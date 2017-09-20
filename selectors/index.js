@@ -55,22 +55,27 @@ export const getReportingUserOnCall = createSelector(
     }
 
     const segmentByDay = (onCall) => {
-      const segmented = List()
-      const currentOnCall = onCall
+      let segmented = List()
+      let currentOnCall = onCall
       while (spansMultipleDays(currentOnCall)) {
-        const localStart = moment(currentOnCall.get('start_epoch')).tz(timeZone)
-        const newOnCallSegment = onCall
-        newOnCallSegment.end_epoch = localStart.endOf('day').valueOf()
-        segmented.push(newOnCallSegment)
-        currentOnCall.start_epoch = localStart.endOf('day').add(1, 'millisecond').valueOf()
+        let localStart = moment(currentOnCall.get('start_epoch')).tz(timeZone)
+        const newOnCallSegment = currentOnCall.set('end_epoch', localStart.endOf('day').valueOf())
+        segmented = segmented.push(newOnCallSegment)
+        currentOnCall = currentOnCall.set('start_epoch', localStart.endOf('day').add(1, 'millisecond').valueOf())
       }
-      segmented.push(currentOnCall)
+      segmented = segmented.push(currentOnCall)
       return segmented
     }
 
     const nonSegmentedOnCalls = state.getIn(['userData', 'on_call'], List())
-    const segmentedOnCalls = nonSegmentedOnCalls.map((onCall) =>
-      spansMultipleDays(onCall) ? segmentByDay(onCall) : onCall)
+    let segmentedOnCalls = List()
+    nonSegmentedOnCalls.forEach((onCall) => {
+      if (spansMultipleDays(onCall)) {
+        segmentedOnCalls = segmentedOnCalls.concat(segmentByDay(onCall))
+      } else {
+        segmentedOnCalls = segmentedOnCalls.push(onCall)
+      }
+    })
 
     return segmentedOnCalls
   }

@@ -15,6 +15,10 @@ class HoursOnCallTable extends React.Component {
     }
   }
 
+  _isFullDay (duration) {
+    return duration.days() === 1 || duration.hours() + duration.minutes() + duration.seconds() === 0
+  }
+
   _generateUserOnCallRows () {
     const generatedRows = this.props.segmentedOnCalls.map((onCallPeriod, index) => {
       const onCallStartTime = this._roundToNearestMinute(moment(onCallPeriod.get('start_epoch')))
@@ -22,7 +26,7 @@ class HoursOnCallTable extends React.Component {
 
       const onCallDate = moment(onCallPeriod.get('start_epoch')).format('MMM. D, YYYY')
       const onCallDuration = moment.duration(onCallEndTime.diff(onCallStartTime))
-      const hours = onCallDuration.hours() + onCallDuration.minutes() + onCallDuration.seconds() === 0 ? 24 : onCallDuration.hours()
+      const hours = this._isFullDay(onCallDuration) ? 24 : onCallDuration.hours()
       const minutes = onCallDuration.minutes() < 10 ? `0${onCallDuration.minutes()}` : onCallDuration.minutes()
       const endDurationTime = onCallEndTime.hours() === 0 ? '24:00' : onCallEndTime.format('HH:mm')
       const durationText = `${hours}:${minutes} (${onCallStartTime.format('HH:mm')} - ${endDurationTime})`
