@@ -1,6 +1,6 @@
 import React from 'react'
 import { Route, IndexRoute, Redirect } from 'react-router'
-import App from './containers/App'
+import app from './containers/app'
 import Reports from './containers/reports'
 
 import {
@@ -10,7 +10,7 @@ import {
 
 export function getRoutes () {
   return (
-    <Route path='/reports/:org' component={App} >
+    <Route path='/reports/:org' component={app} >
       <IndexRoute component={Reports} />
       <Route name='page' path='on-call' component={ReportsOnCallList} />
       <Route path='on-call/:slug' component={ReportsOnCallDetail} />
