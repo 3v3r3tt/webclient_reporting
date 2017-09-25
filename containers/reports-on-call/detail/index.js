@@ -5,7 +5,7 @@ import { Link } from 'react-router'
 import { getReportingUserOnCall } from 'reporting/selectors'
 import { reportingOnCallFilterUpdate, reportingOnCallUserGet } from 'reporting/actions/reporting'
 
-import Filter from '../filter-date-team'
+import Filter from 'reporting/components/filter-date-team'
 import HoursOnCallTable from './hoursOnCallTable'
 import IncidentsOnCallTable from './incidentsOnCallTable'
 
