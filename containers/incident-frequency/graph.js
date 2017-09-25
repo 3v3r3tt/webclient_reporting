@@ -1,5 +1,5 @@
 import React from 'react'
-//import Highcharts from 'highcharts'
+// import Highcharts from 'highcharts'
 
 function Graph (props) {
   return (
