@@ -58,7 +58,7 @@ class Reports extends React.Component {
                 </div>
                 <div className='preview' />
               </a>
-              <Link to={`/reports/${orgslug}/on-call`} className='User reports-nav-item'>
+              <Link to={`/reports/${orgslug}/on-call`} className='OnCall reports-nav-item'>
                 <div className='card-header'>
                   <h6 className='card-header__heading'>On Call</h6>
                 </div>
