@@ -47,12 +47,12 @@ class Filter extends Component {
     this.props.getData()
   }
   _endDateChange (momentDate) {
-    this.props.setFilterOnCall({endDate: momentDate})
+    this.props.setFilterOnCall({endDate: momentDate.valueOf()})
     this._getNewTableData()
   }
 
   _beginDateChange (momentDate) {
-    this.props.setFilterOnCall({beginDate: momentDate})
+    this.props.setFilterOnCall({beginDate: momentDate.valueOf()})
     this._getNewTableData()
   }
 
