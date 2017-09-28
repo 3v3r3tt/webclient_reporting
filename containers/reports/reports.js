@@ -52,12 +52,12 @@ class Reports extends React.Component {
           <div className='js-advancedrep'>
             <ul className='reports-nav'>
               <h4>Advanced Reporting</h4>
-              <a href='/dash/tron/#/reports/view/Strategic' className='Strategic reports-nav-item'>
+              <Link to={`/reports/${orgslug}/incident-frequency`} className='Strategic reports-nav-item'>
                 <div className='card-header'>
                   <h6 className='card-header__heading'>Incident Frequency</h6>
                 </div>
                 <div className='preview' />
-              </a>
+              </Link>
               <Link to={`/reports/${orgslug}/on-call`} className='on-call reports-nav-item'>
                 <div className='card-header'>
                   <h6 className='card-header__heading'>On Call</h6>
