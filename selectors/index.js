@@ -70,10 +70,13 @@ export const getReportingUserOnCall = createSelector(
     const nonSegmentedOnCalls = state.getIn(['userData', 'on_call'], List())
     let segmentedOnCalls = List()
     nonSegmentedOnCalls.forEach((onCall) => {
-      if (spansMultipleDays(onCall)) {
-        segmentedOnCalls = segmentedOnCalls.concat(segmentByDay(onCall))
-      } else {
-        segmentedOnCalls = segmentedOnCalls.push(onCall)
+      // Make sure API returns a start that is before the end to avoid infinite while loop
+      if (onCall.get('start_epoch') < onCall.get('end_epoch')) {
+        if (spansMultipleDays(onCall)) {
+          segmentedOnCalls = segmentedOnCalls.concat(segmentByDay(onCall))
+        } else {
+          segmentedOnCalls = segmentedOnCalls.push(onCall)
+        }
       }
     })
 
