@@ -64,7 +64,7 @@ class Filter extends Component {
   }
 
   _isValidBeginDate (current) {
-    var lastYear = moment().subtract(1, 'year')
+    var lastYear = moment().subtract(13, 'months')
     return current.isAfter(lastYear) && current.isBefore(this.props.endDate)
   }
 
