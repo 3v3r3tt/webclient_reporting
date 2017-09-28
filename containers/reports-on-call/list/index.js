@@ -4,7 +4,7 @@ import { Link } from 'react-router'
 
 import Victory from '@victorops/victory'
 
-import Filter from '../filter-date-team'
+import Filter from 'reporting/components/filter-date-team'
 
 import {
   reportingOnCallTeamGet
