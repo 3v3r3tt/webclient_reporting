@@ -3,15 +3,32 @@ import { connect } from 'react-redux'
 import MainWrapper from '../main-wrapper'
 import { bindActions } from 'reporting/actions'
 
+function provisionedSession (props) {
+  const state = props.state
+  const isAuthenticated = state.auth.config.size > 0
+  const hasRequiredFeatureFlags = !state.meta.get('isFetching', true) && state.meta.getIn(['featureFlags', 'reportingv2'], false)
+
+  if (!isAuthenticated || !hasRequiredFeatureFlags) {
+    window.location = '/' // go home
+    return false
+  }
+
+  return true
+}
+
 function App (props) {
-  return (
-    <MainWrapper
-      actions={props.actions}
-      location={props.location}
-      state={props.state}>
-      { props.children }
-    </MainWrapper>
-  )
+  if (provisionedSession(props)) {
+    return (
+      <MainWrapper
+        actions={props.actions}
+        location={props.location}
+        state={props.state}>
+        { props.children }
+      </MainWrapper>
+    )
+  } else {
+    return null
+  }
 }
 
 export default connect(
