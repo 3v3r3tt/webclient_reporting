@@ -16,6 +16,9 @@ class Reports extends React.Component {
 
   render () {
     const orgslug = this.props.params.org
+    const onCallFeatureFlagIsTrue = this.props.featureFlags.getIn(['featureFlags', 'feature:reportingv2'], false)
+    const incidentFrequencyFlagIsTrue = this.props.featureFlags.getIn(['featureFlags', 'feature:incidentfrequencyreporting'], false)
+
     return (
       <div id='newadmin'>
         <div className='module-wrapper'>
@@ -52,18 +55,36 @@ class Reports extends React.Component {
           <div className='js-advancedrep'>
             <ul className='reports-nav'>
               <h4>Advanced Reporting</h4>
-              <Link to={`/reports/${orgslug}/incident-frequency`} className='Strategic reports-nav-item'>
+              {(incidentFrequencyFlagIsTrue)
+                ? <Link to={`/reports/${orgslug}/incident-frequency`} className='Strategic reports-nav-item'>
+                  <div className='card-header'>
+                    <h6 className='card-header__heading'>Incident Frequency</h6>
+                  </div>
+                  <div className='preview' />
+                </Link>
+                : <a href='/dash/tron/#/reports/view/Strategic' className='Strategic reports-nav-item'>
+                  <div className='card-header'>
+                    <h6 className='card-header__heading'>Incident Frequency</h6>
+                  </div>
+                  <div className='preview' />
+                </a>
+                }
+
+              { (onCallFeatureFlagIsTrue)
+               ? <Link to={`/reports/${orgslug}/on-call`} className='on-call reports-nav-item'>
+                 <div className='card-header'>
+                   <h6 className='card-header__heading'>On Call</h6>
+                 </div>
+                 <div className='preview' />
+               </Link>
+              : <a href='/dash/tron/#/reports/view/User' className='User reports-nav-item'>
                 <div className='card-header'>
-                  <h6 className='card-header__heading'>Incident Frequency</h6>
+                  <h6 className='card-header__heading'>User Metrics</h6>
                 </div>
                 <div className='preview' />
-              </Link>
-              <Link to={`/reports/${orgslug}/on-call`} className='on-call reports-nav-item'>
-                <div className='card-header'>
-                  <h6 className='card-header__heading'>On Call</h6>
-                </div>
-                <div className='preview' />
-              </Link>
+              </a>
+              }
+
             </ul>
           </div>
         </div>

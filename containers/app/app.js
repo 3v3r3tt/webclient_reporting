@@ -6,7 +6,7 @@ import { bindActions } from 'reporting/actions'
 function provisionedSession (props) {
   const state = props.state
   const isAuthenticated = state.auth.config.size > 0
-  const hasRequiredFeatureFlags = !state.meta.get('isFetching', true) && state.meta.getIn(['featureFlags', 'reportingv2'], false)
+  const hasRequiredFeatureFlags = !state.meta.get('isFetching', true) && state.meta.getIn(['featureFlags', 'feature:reportingv2'], false)
 
   if (!isAuthenticated || !hasRequiredFeatureFlags) {
     window.location = '/' // go home

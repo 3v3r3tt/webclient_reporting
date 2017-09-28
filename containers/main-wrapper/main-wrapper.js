@@ -9,7 +9,8 @@ function renderChildren (props) {
     return React.cloneElement(child, {
       children: props.children,
       location: props.location,
-      router: props.router
+      router: props.router,
+      featureFlags: props.state.meta
     })
   })
 }
