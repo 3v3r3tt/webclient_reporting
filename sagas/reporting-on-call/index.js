@@ -10,7 +10,9 @@ import {
   REPORTING_ONCALL_TEAM_GET,
   REPORTING_ONCALL_USER_GET,
   reportingOnCallTeamUpdate,
-  reportingOnCallUserUpdate
+  reportingOnCallTeamError,
+  reportingOnCallUserUpdate,
+  reportingOnCallUserError
 } from 'reporting/actions/reporting'
 
 import config from 'components/__utils/config'
@@ -32,6 +34,7 @@ function _getOnCallTeamReport ({create}, logError) {
       yield put(reportingOnCallTeamUpdate(onCallReportData))
     } catch (err) {
       yield call(logError, err)
+      yield put(reportingOnCallTeamError({error: {list: true}}))
     }
   }
 }
@@ -53,6 +56,7 @@ function _getOnCallUserReport ({create}, logError) {
       yield put(reportingOnCallUserUpdate(userOnCallReportData))
     } catch (err) {
       yield call(logError, err)
+      yield put(reportingOnCallUserError({error: {detail: true}}))
     }
   }
 }

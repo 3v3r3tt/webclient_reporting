@@ -21,7 +21,8 @@ function mapStateToProps (state) {
     startDate: state.reportingOnCall.get('startDate'),
     endDate: state.reportingOnCall.get('endDate'),
     selectedTeam: state.reportingOnCall.get('selectedTeam'),
-    isLoading: state.reportingOnCall.get('loadingData')
+    isLoading: state.reportingOnCall.get('loadingData'),
+    error: state.reportingOnCall.get('error')
   }
 }
 
@@ -48,18 +49,20 @@ class ReportsOnCallDetail extends React.Component {
     const ReportHomeLink = <Link className='link--default' to={`/reports/${config.orgslug}`}>Reports</Link>
     const OnCallListLink = <Link className='link--default' to={`/reports/${config.orgslug}/on-call`}>On-call report</Link>
 
-    return (
-      <div className='container module-wrapper'>
-        <BreadCrumbs breadcrumbs={[
-          {label: ReportHomeLink, active: true},
-          {label: OnCallListLink, active: true},
-          {label: fullName, uri: slug, active: true}
-        ]} light />
+    const BreadcrumbName = fullName || 'Error'
+    const OnCallListErrorMessage =
+      <div>
+        <h1 className='heading-2'>On-Call Reports</h1>
+        <p className='text-center text--bold mt-5'>
+          Could not load your report data - please try again later.
+        </p>
+      </div>
 
+    const OnCallDetailTables =
+      <div>
         <h1 className='heading-2'>{fullName} on-call report</h1>
 
         <Filter getData={this.props.getUserOnCallData} />
-
         <HoursOnCallTable
           isLoading={this.props.isLoading}
           segmentedOnCalls={segmentedOnCalls}
@@ -68,6 +71,18 @@ class ReportsOnCallDetail extends React.Component {
         />
 
         <IncidentsOnCallTable isLoading={this.props.isLoading} fullName={fullName} incidents={incidents} />
+      </div>
+
+    return (
+      <div className='container module-wrapper'>
+        <BreadCrumbs breadcrumbs={[
+          {label: ReportHomeLink, active: true},
+          {label: OnCallListLink, active: true},
+          {label: BreadcrumbName, uri: slug, active: true}
+        ]} light />
+
+        {this.props.error.get('detail') ? OnCallListErrorMessage : OnCallDetailTables}
+
       </div>
     )
   }
