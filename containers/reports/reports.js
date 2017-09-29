@@ -16,8 +16,8 @@ class Reports extends React.Component {
 
   render () {
     const orgslug = this.props.params.org
-    const onCallFeatureFlagIsTrue = this.props.featureFlags.getIn(['featureFlags', 'feature:reportingv2'], false)
-    const incidentFrequencyFlagIsTrue = this.props.featureFlags.getIn(['featureFlags', 'feature:incidentfrequencyreporting'], false)
+    const onCallFeatureFlagIsTrue = this.props.featureFlags.getIn(['featureFlags', 'feature:oncallreport'], false)
+    const incidentFrequencyFlagIsTrue = this.props.featureFlags.getIn(['featureFlags', 'feature:incidentfrequencyreport'], false)
 
     return (
       <div id='newadmin'>
