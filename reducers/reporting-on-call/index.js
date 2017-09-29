@@ -10,7 +10,9 @@ import {
   REPORTING_ONCALL_USER_GET,
   REPORTING_ONCALL_FILTER_UPDATE,
   REPORTING_ONCALL_TEAM_UPDATE,
-  REPORTING_ONCALL_USER_UPDATE
+  REPORTING_ONCALL_USER_UPDATE,
+  REPORTING_ONCALL_TEAM_ERROR,
+  REPORTING_ONCALL_USER_ERROR
 } from 'reporting/actions/reporting'
 
 export const initialState = _fromJS({
@@ -32,6 +34,10 @@ export const initialState = _fromJS({
   },
   teamData: {
     members: List()
+  },
+  error: {
+    list: false,
+    detail: false
   }
 })
 
@@ -46,6 +52,10 @@ export default function onCallReport (state = initialState, action) {
       return _filterUpdate(state, action.payload)
     case REPORTING_ONCALL_USER_UPDATE:
       return _updateUserOnCall(state, action.payload)
+    case REPORTING_ONCALL_TEAM_ERROR:
+      return _setListErrorOnCall(state, action.payload)
+    case REPORTING_ONCALL_USER_ERROR:
+      return _setDetailErrorOnCall(state, action.payload)
     default : return state
   }
 }
@@ -56,9 +66,19 @@ const _filterUpdate = (state, payload) => state.merge(state, payload)
 function _updateTeamOnCall (state, payload) {
   return state.set('teamData', _fromJS(payload.team))
               .update('loadingData', () => false)
+              .setIn(['error', 'list'], false)
 }
 
 function _updateUserOnCall (state, payload) {
   return state.set('userData', _fromJS(payload.user_data))
               .update('loadingData', () => false)
+              .setIn(['error', 'detail'], false)
+}
+
+function _setListErrorOnCall (state, payload) {
+  return state.setIn(['error', 'list'], _fromJS(payload.error))
+}
+
+function _setDetailErrorOnCall (state, payload) {
+  return state.setIn(['error', 'detail'], _fromJS(payload.error))
 }

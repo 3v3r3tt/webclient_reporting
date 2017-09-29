@@ -20,7 +20,8 @@ const config = window.VO_CONFIG
 function mapStateToProps (state) {
   return {
     teamOnCallData: state.reportingOnCall,
-    isLoading: state.reportingOnCall.get('loadingData')
+    isLoading: state.reportingOnCall.get('loadingData'),
+    error: state.reportingOnCall.get('error')
   }
 }
 
@@ -98,6 +99,18 @@ class ReportsOnCallList extends Component {
 
     const ReportHomeLink = <Link className='link--default' to={`/reports/${config.orgslug}`}>Reports</Link>
 
+    const OnCallListErrorMessage = <p className='text-center text--bold mt-5'>Could not load your report data - please try again later.</p>
+    const OnCallListView =
+      <div>
+        <p>&quot;On-call&quot; means this person was on the first step in an escalation policy.</p>
+        <Filter getData={this.props.getTeamOnCallData} />
+        <div className='has-loading-gradient'>
+          <Table showLoader={this.props.isLoading} {...onCallTableConfig} />
+        </div>
+      </div>
+
+    let VisiblePage = this.props.error.get('list') ? OnCallListErrorMessage : OnCallListView
+
     return (
       <div className='container module-wrapper'>
         <BreadCrumbs breadcrumbs={[
@@ -106,12 +119,8 @@ class ReportsOnCallList extends Component {
         ]} light />
 
         <h1 className='heading-2'>On-Call Reports</h1>
-        <p>&quot;On-call&quot; means this person was on the first step in an escalation policy.</p>
 
-        <Filter getData={this.props.getTeamOnCallData} />
-        <div className='has-loading-gradient'>
-          <Table showLoader={this.props.isLoading} {...onCallTableConfig} />
-        </div>
+        { VisiblePage }
       </div>
     )
   }
