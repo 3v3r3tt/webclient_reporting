@@ -114,6 +114,7 @@ class IncidentsOnCallTable extends React.Component {
 
         <div className='has-loading-gradient'>
           <Table {...userIncidentTableConfig} showLoader={this.props.isLoading} />
+          {(!this.props.isLoading && !this.props.incidents.getIn(['teamData', 'members']).size) ? <p>No data found</p> : null}
         </div>
       </div>
     )

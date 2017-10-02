@@ -15,12 +15,14 @@ const config = window.VO_CONFIG
 
 function mapStateToProps (state) {
   return {
+    selectedTeam: state.incidentFrequency.get('selectedTeam'),
+    startDate: state.incidentFrequency.get('beginDate'),
+    endDate: state.incidentFrequency.get('endDate')
   }
 }
 
 function mapDispatchToProps (dispatch) {
-  return {
-  }
+  return { }
 }
 
 class IncidentFrequency extends Component {
@@ -36,7 +38,14 @@ class IncidentFrequency extends Component {
 
         <h1 className='heading-2'>Incident Frequency Report</h1>
 
-        <Filter getData={() => { console.log('needs to get data') }} />
+        <Filter
+          beginDate={this.props.startDate}
+          endDate={this.props.endDate}
+          selectedUser={null}
+          selectedTeam={this.props.selectedTeam}
+          getData={() => { console.log('needs to get data') }}
+        />
+
         <Graph />
         <div className='has-loading-gradient'>
           <Table showLoader={this.props.isLoading} />

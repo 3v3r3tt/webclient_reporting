@@ -102,6 +102,7 @@ class HoursOnCallTable extends React.Component {
 
         <div className='has-loading-gradient'>
           <Table {...userOnCallTableConfig} showLoader={this.props.isLoading} />
+          {(!this.props.isLoading && !this.props.segmentedOnCalls.getIn(['teamData', 'members']).size) ? <p>No data found</p> : null}
         </div>
       </div>
     )

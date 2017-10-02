@@ -18,11 +18,12 @@ function mapStateToProps (state) {
   return {
     userOnCallData: state.reportingOnCall,
     segmentedUserOnCallData: getReportingUserOnCall(state),
-    startDate: state.reportingOnCall.get('startDate'),
+    startDate: state.reportingOnCall.get('beginDate'),
     endDate: state.reportingOnCall.get('endDate'),
     selectedTeam: state.reportingOnCall.get('selectedTeam'),
     isLoading: state.reportingOnCall.get('loadingData'),
-    error: state.reportingOnCall.get('error')
+    error: state.reportingOnCall.get('error'),
+    selectedUser: state.reportingOnCall.get('selectedUser')
   }
 }
 
@@ -62,7 +63,13 @@ class ReportsOnCallDetail extends React.Component {
       <div>
         <h1 className='heading-2'>{fullName} on-call report</h1>
 
-        <Filter getData={this.props.getUserOnCallData} />
+        <Filter
+          beginDate={this.props.startDate}
+          endDate={this.props.endDate}
+          selectedUser={this.props.selectedUser}
+          selectedTeam={this.props.selectedTeam}
+          getData={this.props.getUserOnCallData}
+        />
         <HoursOnCallTable
           isLoading={this.props.isLoading}
           segmentedOnCalls={segmentedOnCalls}
