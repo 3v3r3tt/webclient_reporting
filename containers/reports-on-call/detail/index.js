@@ -18,9 +18,10 @@ function mapStateToProps (state) {
   return {
     userOnCallData: state.reportingOnCall,
     segmentedUserOnCallData: getReportingUserOnCall(state),
-    startDate: state.reportingOnCall.get('startDate'),
+    beginDate: state.reportingOnCall.get('beginDate'),
     endDate: state.reportingOnCall.get('endDate'),
     selectedTeam: state.reportingOnCall.get('selectedTeam'),
+    selectedUser: state.reportingOnCall.get('selectedUser'),
     isLoading: state.reportingOnCall.get('loadingData'),
     error: state.reportingOnCall.get('error')
   }
@@ -50,27 +51,35 @@ class ReportsOnCallDetail extends React.Component {
     const OnCallListLink = <Link className='link--default' to={`/reports/${config.orgslug}/on-call`}>On-call report</Link>
 
     const BreadcrumbName = fullName || 'Error'
-    const OnCallListErrorMessage =
-      <div>
-        <h1 className='heading-2'>On-Call Reports</h1>
-        <p className='text-center text--bold mt-5'>
-          Could not load your report data - please try again later.
-        </p>
-      </div>
 
     const OnCallDetailTables =
       <div>
         <h1 className='heading-2'>{fullName} on-call report</h1>
 
-        <Filter getData={this.props.getUserOnCallData} />
+        <Filter
+          getData={this.props.getUserOnCallData}
+          isDetailPage
+        />
         <HoursOnCallTable
           isLoading={this.props.isLoading}
           segmentedOnCalls={segmentedOnCalls}
           totalHours={totalOnCallHours}
           totalIncidents={totalIncidentsWorked}
+          beginDate={this.props.beginDate}
+          endDate={this.props.endDate}
+          selectedTeam={this.props.selectedTeam}
+          selectedUser={this.props.selectedUser}
         />
 
-        <IncidentsOnCallTable isLoading={this.props.isLoading} fullName={fullName} incidents={incidents} />
+        <IncidentsOnCallTable
+          isLoading={this.props.isLoading}
+          fullName={fullName}
+          incidents={incidents}
+          beginDate={this.props.beginDate}
+          endDate={this.props.endDate}
+          selectedTeam={this.props.selectedTeam}
+          selectedUser={this.props.selectedUser}
+        />
       </div>
 
     return (
@@ -81,7 +90,7 @@ class ReportsOnCallDetail extends React.Component {
           {label: BreadcrumbName, uri: slug, active: true}
         ]} light />
 
-        {this.props.error.get('detail') ? OnCallListErrorMessage : OnCallDetailTables}
+        {OnCallDetailTables}
 
       </div>
     )

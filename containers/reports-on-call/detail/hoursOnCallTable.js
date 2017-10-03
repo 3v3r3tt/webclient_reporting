@@ -2,9 +2,13 @@ import React from 'react'
 
 import moment from 'moment'
 
+import OnCallDownloadCSVRow from './OnCallDownloadCSVRow'
+
 import Victory from '@victorops/victory'
 
 const { Table } = Victory
+
+const ON_CALL_LIMIT = 100
 
 class HoursOnCallTable extends React.Component {
   _roundToNearestMinute (unroundedMoment) {
@@ -19,8 +23,53 @@ class HoursOnCallTable extends React.Component {
     return duration.days() === 1 || duration.hours() + duration.minutes() + duration.seconds() === 0
   }
 
+  _renderDownloadCSVRow () {
+    return {
+      id: 'incidentsSeeMore',
+      columns: [{
+        content: '',
+        value: 'ALWAYS_ON_BOTTOM',
+        id: 'placeholder1',
+        type: 'cell'
+      },
+      {
+        content: '',
+        value: 'ALWAYS_ON_BOTTOM',
+        id: 'placeholder2',
+        type: 'cell'
+      },
+      {
+        component: OnCallDownloadCSVRow,
+        id: 'downloadCSV',
+        content: {
+          type: 'on-call data',
+          endpoint: 'oncall_csv',
+          beginDate: this.props.beginDate,
+          endDate: this.props.endDate,
+          selectedTeam: this.props.selectedTeam,
+          selectedUser: this.props.selectedUser
+        },
+        type: 'component',
+        value: 'ALWAYS_ON_BOTTOM'
+      },
+      {
+        content: '',
+        value: 'ALWAYS_ON_BOTTOM',
+        id: 'placeholder3',
+        type: 'cell'
+      },
+      {
+        content: '',
+        value: 'ALWAYS_ON_BOTTOM',
+        id: 'placeholder4',
+        type: 'cell'
+      }]
+    }
+  }
+
   _generateUserOnCallRows () {
-    const generatedRows = this.props.segmentedOnCalls.map((onCallPeriod, index) => {
+    const showableOnCalls = this.props.segmentedOnCalls.slice(0, ON_CALL_LIMIT)
+    const generatedRows = showableOnCalls.map((onCallPeriod, index) => {
       const onCallStartTime = this._roundToNearestMinute(moment(onCallPeriod.get('start_epoch')))
       const onCallEndTime = this._roundToNearestMinute(moment(onCallPeriod.get('end_epoch')))
 
@@ -66,10 +115,16 @@ class HoursOnCallTable extends React.Component {
         }]
       })
     })
-    return generatedRows.toJS()
+
+    if (this.props.segmentedOnCalls.size > ON_CALL_LIMIT) {
+      return generatedRows.push(this._renderDownloadCSVRow()).toJS()
+    } else {
+      return generatedRows.toJS()
+    }
   }
 
   render () {
+    const generatedRows = this._generateUserOnCallRows()
     const userOnCallTableConfig = {
       columnHeaders: [
         {
@@ -92,7 +147,8 @@ class HoursOnCallTable extends React.Component {
           label: 'On-call Override',
           isSortable: true
         }],
-      rowItems: this._generateUserOnCallRows()
+      rowItems: generatedRows,
+      customClasses: generatedRows.length > ON_CALL_LIMIT ? ['on-call--user-hours--table'] : []
     }
 
     return (

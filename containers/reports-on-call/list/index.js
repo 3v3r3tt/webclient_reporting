@@ -44,9 +44,10 @@ class ReportsOnCallList extends Component {
 
   _generateOnCallRows (teamOnCallData) {
     const _teamData = teamOnCallData.getIn(['teamData', 'members'])
-    const generatedRows = _teamData.map((userData) => {
+    const generatedRows = _teamData.map((userData, index) => {
       return ({
         id: userData.get('username', ''),
+        key: index,
         columns: [{
           content: userData.get('full_name', ''),
           value: userData.get('full_name', 'zz'),
