@@ -6,6 +6,10 @@ import Victory from '@victorops/victory'
 import Filter from 'reporting/components/filter-date-team'
 import Graph from './graph'
 
+import {
+  incidentFrequencyTableGet
+} from 'reporting/actions/incident-frequency'
+
 const {
   BreadCrumbs,
   Table
@@ -22,7 +26,9 @@ function mapStateToProps (state) {
 }
 
 function mapDispatchToProps (dispatch) {
-  return { }
+  return {
+    getTeamIFData: (payload) => dispatch(incidentFrequencyTableGet(payload))
+  }
 }
 
 class IncidentFrequency extends Component {
@@ -43,7 +49,7 @@ class IncidentFrequency extends Component {
           endDate={this.props.endDate}
           selectedUser={null}
           selectedTeam={this.props.selectedTeam}
-          getData={() => { console.log('needs to get data') }}
+          getData={this.props.getTeamIFData}
         />
 
         <Graph />
