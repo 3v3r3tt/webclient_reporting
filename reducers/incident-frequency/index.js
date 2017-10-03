@@ -48,7 +48,6 @@ export default function onCallReport (state = initialState, action) {
 const _loadingData = (state) => state.update('loadingData', () => true)
 const _filterUpdate = (state, payload) => state.merge(state, payload)
 
-
 function _updateTable (state, payload) {
   return state.set('tableData', _fromJS(payload.data))
               .update('loadingData', () => false)
