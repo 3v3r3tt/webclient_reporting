@@ -2,7 +2,7 @@ import React from 'react'
 
 import moment from 'moment'
 
-import OnCallDownloadCSVRow from './OnCallDownloadCSVRow'
+import OnCallDownloadCSVRow from './onCallDownloadCSVRow'
 
 import Victory from '@victorops/victory'
 
