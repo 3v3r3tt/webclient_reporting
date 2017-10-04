@@ -23,8 +23,7 @@ function mapStateToProps (state) {
     selectedTeam: state.reportingOnCall.get('selectedTeam'),
     selectedUser: state.reportingOnCall.get('selectedUser'),
     isLoading: state.reportingOnCall.get('loadingData'),
-    error: state.reportingOnCall.get('error'),
-    selectedUser: state.reportingOnCall.get('selectedUser')
+    error: state.reportingOnCall.get('error')
   }
 }
 

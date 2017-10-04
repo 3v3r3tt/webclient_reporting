@@ -94,7 +94,7 @@ class Filter extends Component {
     })
     const LabelComponent =
       <span className='filter--team-label'>
-        <i className='fa fa-users' />
+        <i className='fas fa-users' />
         <span className='filter--team-label-text'>{selectedTeamName}</span>
       </span>
 
