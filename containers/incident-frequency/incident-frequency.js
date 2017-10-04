@@ -20,7 +20,7 @@ const config = window.VO_CONFIG
 function mapStateToProps (state) {
   return {
     selectedTeam: state.incidentFrequency.get('selectedTeam'),
-    startDate: state.incidentFrequency.get('beginDate'),
+    beginDate: state.incidentFrequency.get('beginDate'),
     endDate: state.incidentFrequency.get('endDate')
   }
 }
@@ -45,7 +45,7 @@ class IncidentFrequency extends Component {
         <h1 className='heading-2'>Incident Frequency Report</h1>
 
         <Filter
-          beginDate={this.props.startDate}
+          beginDate={this.props.beginDate}
           endDate={this.props.endDate}
           selectedUser={null}
           selectedTeam={this.props.selectedTeam}
