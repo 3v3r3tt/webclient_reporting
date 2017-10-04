@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+
 import moment from 'moment'
+import CSVDownloadButton from '../csv-download-button'
 
 import Victory from '@victorops/victory'
 
@@ -128,9 +130,7 @@ class Filter extends Component {
             </div>
           </div>
           <div className='col-12 col-md-3'>
-            <div className='btn btn-secondary on-call--filter_csv'>
-              Export CSV <i className='fa fa-file-archive-o on-call--filter_csv_icon' />
-            </div>
+            <CSVDownloadButton {...this.props} />
           </div>
         </div>
       </div>

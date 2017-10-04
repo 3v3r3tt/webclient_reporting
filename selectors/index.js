@@ -46,6 +46,7 @@ export const getTeams = createSelector(
 export const getReportingUserOnCall = createSelector(
   [_getReportingUserOnCall],
   state => {
+    const ON_CALL_LIMIT = 101
     const timeZone = moment.tz.guess()
 
     const spansMultipleDays = (onCall) => {
@@ -57,7 +58,7 @@ export const getReportingUserOnCall = createSelector(
     const segmentByDay = (onCall) => {
       let segmented = List()
       let currentOnCall = onCall
-      while (spansMultipleDays(currentOnCall)) {
+      while (spansMultipleDays(currentOnCall) && segmented.size < ON_CALL_LIMIT) {
         let localStart = moment(currentOnCall.get('start_epoch')).tz(timeZone)
         const newOnCallSegment = currentOnCall.set('end_epoch', localStart.endOf('day').valueOf())
         segmented = segmented.push(newOnCallSegment)
@@ -72,10 +73,12 @@ export const getReportingUserOnCall = createSelector(
     nonSegmentedOnCalls.forEach((onCall) => {
       // Make sure API returns a start that is before the end to avoid infinite while loop
       if (onCall.get('start_epoch') < onCall.get('end_epoch')) {
-        if (spansMultipleDays(onCall)) {
-          segmentedOnCalls = segmentedOnCalls.concat(segmentByDay(onCall))
-        } else {
-          segmentedOnCalls = segmentedOnCalls.push(onCall)
+        if (segmentedOnCalls.size < ON_CALL_LIMIT) {
+          if (spansMultipleDays(onCall)) {
+            segmentedOnCalls = segmentedOnCalls.concat(segmentByDay(onCall))
+          } else {
+            segmentedOnCalls = segmentedOnCalls.push(onCall)
+          }
         }
       }
     })

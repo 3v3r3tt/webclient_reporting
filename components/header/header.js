@@ -6,6 +6,10 @@ import { connect } from 'react-redux'
 import moment from 'vendor/moment'
 
 import {
+  browserHistory
+} from 'react-router'
+
+import {
   getCompleteProfileStatus
 } from 'reporting/selectors'
 
@@ -56,16 +60,26 @@ class Header extends Component {
     return this._getAccountType() === 'trial' && !this._isAdmin()
   }
 
+  _changeOrg (event) {
+    const value = event.target.value
+    const path = browserHistory.getCurrentLocation().pathname.split('/')
+    path[2] = value
+    browserHistory.push(path.join('/'))
+
+    window.location.reload(false)
+  }
+
   _getOrgs () {
     const config = this.props.auth.config
     const orgs = config.get('orgs', [])
 
     if (orgs.size > 1) {
       return (
-        <select>
+        <select onChange={this._changeOrg}>
           {
             orgs.map(function (org, index) {
-              return (<option>{ org.get('name', '') }</option>)
+              const orgName = org.get('name', '')
+              return (<option key={index} selected={orgName === config.get('orgname', '')} value={org.get('slug', '')}>{ orgName }</option>)
             })
           }
         </select>
