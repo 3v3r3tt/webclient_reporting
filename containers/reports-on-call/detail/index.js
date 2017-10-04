@@ -23,7 +23,8 @@ function mapStateToProps (state) {
     selectedTeam: state.reportingOnCall.get('selectedTeam'),
     selectedUser: state.reportingOnCall.get('selectedUser'),
     isLoading: state.reportingOnCall.get('loadingData'),
-    error: state.reportingOnCall.get('error')
+    error: state.reportingOnCall.get('error'),
+    selectedUser: state.reportingOnCall.get('selectedUser')
   }
 }
 
@@ -57,6 +58,10 @@ class ReportsOnCallDetail extends React.Component {
         <h1 className='heading-2'>{fullName} on-call report</h1>
 
         <Filter
+          beginDate={this.props.beginDate}
+          endDate={this.props.endDate}
+          selectedUser={this.props.selectedUser}
+          selectedTeam={this.props.selectedTeam}
           getData={this.props.getUserOnCallData}
           isDetailPage
         />

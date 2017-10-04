@@ -6,6 +6,10 @@ import Victory from '@victorops/victory'
 import Filter from 'reporting/components/filter-date-team'
 import Graph from './graph'
 
+import {
+  incidentFrequencyTableGet
+} from 'reporting/actions/incident-frequency'
+
 const {
   BreadCrumbs,
   Table
@@ -15,11 +19,15 @@ const config = window.VO_CONFIG
 
 function mapStateToProps (state) {
   return {
+    selectedTeam: state.incidentFrequency.get('selectedTeam'),
+    beginDate: state.incidentFrequency.get('beginDate'),
+    endDate: state.incidentFrequency.get('endDate')
   }
 }
 
 function mapDispatchToProps (dispatch) {
   return {
+    getTeamIFData: (payload) => dispatch(incidentFrequencyTableGet(payload))
   }
 }
 
@@ -36,7 +44,14 @@ class IncidentFrequency extends Component {
 
         <h1 className='heading-2'>Incident Frequency Report</h1>
 
-        <Filter getData={() => { console.log('needs to get data') }} />
+        <Filter
+          beginDate={this.props.beginDate}
+          endDate={this.props.endDate}
+          selectedUser={null}
+          selectedTeam={this.props.selectedTeam}
+          getData={this.props.getTeamIFData}
+        />
+
         <Graph />
         <div className='has-loading-gradient'>
           <Table showLoader={this.props.isLoading} />

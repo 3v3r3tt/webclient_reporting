@@ -16,11 +16,7 @@ const {
 
 function mapStateToProps (state) {
   return {
-    teams: state.teams,
-    beginDate: state.reportingOnCall.get('beginDate'),
-    endDate: state.reportingOnCall.get('endDate'),
-    selectedUser: state.reportingOnCall.get('selectedUser'),
-    selectedTeam: state.reportingOnCall.get('selectedTeam')
+    teams: state.teams
   }
 }
 

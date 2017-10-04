@@ -20,6 +20,10 @@ const config = window.VO_CONFIG
 function mapStateToProps (state) {
   return {
     teamOnCallData: state.reportingOnCall,
+    selectedTeam: state.reportingOnCall.get('selectedTeam'),
+    selectedUser: state.reportingOnCall.get('selectedUser'),
+    beginDate: state.reportingOnCall.get('beginDate'),
+    endDate: state.reportingOnCall.get('endDate'),
     isLoading: state.reportingOnCall.get('loadingData'),
     error: state.reportingOnCall.get('error')
   }
@@ -104,9 +108,17 @@ class ReportsOnCallList extends Component {
     const OnCallListView =
       <div>
         <p>&quot;On-call&quot; means this person was on the first step in an escalation policy.</p>
-        <Filter getData={this.props.getTeamOnCallData} />
+        <Filter
+          beginDate={this.props.beginDate}
+          endDate={this.props.endDate}
+          selectedUser={this.props.selectedUser}
+          selectedTeam={this.props.selectedTeam}
+          getData={this.props.getTeamOnCallData}
+        />
+
         <div className='has-loading-gradient'>
           <Table showLoader={this.props.isLoading} {...onCallTableConfig} />
+          {(!this.props.isLoading && !this.props.teamOnCallData.getIn(['teamData', 'members']).size) ? <p>No data found</p> : null}
         </div>
       </div>
 
@@ -120,7 +132,6 @@ class ReportsOnCallList extends Component {
         ]} light />
 
         <h1 className='heading-2'>On-Call Reports</h1>
-
         { VisiblePage }
       </div>
     )
