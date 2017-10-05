@@ -116,8 +116,8 @@ class ReportsOnCallList extends Component {
           getData={this.props.getTeamOnCallData}
         />
 
-        <div className='has-loading-gradient'>
-          <Table showLoader={this.props.isLoading} {...onCallTableConfig} />
+        <div className='has-loading-gradient oncall--team-table'>
+          <Table customClasses={['rows--have_hover']}showLoader={this.props.isLoading} {...onCallTableConfig} />
           {(!this.props.isLoading && !this.props.teamOnCallData.getIn(['teamData', 'members']).size) ? <p>No data found</p> : null}
         </div>
       </div>
@@ -131,7 +131,7 @@ class ReportsOnCallList extends Component {
           {label: 'On-call report', uri: '#reports/on-call', active: true}
         ]} light />
 
-        <h1 className='heading-2'>On-Call Reports</h1>
+        <h1 className='heading-3'>On-Call Reports</h1>
         { VisiblePage }
       </div>
     )

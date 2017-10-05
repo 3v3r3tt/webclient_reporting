@@ -173,8 +173,7 @@ class IncidentsOnCallTable extends React.Component {
 
     return (
       <div className='oncall--user_incidents'>
-        <h3 className='heading-3'>Incidents worked on by {this.props.fullName}</h3>
-
+        <h2 className='text-weight__bold padded-bottom reports-oncall__heading heading-5'>Incidents worked on by {this.props.fullName}</h2>
         <div className='has-loading-gradient'>
           <Table {...userIncidentTableConfig} showLoader={this.props.isLoading} />
           {(!this.props.isLoading && !this.props.incidents.size) ? <p>No data found</p> : null}

@@ -39,7 +39,7 @@ function _getOnCallTeamReport ({create}, logError) {
   }
 }
 
-function _getOnCallUserReport ({create}, logError) {
+function _getOnCallUserReport (create, logError) {
   return function * () {
     try {
       const onCallReportUserEndpoint = `/api/v1/org/${config.auth.org.slug}/reports/oncalluser`
@@ -53,8 +53,12 @@ function _getOnCallUserReport ({create}, logError) {
       }
 
       const userOnCallReportData = yield call(create, onCallReportUserEndpoint, data)
+
       yield put(reportingOnCallUserUpdate(userOnCallReportData))
     } catch (err) {
+      if (err.status === 504) {
+        _getOnCallUserReport(create, logError)
+      }
       yield call(logError, err)
       yield put(reportingOnCallUserError({error: {detail: true}}))
     }
@@ -72,5 +76,5 @@ export function * watchGetOnCallTeamReport (api, logError) {
 }
 
 export function * watchGetOnCallUserReport (api, logError) {
-  yield * takeEvery(REPORTING_ONCALL_USER_GET, _getOnCallUserReport(api, logError))
+  yield * takeEvery(REPORTING_ONCALL_USER_GET, _getOnCallUserReport(api.create, logError))
 }

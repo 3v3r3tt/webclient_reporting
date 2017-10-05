@@ -42,7 +42,7 @@ class IncidentFrequency extends Component {
           {label: 'Incident Frequency', uri: '#reports/incident-frequcy', active: true}
         ]} light />
 
-        <h1 className='heading-2'>Incident Frequency Report</h1>
+        <h1 className='heading-3'>Incident Frequency Report</h1>
 
         <Filter
           beginDate={this.props.beginDate}

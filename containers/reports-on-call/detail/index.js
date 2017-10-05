@@ -2,7 +2,10 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
 
-import { getReportingUserOnCall } from 'reporting/selectors'
+import {
+  getReportingUserOnCall
+} from 'reporting/selectors'
+
 import { reportingOnCallFilterUpdate, reportingOnCallUserGet } from 'reporting/actions/reporting'
 
 import Filter from 'reporting/components/filter-date-team'
@@ -54,7 +57,7 @@ class ReportsOnCallDetail extends React.Component {
 
     const OnCallDetailTables =
       <div>
-        <h1 className='heading-2'>{fullName} on-call report</h1>
+        <h1 className='heading-3'>{fullName} on-call report</h1>
 
         <Filter
           beginDate={this.props.beginDate}

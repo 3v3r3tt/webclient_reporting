@@ -26,7 +26,7 @@ class CSVDownloadButton extends Component {
           content: <a
             href={onCallCSVHref}
             target='_blank'
-            className='text-center dropdown-item'
+            className='dropdown-item'
             download
             >
               Hours On-Call
@@ -37,7 +37,7 @@ class CSVDownloadButton extends Component {
           content: <a
             href={incidentsWorkedCSVHref}
             target='_blank'
-            className='text-center dropdown-item'
+            className='dropdown-item'
             download
           >
             Incidents Worked
@@ -45,15 +45,17 @@ class CSVDownloadButton extends Component {
         }
       ]
       const DropdownLabel =
-        <span>
-          <i className='far fa-file-excel' /> Export CSV
+        <span className='filter--csv-dropdown'>
+          <i className='fal fa-file-alt' />
+          <span className='filter--csv-label-text'>Export CSV</span>
+          <i className='fas fa-angle-down' />
         </span>
       return (
         <Dropdown
           dropdownItems={exportCSVOptions}
           labelComponent={DropdownLabel}
           triggerClasses={['btn', 'btn-secondary']}
-          customClasses={['dropdown-wrapper dropdown', 'dropdown-div', 'on-call--filter_csv_dropdown']}
+          customClasses={['fal-calendar-alt', 'dropdown-wrapper dropdown', 'dropdown-div', 'on-call--filter_csv_dropdown']}
         />
       )
     } else {
@@ -67,7 +69,7 @@ class CSVDownloadButton extends Component {
           target='_blank'
           download
         >
-          <i className='far fa-file-excel' /> Export CSV
+          <i className='fal fa-file-alt' /> Export CSV
         </a>
       )
     }

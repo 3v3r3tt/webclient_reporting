@@ -153,8 +153,8 @@ class HoursOnCallTable extends React.Component {
 
     return (
       <div className='oncall--user_hours'>
-        <h5>Hours on-call ({this.props.totalHours})</h5>
-        <p>"On-call" means the person was on the first step in an escalation policy.</p>
+        <h2 className='text-weight__bold padded-bottom reports-oncall__heading heading-5'>Hours on-call <span className='text-weight__regular reports-oncall__heading'>({this.props.totalHours} hours )</span></h2>
+        <p className='padded-double-bottom'>"On-call" means the person was on the first step in an escalation policy.</p>
 
         <div className='has-loading-gradient'>
           <Table {...userOnCallTableConfig} showLoader={this.props.isLoading} />

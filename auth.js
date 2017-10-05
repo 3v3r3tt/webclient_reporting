@@ -82,7 +82,7 @@ request.setRequestHeader('Accept', 'application/json')
 request.onload = function () {
   if (request.status >= 200 && request.status < 300) {
     window.VO_CONFIG = JSON.parse(request.responseText)
-    document.getElementsByTagName('title')[0].text = 'Timeline - ' + window.VO_CONFIG.orgname
+    document.getElementsByTagName('title')[0].text = 'Reporting - ' + window.VO_CONFIG.orgname
     require('./app').default()
   } else if (request.status >= 400 && request.status < 500) {
     getLoginOptsAndRedirect()
