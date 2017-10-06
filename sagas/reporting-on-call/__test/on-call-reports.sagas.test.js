@@ -74,7 +74,11 @@ describe('sagas.on-call-report', function () {
       }
     }
 
-    const iterator = _getOnCallUserReport(api, log)(action)
+    const userapi = {
+      create: () => Promise.resolve(Fixture.onCallReportUserData)
+    }
+
+    const iterator = _getOnCallUserReport(userapi, log)(action)
     const getOnCallUserGetState = iterator.next().value
     it('should get on-call user data from state', function () {
       expect(getOnCallUserGetState)
@@ -87,7 +91,7 @@ describe('sagas.on-call-report', function () {
     it('should use state to get on-call report data from oncalluser endpoint', function () {
       expect(fetchOnCallUserData)
         .to.deep.equal(
-          call(api.create, `/api/v1/org/${config.auth.org.slug}/reports/oncalluser`, Fixture.onCallReportUserPayload.toJS())
+          call(userapi.create, `/api/v1/org/${config.auth.org.slug}/reports/oncalluser`, Fixture.onCallReportUserPayload.toJS())
         )
     })
 
