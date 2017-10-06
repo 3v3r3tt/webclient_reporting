@@ -12,6 +12,7 @@ import {
 
 const {
   BreadCrumbs,
+  Dropdown,
   Table
 } = Victory
 
@@ -21,7 +22,8 @@ function mapStateToProps (state) {
   return {
     selectedTeam: state.incidentFrequency.get('selectedTeam'),
     beginDate: state.incidentFrequency.get('beginDate'),
-    endDate: state.incidentFrequency.get('endDate')
+    endDate: state.incidentFrequency.get('endDate'),
+    data: state.incidentFrequency.get('graphData')
   }
 }
 
@@ -32,6 +34,29 @@ function mapDispatchToProps (dispatch) {
 }
 
 class IncidentFrequency extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      data: props.data,
+      chartType: 'Line'
+    }
+
+    this.setChartType.bind(this)
+
+    this.chartTypes = [
+      { label: 'Line', handleClick: () => { this.setChartType('line', 'Line') } },
+      { label: 'Column', handleClick: () => { this.setChartType('column', 'Column') } },
+      { label: 'Area', handleClick: () => { this.setChartType('area', 'Area') } }
+    ]
+  }
+
+  setChartType (type, name) {
+    this.setState({
+      data: this.state.data.set('chart', this.state.data.get('chart').set('type', type)),
+      chartType: name
+    })
+  }
+    
   _generateIncidentFrequencyRows (incidentFrequencyData) {
     if (!incidentFrequencyData) return []
     const generatedRows = incidentFrequencyData.map((data, index) => {
@@ -120,7 +145,13 @@ class IncidentFrequency extends Component {
           getData={this.props.getTeamIFData}
         />
 
-        <Graph />
+        <Dropdown
+          dropdownItems={this.chartTypes}
+          label={this.state.chartType}
+          triggerClasses={['btn', 'btn-secondary', 'dropdown-btn']} />
+
+        <Graph data={this.state.data} />
+
         <div className='has-loading-gradient margin-top-10'>
           <Table {...incidentFrequencyTableConfig} showLoader={this.props.isLoading} />
         </div>

@@ -4,6 +4,7 @@ import {
 } from 'immutable'
 
 import moment from 'moment'
+import data from './data'
 
 import {
   INCIDENT_FREQUENCY_GRAPH_GET,
@@ -21,7 +22,7 @@ export const initialState = _fromJS({
   endDate: moment().valueOf(),
   selectedTeam: '',
   tableData: List(),
-  graphData: List(),
+  graphData: data,
   error: {
     list: false,
     detail: false
