@@ -40,8 +40,9 @@ class OnCallTimelineRows extends React.Component {
           const eventText = timelineItem.get('event').length > 60
             ? _truncate(timelineItem.get('event'), 60)
             : timelineItem.get('event')
+          const involvesUser = timelineItem.get('involves_user', false)
           return (
-            <li className='reporting--on-call--list-item' key={index}>
+            <li className={`reporting--on-call--list-item ${involvesUser ? '' : 'half-fade'}`} key={index}>
               {eventTime}&nbsp;&nbsp;&nbsp;&nbsp;{eventText}
             </li>
           )
@@ -66,12 +67,15 @@ class OnCallActionRows extends React.Component {
     return (
       <ul>
         {showableIncidents.map((timelineItem, index) => {
-          const interactionText = timelineItem.get('event_interaction').length > 30
-            ? _truncate(timelineItem.get('event_interaction'), 30)
+          const interactionText = timelineItem.get('event_interaction')
+          let truncatedInteractionText = interactionText.length > 45
+            ? _truncate(timelineItem.get('event_interaction'), 45)
             : timelineItem.get('event_interaction')
+
+          const involvesUser = timelineItem.get('involves_user', false)
           return (
-            <li className='reporting--on-call--list-item' key={index}>
-              { interactionText }
+            <li className={`reporting--on-call--list-item ${involvesUser ? '' : 'half-fade'}`} key={index}>
+              { truncatedInteractionText }
             </li>
           )
         })}
@@ -137,7 +141,8 @@ class IncidentsOnCallTable extends React.Component {
         {
           component: OnCallActionRows,
           content: {
-            incident: incident
+            incident: incident,
+            selectedUser: this.props.selectedUser
           },
           id: 'action',
           type: 'component'
@@ -166,7 +171,7 @@ class IncidentsOnCallTable extends React.Component {
         {
           label: 'Who took action'
         }],
-      columnWidths: ['30%', '50%', '20%'],
+      columnWidths: ['30%', '40%', '30%'],
       rowItems: generatedRows,
       customClasses: generatedRows.length > INCIDENT_LIMIT ? ['on-call--user-incidents--table'] : []
     }
