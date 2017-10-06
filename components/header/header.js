@@ -202,7 +202,7 @@ class Header extends Component {
 
             { (this._isPaidAdmin())
                 ? <li className='primary-nav-billing'>
-                  <a href={'billing/' + orgslug} target='_blank'>Billing</a>
+                  <a href={'/billing/' + orgslug} target='_blank'>Billing</a>
                 </li>
               : null}
 
