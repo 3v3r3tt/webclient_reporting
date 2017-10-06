@@ -73,7 +73,7 @@ class Reports extends React.Component {
               { (onCallFeatureFlagIsTrue)
                ? <Link to={`/reports/${orgslug}/on-call`} className='on-call reports-nav-item'>
                  <div className='card-header'>
-                   <h6 className='card-header__heading'>On Call</h6>
+                   <h6 className='card-header__heading'>On-Call</h6>
                  </div>
                  <div className='preview' />
                </Link>
