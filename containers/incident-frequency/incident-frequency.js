@@ -32,8 +32,76 @@ function mapDispatchToProps (dispatch) {
 }
 
 class IncidentFrequency extends Component {
+  _generateIncidentFrequencyRows (incidentFrequencyData) {
+    if (!incidentFrequencyData) return []
+    const generatedRows = incidentFrequencyData.map((data, index) => {
+      return ({
+        id: data.get('name', ''),
+        key: index,
+        columns: [{
+          content: data.get('name', ''),
+          value: data.get('name', ''),
+          id: 'name',
+          type: 'cell'
+        },
+        {
+          content: data.get('service', 0),
+          value: data.get('service', 0),
+          id: 'service',
+          type: 'cell'
+        },
+        {
+          content: data.get('alert_count', 0),
+          value: data.get('alert_count', 0),
+          id: 'alert_count',
+          type: 'cell'
+        },
+        {
+          content: data.get('time_to_ack', 0),
+          value: data.get('time_to_ack', 0),
+          id: 'time_to_ack',
+          type: 'cell'
+        },
+        {
+          content: data.get('time_to_resolve', 0),
+          value: data.get('time_to_resolve', 0),
+          id: 'time_to_resolve',
+          type: 'cell'
+        }]
+      })
+    })
+    return generatedRows.toJS()
+  }
+
   render () {
     const ReportHomeLink = <Link className='link--default' to={`/reports/${config.orgslug}`}>Reports</Link>
+    const generatedRows = this._generateIncidentFrequencyRows(this.props.incidentFrequencyData)
+    const incidentFrequencyTableConfig = {
+      columnHeaders: [
+        {
+          label: 'Incident Name',
+          isSortable: true
+        },
+        {
+          label: 'Service',
+          isSortable: true
+        },
+        {
+          label: '# of Alerts',
+          isSortable: true
+        },
+        {
+          label: 'TTA',
+          isSortable: true
+        },
+        {
+          label: 'TTR',
+          isSortable: true
+        }],
+      columnWidths: ['50%', '15%', '11%', '12%', '12%'],
+      rowItems: generatedRows,
+      generateRowClickFn: this._rowClickFnGenerator
+    }
 
     return (
       <div className='container module-wrapper'>
@@ -53,8 +121,8 @@ class IncidentFrequency extends Component {
         />
 
         <Graph />
-        <div className='has-loading-gradient'>
-          <Table showLoader={this.props.isLoading} />
+        <div className='has-loading-gradient margin-top-10'>
+          <Table {...incidentFrequencyTableConfig} showLoader={this.props.isLoading} />
         </div>
       </div>
     )
