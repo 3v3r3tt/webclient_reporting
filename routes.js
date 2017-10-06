@@ -14,7 +14,7 @@ export function getRoutes () {
     <Route path='/reports/:org' component={app} >
       <IndexRoute component={Reports} />
       <Route name='page' path='on-call' component={ReportsOnCallList} />
-      <Route path='on-call/:slug' component={ReportsOnCallDetail} />
+      <Route path='on-call/:slug/:username' component={ReportsOnCallDetail} />
       <Route path='incident-frequency' component={IncidentFrequency} />
       <Redirect push path='*' to='/dash/:org#reports' />
     </Route>

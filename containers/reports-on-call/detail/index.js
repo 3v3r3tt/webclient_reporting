@@ -53,7 +53,7 @@ class ReportsOnCallDetail extends React.Component {
     const ReportHomeLink = <Link className='link--default' to={`/reports/${config.orgslug}`}>Reports</Link>
     const OnCallListLink = <Link className='link--default' to={`/reports/${config.orgslug}/on-call`}>On-call report</Link>
 
-    const BreadcrumbName = fullName || 'Error'
+    const BreadcrumbName = this.props.params.username || fullName || 'Error'
 
     const OnCallDetailTables =
       <div>
