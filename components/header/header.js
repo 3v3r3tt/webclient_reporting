@@ -197,7 +197,7 @@ class Header extends Component {
             </li>
 
             <li className='primary-nav-item'>
-              <a data-nav='reports' href='/#reports' className='current'>Reports</a>
+              <a data-nav='reports' href={'/reports/' + orgslug} className='current'>Reports</a>
             </li>
 
             { this._getBuyNowAdmin() }
