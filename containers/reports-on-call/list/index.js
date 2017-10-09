@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
-import { get as _get } from 'lodash'
 
 import Victory from '@victorops/victory'
 
@@ -44,8 +43,7 @@ class ReportsOnCallList extends Component {
   }
 
   _goToUserDetailPage (username) {
-    const userFullName = _get(username, 'columns[0].content', username.id)
-    this.props.router.push(`/reports/${this.props.params.org}/on-call/${username.id}/${userFullName}`)
+    this.props.router.push(`/reports/${this.props.params.org}/on-call/${username}`)
   }
 
   _generateOnCallRows (teamOnCallData) {
