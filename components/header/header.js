@@ -200,12 +200,6 @@ class Header extends Component {
               <a data-nav='reports' href='/#reports' className='current'>Reports</a>
             </li>
 
-            { (this._isPaidAdmin())
-                ? <li className='primary-nav-billing'>
-                  <a href={'/billing/' + orgslug} target='_blank'>Billing</a>
-                </li>
-              : null}
-
             { this._getBuyNowAdmin() }
             { this._getBuyNowNonAdmin() }
 
