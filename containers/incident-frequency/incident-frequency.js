@@ -56,7 +56,7 @@ class IncidentFrequency extends Component {
       chartType: name
     })
   }
-    
+
   _generateIncidentFrequencyRows (incidentFrequencyData) {
     if (!incidentFrequencyData) return []
     const generatedRows = incidentFrequencyData.map((data, index) => {
