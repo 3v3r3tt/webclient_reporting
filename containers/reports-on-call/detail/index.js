@@ -44,11 +44,15 @@ class ReportsOnCallDetail extends React.Component {
 
   render () {
     const slug = this.props.params.slug
-    const fullName = this.props.userOnCallData.getIn(['userData', 'user_rollup', 'full_name'])
     const totalOnCallHours = this.props.userOnCallData.getIn(['userData', 'user_rollup', 'total_hours_on_call'])
     const totalIncidentsWorked = this.props.userOnCallData.getIn(['userData', 'user_rollup', 'total_incidents_involved_with'])
     const segmentedOnCalls = this.props.segmentedUserOnCallData
     const incidents = this.props.userOnCallData.getIn(['userData', 'incidents'])
+
+    let fullName = 'Loading'
+    if (this.props.selectedUser === this.props.userOnCallData.getIn(['userData', 'user_rollup', 'username'])) {
+      fullName = this.props.userOnCallData.getIn(['userData', 'user_rollup', 'full_name'])
+    }
 
     const ReportHomeLink = <Link className='link--default' to={`/reports/${config.orgslug}`}>Reports</Link>
     const OnCallListLink = <Link className='link--default' to={`/reports/${config.orgslug}/on-call`}>On-call report</Link>
