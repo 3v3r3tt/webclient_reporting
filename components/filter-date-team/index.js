@@ -96,7 +96,6 @@ class Filter extends Component {
       <span className='filter--team-label'>
         <i className='fal fa-users' />
         <span className='filter--team-label-text'>{selectedTeamName}</span>
-        <i className='fas fa-angle-down' />
       </span>
 
     return (
