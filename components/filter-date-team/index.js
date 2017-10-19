@@ -2,6 +2,11 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
 import moment from 'moment'
+import when from 'when'
+import { fetch } from 'components/__utils/xhr'
+import config from 'components/__utils/config'
+import error from 'util/extendedLog'
+
 import CSVDownloadButton from '../csv-download-button'
 
 import Victory from '@victorops/victory'
@@ -34,16 +39,35 @@ class Filter extends Component {
     this._endDateChange = this._endDateChange.bind(this)
     this._isValidEndDate = this._isValidEndDate.bind(this)
     this._isValidBeginDate = this._isValidBeginDate.bind(this)
+    this._getTeamsForUser = this._getTeamsForUser.bind(this)
+
+    this.state = {
+      userTeams: null
+    }
   }
 
   componentDidMount () {
     this.props.getTeams()
+    if (this.props.isDetailPage) this._getTeamsForUser()
     this._getNewTableData()
+  }
+
+  _getTeamsForUser () {
+    const getUserTeams = fetch(`/api/v1/org/${config.auth.org.slug}/users/${this.props.selectedUser}/teams`)
+    when(getUserTeams)
+      .then((teams) => {
+        this.setState({
+          userTeams: teams.map((teamObject) => teamObject.team.slug)
+        })
+      }).catch((err) => {
+        error(`Error fetching teams for user: ${err}`)
+      })
   }
 
   _getNewTableData () {
     this.props.getData()
   }
+
   _endDateChange (momentDate) {
     this.props.setFilterOnCall({endDate: momentDate.valueOf()})
     this._getNewTableData()
@@ -73,7 +97,8 @@ class Filter extends Component {
 
   _renderTeamsDropdown () {
     const teams = this.props.teams
-    if (!teams.size) return null
+    const mustFilterTeams = this.props.isDetailPage && !this.state.userTeams
+    if (!teams.size || mustFilterTeams) return null
     let selectedTeamName = 'All'
 
     const dropDownItems = [
@@ -83,14 +108,16 @@ class Filter extends Component {
       }
     ]
 
-    teams.map((team) => {
+    teams.forEach((team) => {
       const teamName = team.get('name', '')
       const teamSlug = team.get('slug')
       if (this.props.selectedTeam === teamSlug) selectedTeamName = teamName
-      dropDownItems.push({
-        label: teamName,
-        handleClick: this._teamChange(teamSlug)
-      })
+      if (!this.state.userTeams || this.state.userTeams.indexOf(teamSlug) > -1) {
+        dropDownItems.push({
+          label: teamName,
+          handleClick: this._teamChange(teamSlug)
+        })
+      }
     })
     const LabelComponent =
       <span className='filter--team-label'>
