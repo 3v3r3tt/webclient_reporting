@@ -1,5 +1,4 @@
 import { fromJS } from 'immutable'
-import { sortBy } from 'lodash'
 
 import { TEAMS_UPDATE } from 'reporting/actions/teams'
 
@@ -18,5 +17,6 @@ export default function teamsReducer (state = initialState, action) {
 }
 
 const _updateTeams = (payload) => {
-  return fromJS(sortBy(payload, 'name'))
+  const sortFn = (x, y) => x.name.localeCompare(y.name)
+  return fromJS(payload.sort(sortFn))
 }
