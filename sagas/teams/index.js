@@ -1,16 +1,12 @@
-// vendor
 import debug from 'debug'
 
-import {
-  takeEvery
-} from 'redux-saga'
+import { takeEvery } from 'redux-saga'
 
 import {
     call,
     put
 } from 'redux-saga/effects'
 
-// lib
 import {
    updateTeams,
    TEAMS_GET
@@ -23,8 +19,14 @@ const error = debug('VO:sagas:error')
 function _getTeams (api) {
   return function * (action) {
     try {
-      const response = yield call(api.fetch, `/api/v2/org/${config.orgslug}/teams?include=policies`)
-      yield put(updateTeams(response))
+      let teamsResponse = yield call(api.fetch, `/api/v2/org/${config.orgslug}/teams?include=policies`)
+      if (action.payload && action.payload.filterBy) {
+        const userTeamsResponse = yield call(api.fetch, `/api/v1/org/${config.orgslug}/users/${action.payload.filterBy}/teams`)
+        const userTeams = userTeamsResponse.teams.map((t) => t.team.slug)
+        teamsResponse = teamsResponse.filter((t) => userTeams.indexOf(t.slug) > -1)
+      }
+
+      yield put(updateTeams(teamsResponse))
     } catch (err) {
       yield call(error, err)
     }

@@ -58,7 +58,6 @@ class ReportsOnCallDetail extends React.Component {
     const OnCallListLink = <Link className='link--default' to={`/reports/${config.orgslug}/on-call`}>On-call report</Link>
 
     const BreadcrumbName = this.props.params.username || fullName || 'Error'
-
     const OnCallDetailTables =
       <div>
         <h1 className='heading-3'>{fullName} on-call report</h1>
@@ -66,9 +65,10 @@ class ReportsOnCallDetail extends React.Component {
         <Filter
           beginDate={this.props.beginDate}
           endDate={this.props.endDate}
-          selectedUser={this.props.selectedUser}
+          selectedUser={this.props.params.slug}
           selectedTeam={this.props.selectedTeam}
           getData={this.props.getUserOnCallData}
+          filterTeamsBy={this.props.params.slug}
           isDetailPage
         />
         <HoursOnCallTable
