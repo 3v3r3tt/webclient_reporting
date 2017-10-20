@@ -25,7 +25,6 @@ class Reports extends React.Component {
           <div className='js-region-reports-nav view-section' style={{'paddingTop': '20px'}}>
             <div className='ui-mask' />
             <ul className='reports-nav'>
-              <h4> Reporting</h4>
               <a className='reports-nav-item post-mortems' href={this._createLink('#/reports/post-mortems')}>
                 <div className='card-header'>
                   <h6 className='card-header__heading'>Post-Incident Reviews</h6>
