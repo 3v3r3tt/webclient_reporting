@@ -14,11 +14,60 @@ class Reports extends React.Component {
     return href
   }
 
-  render () {
-    const orgslug = this.props.params.org
+  _getOnCallTile () {
     const onCallFeatureFlagIsTrue = this.props.featureFlags.getIn(['featureFlags', 'feature:oncallreport'], false)
-    const incidentFrequencyFlagIsTrue = this.props.featureFlags.getIn(['featureFlags', 'feature:incidentfrequencyreport'], false)
+    const orgslug = this.props.params.org
 
+    switch (onCallFeatureFlagIsTrue) {
+      case true:
+        return (
+          <Link to={`/reports/${orgslug}/on-call`} className='on-call reports-nav-item'>
+            <div className='card-header'>
+              <h6 className='card-header__heading'>On-Call</h6>
+            </div>
+            <div className='preview' />
+          </Link>
+        )
+      default:
+        return (
+          <a href='/dash/tron/#/reports/view/User' className='User reports-nav-item'>
+            <div className='card-header'>
+              <h6 className='card-header__heading'>User Metrics</h6>
+            </div>
+            <div className='preview' />
+          </a>
+        )
+    }
+  }
+
+  _getIncidentFrequencyTile () {
+    const incidentFrequencyFlagIsTrue = this.props.featureFlags.getIn(['featureFlags', 'feature:incidentfrequencyreport'], false)
+    const orgslug = this.props.params.org
+
+    switch (incidentFrequencyFlagIsTrue) {
+      case true:
+        return (
+          <Link to={`/reports/${orgslug}/incident-frequency`} className='Strategic reports-nav-item'>
+            <div className='card-header'>
+              <h6 className='card-header__heading'>Incident Frequency</h6>
+            </div>
+            <div className='preview' />
+          </Link>
+        )
+      default:
+        return (
+          <a href='/dash/tron/#/reports/view/Strategic' className='Strategic reports-nav-item'>
+            <div className='card-header'>
+              <h6 className='card-header__heading'>Incident Frequency</h6>
+            </div>
+            <div className='preview' />
+          </a>
+        )
+    }
+  }
+
+  render () {
+    const featchingFeatureFlags = this.props.featureFlags.get('isFetching', true)
     return (
       <div id='newadmin'>
         <div className='module-wrapper'>
@@ -53,39 +102,14 @@ class Reports extends React.Component {
             </ul>
           </div>
           <div className='js-advancedrep'>
-            <ul className='reports-nav'>
-              <h4>Advanced Reporting</h4>
-              {(incidentFrequencyFlagIsTrue)
-                ? <Link to={`/reports/${orgslug}/incident-frequency`} className='Strategic reports-nav-item'>
-                  <div className='card-header'>
-                    <h6 className='card-header__heading'>Incident Frequency</h6>
-                  </div>
-                  <div className='preview' />
-                </Link>
-                : <a href='/dash/tron/#/reports/view/Strategic' className='Strategic reports-nav-item'>
-                  <div className='card-header'>
-                    <h6 className='card-header__heading'>Incident Frequency</h6>
-                  </div>
-                  <div className='preview' />
-                </a>
-                }
-
-              { (onCallFeatureFlagIsTrue)
-               ? <Link to={`/reports/${orgslug}/on-call`} className='on-call reports-nav-item'>
-                 <div className='card-header'>
-                   <h6 className='card-header__heading'>On-Call</h6>
-                 </div>
-                 <div className='preview' />
-               </Link>
-              : <a href='/dash/tron/#/reports/view/User' className='User reports-nav-item'>
-                <div className='card-header'>
-                  <h6 className='card-header__heading'>User Metrics</h6>
-                </div>
-                <div className='preview' />
-              </a>
-              }
-
-            </ul>
+            { (!featchingFeatureFlags)
+              ? <ul className='reports-nav'>
+                <h4>Advanced Reporting</h4>
+                { this._getIncidentFrequencyTile() }
+                { this._getOnCallTile() }
+              </ul>
+              : null
+            }
           </div>
         </div>
       </div>
