@@ -4,7 +4,6 @@ import {
 } from 'immutable'
 
 import moment from 'moment'
-import data from './data'
 
 import {
   INCIDENT_FREQUENCY_GRAPH_GET,
@@ -20,28 +19,34 @@ export const initialState = _fromJS({
   loadingData: true,
   beginDate: moment().subtract(1, 'month').valueOf(),
   endDate: moment().valueOf(),
+  timezoneOffset: moment().utcOffset() / 60,
   selectedTeam: '',
+  chartType: 'Area',
+  segmentationType: 'Segment by service',
+  resolutionType: 'Display weekly',
   tableData: List(),
-  graphData: data,
+  graphData: null,
   error: {
-    list: false,
-    detail: false
+    graph: false,
+    table: false
   }
 })
 
-export default function onCallReport (state = initialState, action) {
+export default function incidentFrequencyReport (state = initialState, action) {
   switch (action.type) {
     case INCIDENT_FREQUENCY_TABLE_GET:
     case INCIDENT_FREQUENCY_GRAPH_GET:
       return _loadingData(state)
-    case INCIDENT_FREQUENCY_TABLE_UPDATE:
     case INCIDENT_FREQUENCY_GRAPH_UPDATE:
+      return _updateGraph(state, action.payload)
+    case INCIDENT_FREQUENCY_TABLE_UPDATE:
       return _updateTable(state, action.payload)
     case INCIDENT_FREQUENCY_FILTER_UPDATE:
       return _filterUpdate(state, action.payload)
-    case INCIDENT_FREQUENCY_TABLE_ERROR:
     case INCIDENT_FREQUENCY_GRAPH_ERROR:
-      return _setListErrorOnCall(state, action.payload)
+      return _setIncidentFrequencyGraphError(state, action.payload)
+    case INCIDENT_FREQUENCY_TABLE_ERROR:
+      return _setIncidentFrequencyTableError(state, action.payload)
     default : return state
   }
 }
@@ -50,11 +55,21 @@ const _loadingData = (state) => state.update('loadingData', () => true)
 const _filterUpdate = (state, payload) => state.merge(state, payload)
 
 function _updateTable (state, payload) {
-  return state.set('tableData', _fromJS(payload.data))
+  return state.set('tableData', _fromJS(payload))
               .update('loadingData', () => false)
-              .setIn(['error', 'list'], false)
+              .setIn(['error', 'table'], false)
 }
 
-function _setListErrorOnCall (state, payload) {
-  return state.setIn(['error', 'list'], _fromJS(payload.error))
+function _setIncidentFrequencyTableError (state, payload) {
+  return state.setIn(['error', 'table'], _fromJS(payload.error))
+}
+
+function _updateGraph (state, payload) {
+  return state.set('graphData', _fromJS(payload))
+              .update('loadingData', () => false)
+              .setIn(['error', 'table'], false)
+}
+
+function _setIncidentFrequencyGraphError (state, payload) {
+  return state.setIn(['error', 'graph'], _fromJS(payload.error))
 }

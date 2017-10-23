@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
 import moment from 'moment'
-import CSVDownloadButton from '../csv-download-button'
+import CSVDownloadButton from './csvDownloadButton'
 
 import Victory from '@victorops/victory'
 
@@ -27,7 +27,7 @@ function mapDispatchToProps (dispatch) {
   }
 }
 
-class Filter extends Component {
+class OnCallFilter extends Component {
   constructor () {
     super()
     this._beginDateChange = this._beginDateChange.bind(this)
@@ -143,4 +143,4 @@ class Filter extends Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Filter)
+export default connect(mapStateToProps, mapDispatchToProps)(OnCallFilter)

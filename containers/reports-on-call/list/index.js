@@ -4,7 +4,7 @@ import { Link } from 'react-router'
 
 import Victory from '@victorops/victory'
 
-import Filter from 'reporting/components/filter-date-team'
+import OnCallFilter from '../filter'
 
 import {
   reportingOnCallTeamGet
@@ -108,7 +108,7 @@ class ReportsOnCallList extends Component {
     const OnCallListView =
       <div>
         <p>&quot;On-call&quot; means this person was on the first step in an escalation policy.</p>
-        <Filter
+        <OnCallFilter
           beginDate={this.props.beginDate}
           endDate={this.props.endDate}
           selectedUser={this.props.selectedUser}

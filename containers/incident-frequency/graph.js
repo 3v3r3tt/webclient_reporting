@@ -1,11 +1,14 @@
 import React from 'react'
-// import Highcharts from 'highcharts'
 import ReactHighcharts from 'react-highcharts'
 
 function Graph (props) {
+  const GraphContent = props.data
+    ? <ReactHighcharts config={props.data} />
+    : <p>Loading Graph...</p>
+
   return (
     <div>
-      <ReactHighcharts config={props.data.toJS()} />
+      {GraphContent}
     </div>
   )
 }

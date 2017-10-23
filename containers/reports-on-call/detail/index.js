@@ -8,7 +8,7 @@ import {
 
 import { reportingOnCallFilterUpdate, reportingOnCallUserGet } from 'reporting/actions/reporting'
 
-import Filter from 'reporting/components/filter-date-team'
+import OnCallFilter from '../filter'
 import HoursOnCallTable from './hoursOnCallTable'
 import IncidentsOnCallTable from './incidentsOnCallTable'
 
@@ -62,7 +62,7 @@ class ReportsOnCallDetail extends React.Component {
       <div>
         <h1 className='heading-3'>{fullName} on-call report</h1>
 
-        <Filter
+        <OnCallFilter
           beginDate={this.props.beginDate}
           endDate={this.props.endDate}
           selectedUser={this.props.params.slug}

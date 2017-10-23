@@ -4,7 +4,7 @@ import config from 'components/__utils/config'
 import Victory from '@victorops/victory'
 const { Dropdown } = Victory
 
-class CSVDownloadButton extends Component {
+class OnCallCSVDownloadButton extends Component {
   render () {
     const {
       beginDate,
@@ -76,4 +76,4 @@ class CSVDownloadButton extends Component {
   }
 }
 
-export default CSVDownloadButton
+export default OnCallCSVDownloadButton

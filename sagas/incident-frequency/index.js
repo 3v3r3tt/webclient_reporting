@@ -17,21 +17,32 @@ import {
 
 import config from 'components/__utils/config'
 
+// TODO: remove this once API working
+/*eslint-disable */
+import mockGraphData from './sampleData/graphData'
+import mockTableData from './sampleData/tableData'
+
 export const _getincidentFrequencyState = (state) => state.incidentFrequency
 
 function _getIncidentFrequencyTable ({create}, logError) {
   return function * () {
     try {
-      let IncidentFrequencyReportEndpoint = `/api/v1/org/${config.auth.org.slug}/reports/incidentfreqtable`
-      let reportingState = yield select(_getincidentFrequencyState)
+      const IncidentFrequencyReportEndpoint = `/api/v1/org/${config.auth.org.slug}/reports/incidentfrequencysegmentincidents`
+      const reportingState = yield select(_getincidentFrequencyState)
       const data = {
         team: reportingState.get('selectedTeam', ''),
-        begin: reportingState.get('beginDate', ''),
-        end: reportingState.get('endDate', '')
+        start_time: reportingState.get('beginDate', ''),
+        end_time: reportingState.get('endDate', ''),
+        segment_name: reportingState.get('selectedSegment'),
+        segment_type: reportingState.get('selectedSegmentType'),
+        tz_offset: reportingState.get('tz_offset')
       }
 
-      const IncidentFrequencyReportData = yield call(create, IncidentFrequencyReportEndpoint, data)
-      yield put(incidentFrequencyTableUpdate(IncidentFrequencyReportData))
+      // const incidentFrequencyReportData = yield call(create, IncidentFrequencyReportEndpoint, data)
+      // TODO: remove this once API works
+      const incidentFrequencyReportData = mockTableData
+
+      yield put(incidentFrequencyTableUpdate(incidentFrequencyReportData))
     } catch (err) {
       yield call(logError, err)
       yield put(incidentFrequencyTableError({error: {list: true}}))
@@ -42,22 +53,31 @@ function _getIncidentFrequencyTable ({create}, logError) {
 function _getIncidentFrequencyGraph ({create}, logError) {
   return function * () {
     try {
-      let IncidentFrequencyReportEndpoint = `/api/v1/org/${config.auth.org.slug}/reports/incidentfreqgraph`
-      let reportingState = yield select(_getincidentFrequencyState)
+      const IncidentFrequencyReportEndpoint = `/api/v1/org/${config.auth.org.slug}/reports/incidentfrequencygraph`
+      const reportingState = yield select(_getincidentFrequencyState)
       const data = {
         team: reportingState.get('selectedTeam', ''),
-        begin: reportingState.get('beginDate', ''),
-        end: reportingState.get('endDate', '')
+        start_time: reportingState.get('beginDate', ''),
+        end_time: reportingState.get('endDate', ''),
+        display_by: reportingState.get('display_by'),
+        segment_type: reportingState.get('selectedSegmentType'),
+        tz_offset: reportingState.get('tz_offset')
       }
 
-      const IncidentFrequencyReportData = yield call(create, IncidentFrequencyReportEndpoint, data)
-      yield put(incidentFrequencyGraphUpdate(IncidentFrequencyReportData))
+      // const IncidentFrequencyReportData = yield call(create, IncidentFrequencyReportEndpoint, data)
+      // TODO: remove this once API works
+      const incidentFrequencyReportData = mockGraphData
+
+      yield put(incidentFrequencyGraphUpdate(incidentFrequencyReportData))
     } catch (err) {
       yield call(logError, err)
       yield put(incidentFrequencyGraphError({error: {list: true}}))
     }
   }
 }
+
+// TODO: remove this once API works
+/*eslint-enable */
 
 export const Test = {
   _getIncidentFrequencyTable,

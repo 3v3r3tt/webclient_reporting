@@ -3,16 +3,17 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import Victory from '@victorops/victory'
 
-import Filter from 'reporting/components/filter-date-team'
+import moment from 'moment'
+
+import Filter from './filter'
 import Graph from './graph'
 
 import {
-  incidentFrequencyTableGet
+  incidentFrequencyGraphGet
 } from 'reporting/actions/incident-frequency'
 
 const {
   BreadCrumbs,
-  Dropdown,
   Table
 } = Victory
 
@@ -23,74 +24,119 @@ function mapStateToProps (state) {
     selectedTeam: state.incidentFrequency.get('selectedTeam'),
     beginDate: state.incidentFrequency.get('beginDate'),
     endDate: state.incidentFrequency.get('endDate'),
-    data: state.incidentFrequency.get('graphData')
+    data: state.incidentFrequency.get('graphData'),
+    chartType: state.incidentFrequency.get('chartType'),
+    segmentationType: state.incidentFrequency.get('segmentationType'),
+    resolutionType: state.incidentFrequency.get('resolutionType')
   }
 }
 
 function mapDispatchToProps (dispatch) {
   return {
-    getTeamIFData: (payload) => dispatch(incidentFrequencyTableGet(payload))
+    getTeamIncidentFrequencyData: (payload) => dispatch(incidentFrequencyGraphGet(payload))
   }
 }
 
 class IncidentFrequency extends Component {
   constructor (props) {
     super(props)
+
+    this._transformGraphData = this._transformGraphData.bind(this)
+
     this.state = {
-      data: props.data,
-      chartType: 'Line'
+      formattedData: null
     }
-
-    this.setChartType.bind(this)
-
-    this.chartTypes = [
-      { label: 'Line', handleClick: () => { this.setChartType('line', 'Line') } },
-      { label: 'Column', handleClick: () => { this.setChartType('column', 'Column') } },
-      { label: 'Area', handleClick: () => { this.setChartType('area', 'Area') } }
-    ]
   }
 
-  setChartType (type, name) {
-    this.setState({
-      data: this.state.data.set('chart', this.state.data.get('chart').set('type', type)),
-      chartType: name
+  _transformGraphData (rawData) {
+    if (!rawData) return false
+    rawData = rawData.toJS()
+
+    let startDateBuckets = []
+    let segmentSeriesData = []
+    rawData.display_buckets.forEach((bucket, outerIndex) => {
+      startDateBuckets.push(moment(Number(bucket.bucket_start_date)).format('MMM D'))
+      bucket.segments_and_values.forEach((segment, index) => {
+        if (outerIndex === 0) {
+          segmentSeriesData[index] = {
+            name: segment.segment_name,
+            data: [segment.bucket_total]
+          }
+        } else {
+          segmentSeriesData[index].data.push(segment.bucket_total)
+        }
+      })
     })
+
+    return {
+      chart: {
+        type: this.props.chartType.toLowerCase()
+      },
+
+      title: {
+        text: 'Incident Frequency Report'
+      },
+
+      xAxis: {
+        categories: startDateBuckets,
+        type: 'linear',
+        gridLineWidth: 1,
+        tickInterval: 1,
+        tickColor: '#d6d6d6',
+        tickmarkPlacement: 'on',
+        crosshair: {
+          width: 1,
+          color: '#7e7e7e'
+        }
+      },
+      yAxis: {
+        type: 'linear',
+        title: {
+          text: 'Number of Incidents'
+        },
+        gridLineWidth: 0
+      },
+
+      tooltip: {
+        crosshairs: true,
+        shared: true,
+        backgroundColor: 'white',
+        borderColor: '#7e7e7e'
+      },
+
+      plotOptions: {
+        line: {
+          enableMouseTracking: true,
+          marker: {
+            enabled: false
+          }
+        },
+
+        area: {
+          stacking: 'normal'
+        }
+      },
+
+      series: segmentSeriesData
+    }
   }
 
-  _generateIncidentFrequencyRows (incidentFrequencyData) {
+  _generateIncidentFrequencyTableRows (incidentFrequencyData) {
     if (!incidentFrequencyData) return []
-    const generatedRows = incidentFrequencyData.map((data, index) => {
+    const generatedRows = incidentFrequencyData.get('segments').map((segment, index) => {
       return ({
-        id: data.get('name', ''),
+        id: segment.get('segment_name'),
         key: index,
         columns: [{
-          content: data.get('name', ''),
-          value: data.get('name', ''),
+          content: segment.get('segment_name'),
+          value: segment.get('segment_name'),
           id: 'name',
           type: 'cell'
         },
         {
-          content: data.get('service', 0),
-          value: data.get('service', 0),
-          id: 'service',
-          type: 'cell'
-        },
-        {
-          content: data.get('alert_count', 0),
-          value: data.get('alert_count', 0),
-          id: 'alert_count',
-          type: 'cell'
-        },
-        {
-          content: data.get('time_to_ack', 0),
-          value: data.get('time_to_ack', 0),
-          id: 'time_to_ack',
-          type: 'cell'
-        },
-        {
-          content: data.get('time_to_resolve', 0),
-          value: data.get('time_to_resolve', 0),
-          id: 'time_to_resolve',
+          content: segment.get('bucket_total'),
+          value: segment.get('bucket_total'),
+          id: 'total',
           type: 'cell'
         }]
       })
@@ -100,32 +146,19 @@ class IncidentFrequency extends Component {
 
   render () {
     const ReportHomeLink = <Link className='link--default' to={`/reports/${config.orgslug}`}>Reports</Link>
-    const generatedRows = this._generateIncidentFrequencyRows(this.props.incidentFrequencyData)
+    const generatedRows = this._generateIncidentFrequencyTableRows(this.props.data)
     const incidentFrequencyTableConfig = {
       columnHeaders: [
-        {
-          label: 'Incident Name',
-          isSortable: true
-        },
         {
           label: 'Service',
           isSortable: true
         },
         {
-          label: '# of Alerts',
-          isSortable: true
-        },
-        {
-          label: 'TTA',
-          isSortable: true
-        },
-        {
-          label: 'TTR',
+          label: '# of Incidents',
           isSortable: true
         }],
-      columnWidths: ['50%', '15%', '11%', '12%', '12%'],
-      rowItems: generatedRows,
-      generateRowClickFn: this._rowClickFnGenerator
+      columnWidths: ['80%', '20%'],
+      rowItems: generatedRows
     }
 
     return (
@@ -142,15 +175,13 @@ class IncidentFrequency extends Component {
           endDate={this.props.endDate}
           selectedUser={null}
           selectedTeam={this.props.selectedTeam}
-          getData={this.props.getTeamIFData}
+          chartType={this.props.chartType}
+          segmentationType={this.props.segmentationType}
+          resolutionType={this.props.resolutionType}
+          getData={this.props.getTeamIncidentFrequencyData}
         />
 
-        <Dropdown
-          dropdownItems={this.chartTypes}
-          label={this.state.chartType}
-          triggerClasses={['btn', 'btn-secondary', 'dropdown-btn']} />
-
-        <Graph data={this.state.data} />
+        <Graph data={this._transformGraphData(this.props.data)} />
 
         <div className='has-loading-gradient margin-top-10'>
           <Table {...incidentFrequencyTableConfig} showLoader={this.props.isLoading} />
