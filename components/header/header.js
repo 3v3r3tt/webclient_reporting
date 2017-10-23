@@ -64,7 +64,7 @@ class Header extends Component {
     const value = event.target.value
     const path = browserHistory.getCurrentLocation().pathname.split('/')
     path[2] = value
-    browserHistory.push(path.join('/'))
+    browserHistory.push(path.slice(0, 3).join('/'))
 
     window.location.reload(false)
   }
