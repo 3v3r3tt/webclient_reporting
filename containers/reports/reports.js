@@ -30,7 +30,7 @@ class Reports extends React.Component {
         )
       default:
         return (
-          <a href='/dash/tron/#/reports/view/User' className='User reports-nav-item'>
+          <a href={`/dash/${orgslug}/#/reports/view/User`} className='User reports-nav-item'>
             <div className='card-header'>
               <h6 className='card-header__heading'>User Metrics</h6>
             </div>
@@ -56,7 +56,7 @@ class Reports extends React.Component {
         )
       default:
         return (
-          <a href='/dash/tron/#/reports/view/Strategic' className='Strategic reports-nav-item'>
+          <a href={`/dash/${orgslug}/#/reports/view/Strategic`} className='Strategic reports-nav-item'>
             <div className='card-header'>
               <h6 className='card-header__heading'>Incident Frequency</h6>
             </div>
