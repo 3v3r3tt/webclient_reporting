@@ -53,6 +53,7 @@ class IncidentFrequencyFilter extends Component {
     this._endDateChange = this._endDateChange.bind(this)
     this._isValidEndDate = this._isValidEndDate.bind(this)
     this._isValidBeginDate = this._isValidBeginDate.bind(this)
+    this._checkDateRange = this._checkDateRange.bind(this)
     this._setFilter = this._setFilter.bind(this)
   }
 
@@ -64,13 +65,48 @@ class IncidentFrequencyFilter extends Component {
   _getNewTableData () {
     this.props.getData()
   }
+
+  _setFilter (type, value) {
+    const payload = {[type]: value}
+    this.props.setFilterIncidentFrequency(payload)
+    this._getNewTableData()
+  }
+
   _endDateChange (momentDate) {
     this.props.setFilterIncidentFrequency({endDate: momentDate.valueOf()})
-    this._getNewTableData()
+    this._checkDateRange(moment(this.props.beginDate), momentDate)
   }
 
   _beginDateChange (momentDate) {
     this.props.setFilterIncidentFrequency({beginDate: momentDate.valueOf()})
+    this._checkDateRange(momentDate, moment(this.props.endDate))
+  }
+
+  _checkDateRange (begin, end) {
+    const rangeIsUnderWeek = !begin.clone().add(1, 'week').isBefore(end)
+    const rangeIsUnderMonth = !begin.clone().add(1, 'month').isBefore(end)
+    if (rangeIsUnderWeek) {
+      this.resolutionTypes = [
+        {label: 'Display daily', handleClick: () => { this._setFilter('resolutionType', 'Display daily') }}
+      ]
+      if (this.props.resolutionType === 'Display weekly' || this.props.resolutionType === 'Display monthly') {
+        this._setFilter('resolutionType', 'Display daily')
+      }
+    } else if (rangeIsUnderMonth) {
+      this.resolutionTypes = [
+        {label: 'Display daily', handleClick: () => { this._setFilter('resolutionType', 'Display daily') }},
+        {label: 'Display weekly', handleClick: () => { this._setFilter('resolutionType', 'Display weekly') }}
+      ]
+      if (this.props.resolutionType === 'Display monthly') {
+        this._setFilter('resolutionType', 'Display weekly')
+      }
+    } else {
+      this.resolutionTypes = [
+        {label: 'Display daily', handleClick: () => { this._setFilter('resolutionType', 'Display daily') }},
+        {label: 'Display weekly', handleClick: () => { this._setFilter('resolutionType', 'Display weekly') }},
+        {label: 'Display monthly', handleClick: () => { this._setFilter('resolutionType', 'Display monthly') }}
+      ]
+    }
     this._getNewTableData()
   }
 
@@ -127,12 +163,6 @@ class IncidentFrequencyFilter extends Component {
         customClasses={['filter--dropdown-div']}
       />
     )
-  }
-
-  _setFilter (type, value) {
-    const payload = {[type]: value}
-    this.props.setFilterIncidentFrequency(payload)
-    this._getNewTableData()
   }
 
   render () {
