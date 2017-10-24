@@ -73,6 +73,7 @@ class Reports extends React.Component {
         <div className='module-wrapper'>
           <div className='js-region-reports-nav view-section' style={{'paddingTop': '20px'}}>
             <div className='ui-mask' />
+            <h4>Reporting</h4>
             <ul className='reports-nav'>
               <a className='reports-nav-item post-mortems' href={this._createLink('#/reports/post-mortems')}>
                 <div className='card-header'>
