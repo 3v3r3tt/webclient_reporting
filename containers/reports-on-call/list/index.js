@@ -98,6 +98,7 @@ class ReportsOnCallList extends Component {
           isSortable: true
         }],
       columnWidths: ['40%', '30%', '30%'],
+      loaderRowHeight: 40,
       rowItems: generatedRows,
       generateRowClickFn: this._rowClickFnGenerator
     }
