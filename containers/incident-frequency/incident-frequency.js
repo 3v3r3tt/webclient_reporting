@@ -9,7 +9,9 @@ import Filter from './filter'
 import Graph from './graph'
 
 import {
-  incidentFrequencyGraphGet
+  incidentFrequencyGraphGet,
+  incidentFrequencyTableReduce,
+  incidentFrequencyTableReset
 } from 'reporting/actions/incident-frequency'
 
 const {
@@ -27,13 +29,16 @@ function mapStateToProps (state) {
     data: state.incidentFrequency.get('graphData'),
     chartType: state.incidentFrequency.get('chartType'),
     segmentationType: state.incidentFrequency.get('segmentationType'),
-    resolutionType: state.incidentFrequency.get('resolutionType')
+    resolutionType: state.incidentFrequency.get('resolutionType'),
+    reducedData: state.incidentFrequency.get('reducedData')
   }
 }
 
 function mapDispatchToProps (dispatch) {
   return {
-    getTeamIncidentFrequencyData: (payload) => dispatch(incidentFrequencyGraphGet(payload))
+    getTeamIncidentFrequencyData: (payload) => dispatch(incidentFrequencyGraphGet(payload)),
+    updateReducedTable: (payload) => dispatch(incidentFrequencyTableReduce(payload)),
+    resetReducedTable: (payload) => dispatch(incidentFrequencyTableReset(payload))
   }
 }
 
@@ -42,13 +47,10 @@ class IncidentFrequency extends Component {
     super(props)
 
     this._transformGraphData = this._transformGraphData.bind(this)
-
-    this.state = {
-      formattedData: null
-    }
+    this.generateReducedGraph = this.generateReducedGraph.bind(this)
   }
 
-  _transformGraphData (rawData) {
+  _transformGraphData (rawData, generateGraph) {
     if (!rawData) return false
     rawData = rawData.toJS()
 
@@ -70,7 +72,14 @@ class IncidentFrequency extends Component {
 
     return {
       chart: {
-        type: this.props.chartType.toLowerCase()
+        type: this.props.chartType.toLowerCase(),
+        events: {
+          click: function (e) {
+            let chart = this
+            let point = chart.series[0].searchPoint(chart.pointer.normalize(e))
+            generateGraph(point.category, point.series.chart.series, point.x)
+          }
+        }
       },
 
       title: {
@@ -109,16 +118,54 @@ class IncidentFrequency extends Component {
           enableMouseTracking: true,
           marker: {
             enabled: false
-          }
+          },
+          animation: this.props.reducedData.get('animation')
         },
 
         area: {
-          stacking: 'normal'
+          stacking: 'normal',
+          animation: this.props.reducedData.get('animation')
+        },
+
+        series: {
+          point: {
+            events: {
+              click: function (e) {
+                generateGraph(this.category, this.series.chart.series, this.x)
+              }
+            }
+          }
         }
       },
 
       series: segmentSeriesData
     }
+  }
+
+  generateReducedGraph (name, series, pointIndex) {
+    const generatedRows = series.map((segment, index) => {
+      return ({
+        id: segment.name,
+        key: index,
+        columns: [{
+          content: segment.name,
+          value: segment.name,
+          id: 'name',
+          type: 'cell'
+        },
+        {
+          content: segment.yData[pointIndex],
+          value: segment.yData[pointIndex],
+          id: 'total',
+          type: 'cell'
+        }]
+      })
+    })
+    this.props.updateReducedTable({
+      reducedRows: generatedRows,
+      animation: false,
+      columnTitle: name
+    })
   }
 
   _generateIncidentFrequencyTableRows (incidentFrequencyData) {
@@ -144,9 +191,35 @@ class IncidentFrequency extends Component {
     return generatedRows.toJS()
   }
 
+  _determineResolutionMomentType (label) {
+    switch (label) {
+      case 'Display daily': return 'day'
+      case 'Display weekly': return 'week'
+      case 'Display monthly': return 'month'
+      default: throw new Error('Unexpected date resolution type!')
+    }
+  }
+
+  _determineDateRangeLabel (columnTitle) {
+    const clickDate = moment(columnTitle, 'MMM D').date()
+    const clickMonth = moment(columnTitle, 'MMM D').month()
+    const clickYear = moment().month() > clickMonth ? moment().year() : moment().year() - 1
+    const fromDate = moment(new Date(clickYear, clickMonth, clickDate))
+    const dateResolution = this._determineResolutionMomentType(this.props.resolutionType)
+    const toDate = fromDate.clone().add(1, dateResolution)
+    return `# of Incidents (${fromDate.format('MMM D')} - ${toDate.format('MMM D')})`
+  }
+
   render () {
     const ReportHomeLink = <Link className='link--default' to={`/reports/${config.orgslug}`}>Reports</Link>
     const generatedRows = this._generateIncidentFrequencyTableRows(this.props.data)
+
+    const columnTitle = this.props.reducedData.get('columnTitle')
+    let incidentColumnLabel = '# of Incidents'
+    if (columnTitle) {
+      incidentColumnLabel = this._determineDateRangeLabel(columnTitle)
+    }
+
     const incidentFrequencyTableConfig = {
       columnHeaders: [
         {
@@ -154,11 +227,11 @@ class IncidentFrequency extends Component {
           isSortable: true
         },
         {
-          label: '# of Incidents',
+          label: incidentColumnLabel,
           isSortable: true
         }],
-      columnWidths: ['80%', '20%'],
-      rowItems: generatedRows
+      columnWidths: ['70%', '30%'],
+      rowItems: this.props.reducedData.get('reducedRows') ? this.props.reducedData.get('reducedRows').toJS() : generatedRows
     }
 
     return (
@@ -181,7 +254,10 @@ class IncidentFrequency extends Component {
           getData={this.props.getTeamIncidentFrequencyData}
         />
 
-        <Graph data={this._transformGraphData(this.props.data)} />
+        <Graph
+          data={this._transformGraphData(this.props.data, this.generateReducedGraph)}
+          reset={this.props.resetReducedTable}
+          drawButton={this.props.reducedData.get('reducedRows') !== null} />
 
         <div className='has-loading-gradient margin-top-10'>
           <Table {...incidentFrequencyTableConfig} showLoader={this.props.isLoading} />

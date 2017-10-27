@@ -6,7 +6,10 @@ import moment from 'moment'
 import Victory from '@victorops/victory'
 
 import { getTeams } from 'reporting/actions/teams'
-import { incidentFrequencyFilterUpdate } from 'reporting/actions/incident-frequency'
+import {
+  incidentFrequencyFilterUpdate,
+  incidentFrequencyTableReset
+} from 'reporting/actions/incident-frequency'
 
 const {
   Dropdown,
@@ -22,7 +25,8 @@ function mapStateToProps (state) {
 function mapDispatchToProps (dispatch) {
   return {
     getTeams: (payload) => dispatch(getTeams(payload)),
-    setFilterIncidentFrequency: (payload) => dispatch(incidentFrequencyFilterUpdate(payload))
+    setFilterIncidentFrequency: (payload) => dispatch(incidentFrequencyFilterUpdate(payload)),
+    resetReducedTable: (payload) => dispatch(incidentFrequencyTableReset(payload))
   }
 }
 
@@ -31,9 +35,24 @@ class IncidentFrequencyFilter extends Component {
     super(props)
 
     this.chartTypes = [
-      { label: 'Line', handleClick: () => { this._setFilter('chartType', 'Line') } },
-      { label: 'Column', handleClick: () => { this._setFilter('chartType', 'Column') } },
-      { label: 'Area', handleClick: () => { this._setFilter('chartType', 'Area') } }
+      { label: 'Line',
+        handleClick: () => {
+          this._setFilter('chartType', 'Line')
+          this.props.resetReducedTable()
+        }
+      },
+      { label: 'Column',
+        handleClick: () => {
+          this._setFilter('chartType', 'Column')
+          this.props.resetReducedTable()
+        }
+      },
+      { label: 'Area',
+        handleClick: () => {
+          this._setFilter('chartType', 'Area')
+          this.props.resetReducedTable()
+        }
+      }
     ]
 
     this.segmentationTypes = [

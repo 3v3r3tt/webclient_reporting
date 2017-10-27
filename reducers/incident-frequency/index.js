@@ -12,7 +12,9 @@ import {
   INCIDENT_FREQUENCY_TABLE_GET,
   INCIDENT_FREQUENCY_TABLE_UPDATE,
   INCIDENT_FREQUENCY_TABLE_ERROR,
-  INCIDENT_FREQUENCY_FILTER_UPDATE
+  INCIDENT_FREQUENCY_FILTER_UPDATE,
+  INCIDENT_FREQUENCY_TABLE_REDUCE,
+  INCIDENT_FREQUENCY_TABLE_RESET
 } from 'reporting/actions/incident-frequency'
 
 export const initialState = _fromJS({
@@ -29,6 +31,11 @@ export const initialState = _fromJS({
   error: {
     graph: false,
     table: false
+  },
+  reducedData: {
+    reducedRows: null,
+    animation: true,
+    columnTitle: null
   }
 })
 
@@ -47,6 +54,10 @@ export default function incidentFrequencyReport (state = initialState, action) {
       return _setIncidentFrequencyGraphError(state, action.payload)
     case INCIDENT_FREQUENCY_TABLE_ERROR:
       return _setIncidentFrequencyTableError(state, action.payload)
+    case INCIDENT_FREQUENCY_TABLE_REDUCE:
+      return _updateReducedTable(state, action.payload)
+    case INCIDENT_FREQUENCY_TABLE_RESET:
+      return _resetReducedTable(state, action.payload)
     default : return state
   }
 }
@@ -72,4 +83,16 @@ function _updateGraph (state, payload) {
 
 function _setIncidentFrequencyGraphError (state, payload) {
   return state.setIn(['error', 'graph'], _fromJS(payload.error))
+}
+
+function _updateReducedTable (state, payload) {
+  return state.set('reducedData', _fromJS(payload))
+}
+
+function _resetReducedTable (state, payload) {
+  return state.set('reducedData', _fromJS({
+    reducedRows: null,
+    animation: true,
+    columnTitle: null
+  }))
 }
