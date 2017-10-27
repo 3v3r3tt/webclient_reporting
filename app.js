@@ -3,6 +3,7 @@ import React from 'react'
 import { fromJS } from 'immutable'
 import { Provider } from 'react-redux'
 import { getRoutes } from './routes'
+import initRaygun from 'util/initRaygun'
 import configureStore from './store/configureStore'
 
 import {
@@ -27,6 +28,8 @@ const store = configureStore({
     routes: fromJS(VO_ROUTES)
   }
 })
+
+initRaygun()
 
 export default function () {
   render(
