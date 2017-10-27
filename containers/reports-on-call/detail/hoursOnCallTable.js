@@ -147,7 +147,7 @@ class HoursOnCallTable extends React.Component {
           label: 'On-call Override',
           isSortable: true
         }],
-      loaderRowHeight: 40,
+      loaderRowHeight: 42,
       rowItems: generatedRows,
       customClasses: generatedRows.length > ON_CALL_LIMIT ? ['on-call--user-hours--table'] : []
     }

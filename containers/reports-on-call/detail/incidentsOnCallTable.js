@@ -172,7 +172,7 @@ class IncidentsOnCallTable extends React.Component {
           label: 'Who took action'
         }],
       columnWidths: ['30%', '40%', '30%'],
-      loaderRowHeight: 40,
+      loaderRowHeight: 42,
       loaderRows: 2,
       rowItems: generatedRows,
       customClasses: generatedRows.length > INCIDENT_LIMIT ? ['on-call--user-incidents--table'] : []
