@@ -22,7 +22,7 @@ export const initialState = _fromJS({
   timezoneOffset: moment().utcOffset() / 60,
   selectedTeam: '',
   chartType: 'Area',
-  segmentationType: 'Segment by service',
+  segmentationType: 'Segment by integration',
   resolutionType: 'Display weekly',
   tableData: List(),
   graphData: null,
