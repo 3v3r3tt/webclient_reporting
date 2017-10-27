@@ -144,7 +144,7 @@ class HoursOnCallTable extends React.Component {
           isSortable: true
         },
         {
-          label: 'On-call Override',
+          label: 'Scheduled Override',
           isSortable: true
         }],
       loaderRowHeight: 42,
@@ -154,7 +154,7 @@ class HoursOnCallTable extends React.Component {
 
     return (
       <div className='oncall--user_hours'>
-        <h2 className='text-weight__bold padded-bottom reports-oncall__heading heading-5'>Hours on-call <span className='text-weight__regular reports-oncall__heading'>({this.props.totalHours} hours )</span></h2>
+        <h2 className='text-weight__bold padded-bottom reports-oncall__heading heading-5'>Hours on-call <span className='text-weight__regular reports-oncall__heading'>({this.props.totalHours} hours)</span></h2>
         <p className='padded-double-bottom'>"On-call" means the person was on the first step in an escalation policy.</p>
 
         <div className='has-loading-gradient'>
