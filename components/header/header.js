@@ -6,7 +6,8 @@ import { connect } from 'react-redux'
 import moment from 'vendor/moment'
 
 import {
-  browserHistory
+  browserHistory,
+  Link
 } from 'react-router'
 
 import {
@@ -197,7 +198,7 @@ class Header extends Component {
             </li>
 
             <li className='primary-nav-item'>
-              <a data-nav='reports' href={'/reports/' + orgslug} className='current'>Reports</a>
+              <Link className='link--default' to={`/reports/${orgslug}`}>Reports</Link>
             </li>
 
             { this._getBuyNowAdmin() }

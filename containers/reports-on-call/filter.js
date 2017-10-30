@@ -124,12 +124,14 @@ class OnCallFilter extends Component {
                 beginDate={{
                   isValidDate: this._isValidBeginDate,
                   onChange: this._beginDateChange,
-                  defaultValue: this.props.beginDate
+                  defaultValue: this.props.beginDate,
+                  value: this.props.beginDate
                 }}
                 endDate={{
                   isValidDate: this._isValidEndDate,
                   onChange: this._endDateChange,
-                  defaultValue: this.props.endDate
+                  defaultValue: this.props.endDate,
+                  value: this.props.endDate
                 }}
             />
             </div>

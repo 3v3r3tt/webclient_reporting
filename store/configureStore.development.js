@@ -3,8 +3,10 @@
 import createSagaMiddleware from 'redux-saga'
 
 import {
-    autoRehydrate
+    autoRehydrate,
+    persistStore
 } from 'redux-persist'
+import immutableTransform from 'redux-persist-transform-immutable'
 
 import {
     applyMiddleware,
@@ -21,11 +23,13 @@ import { api } from 'components/__utils/xhr'
 
 // ---------------------------------------------------------------------------
 
+const { VO_CONFIG } = window
+
 const sagaMiddleware = createSagaMiddleware()
 
 const finalCreateStore = compose(
-    autoRehydrate(),
     applyMiddleware(sagaMiddleware),
+    autoRehydrate(),
     global && global.devToolsExtension ? global.devToolsExtension() : f => f
 )(createStore)
 
@@ -39,6 +43,12 @@ export default function store (initialData) {
   )
 
   sagaMiddleware.run(createSagas(api))
+
+  persistStore(voStore, {
+    whitelist: ['reportingOnCall', 'incidentFrequency'],
+    transforms: [immutableTransform()],
+    keyPrefix: VO_CONFIG.orgslug + ':'
+  })
 
   return voStore
 }
