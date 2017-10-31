@@ -1,6 +1,7 @@
 // On-call Reports
 export const INCIDENT_FREQUENCY_TABLE_GET = 'INCIDENT_FREQUENCY_TABLE_GET'
 export const INCIDENT_FREQUENCY_TABLE_UPDATE = 'INCIDENT_FREQUENCY_Table_UPDATE'
+export const INCIDENT_FREQUENCY_INNER_TABLE_RESET = 'INCIDENT_FREQUENCY_INNER_TABLE_RESET'
 export const INCIDENT_FREQUENCY_TABLE_ERROR = 'INCIDENT_FREQUENCY_Table_ERROR'
 export const INCIDENT_FREQUENCY_GRAPH_GET = 'INCIDENT_FREQUENCY_GRAPH_GET'
 export const INCIDENT_FREQUENCY_GRAPH_UPDATE = 'INCIDENT_FREQUENCY_GRAPH_UPDATE'
@@ -19,6 +20,13 @@ export function incidentFrequencyFilterUpdate (payload = {}) {
 export function incidentFrequencyTableGet (payload = {}) {
   return {
     type: INCIDENT_FREQUENCY_TABLE_GET,
+    payload
+  }
+}
+
+export function incidentFrequencyInnerTableReset (payload = {}) {
+  return {
+    type: INCIDENT_FREQUENCY_INNER_TABLE_RESET,
     payload
   }
 }

@@ -47,7 +47,7 @@ class Reports extends React.Component {
     switch (incidentFrequencyFlagIsTrue) {
       case true:
         return (
-          <Link to={`/reports/${orgslug}/incident-frequency`} className='Strategic reports-nav-item'>
+          <Link to={`/reports/${orgslug}/incident-frequency`} className='Strategic reports-nav-item incident-frequency'>
             <div className='card-header'>
               <h6 className='card-header__heading'>Incident Frequency</h6>
             </div>

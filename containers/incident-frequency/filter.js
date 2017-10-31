@@ -6,8 +6,13 @@ import moment from 'moment'
 import Victory from '@victorops/victory'
 
 import { getTeams } from 'reporting/actions/teams'
+
 import {
   incidentFrequencyFilterUpdate,
+  incidentFrequencyGraphGet,
+  incidentFrequencyTableGet,
+  incidentFrequencyInnerTableReset,
+  incidentFrequencyTableReduce,
   incidentFrequencyTableReset
 } from 'reporting/actions/incident-frequency'
 
@@ -18,7 +23,13 @@ const {
 
 function mapStateToProps (state) {
   return {
-    teams: state.teams
+    teams: state.teams,
+    selectedTeam: state.incidentFrequency.get('selectedTeam'),
+    beginDate: state.incidentFrequency.get('beginDate'),
+    endDate: state.incidentFrequency.get('endDate'),
+    chartType: state.incidentFrequency.get('chartType'),
+    segmentationType: state.incidentFrequency.get('segmentationType'),
+    resolutionType: state.incidentFrequency.get('resolutionType')
   }
 }
 
@@ -26,6 +37,10 @@ function mapDispatchToProps (dispatch) {
   return {
     getTeams: (payload) => dispatch(getTeams(payload)),
     setFilterIncidentFrequency: (payload) => dispatch(incidentFrequencyFilterUpdate(payload)),
+    getTeamIncidentFrequencyGraph: (payload) => dispatch(incidentFrequencyGraphGet(payload)),
+    getInnerIncidentFrequencyTable: (payload) => dispatch(incidentFrequencyTableGet(payload)),
+    resetInnerIncidentFrequencyTable: (payload) => dispatch(incidentFrequencyInnerTableReset(payload)),
+    updateReducedTable: (payload) => dispatch(incidentFrequencyTableReduce(payload)),
     resetReducedTable: (payload) => dispatch(incidentFrequencyTableReset(payload))
   }
 }
@@ -82,13 +97,13 @@ class IncidentFrequencyFilter extends Component {
   }
 
   _getNewTableData () {
-    this.props.getData()
+    this.props.getTeamIncidentFrequencyGraph()
   }
 
   _setFilter (type, value) {
     const payload = {[type]: value}
     this.props.setFilterIncidentFrequency(payload)
-    this._getNewTableData()
+    this.props.getTeamIncidentFrequencyGraph()
   }
 
   _endDateChange (momentDate) {

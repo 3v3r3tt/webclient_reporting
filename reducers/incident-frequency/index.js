@@ -1,7 +1,4 @@
-import {
-  fromJS as _fromJS,
-  List
-} from 'immutable'
+import { fromJS as _fromJS } from 'immutable'
 
 import moment from 'moment'
 
@@ -11,6 +8,7 @@ import {
   INCIDENT_FREQUENCY_GRAPH_ERROR,
   INCIDENT_FREQUENCY_TABLE_GET,
   INCIDENT_FREQUENCY_TABLE_UPDATE,
+  INCIDENT_FREQUENCY_INNER_TABLE_RESET,
   INCIDENT_FREQUENCY_TABLE_ERROR,
   INCIDENT_FREQUENCY_FILTER_UPDATE,
   INCIDENT_FREQUENCY_TABLE_REDUCE,
@@ -26,8 +24,8 @@ export const initialState = _fromJS({
   chartType: 'Area',
   segmentationType: 'Segment by integration',
   resolutionType: 'Display weekly',
-  tableData: List(),
   graphData: null,
+  innerTableIncidentData: null,
   error: {
     graph: false,
     table: false
@@ -35,7 +33,8 @@ export const initialState = _fromJS({
   reducedData: {
     reducedRows: null,
     animation: true,
-    columnTitle: null
+    columnTitle: null,
+    selectedBucket: null
   }
 })
 
@@ -48,6 +47,8 @@ export default function incidentFrequencyReport (state = initialState, action) {
       return _updateGraph(state, action.payload)
     case INCIDENT_FREQUENCY_TABLE_UPDATE:
       return _updateTable(state, action.payload)
+    case INCIDENT_FREQUENCY_INNER_TABLE_RESET:
+      return _resetInnerTable(state, action.payload)
     case INCIDENT_FREQUENCY_FILTER_UPDATE:
       return _filterUpdate(state, action.payload)
     case INCIDENT_FREQUENCY_GRAPH_ERROR:
@@ -63,10 +64,20 @@ export default function incidentFrequencyReport (state = initialState, action) {
 }
 
 const _loadingData = (state) => state.update('loadingData', () => true)
-const _filterUpdate = (state, payload) => state.merge(state, payload)
+
+function _filterUpdate (state, payload) {
+  const filterKey = Object.keys(payload)[0]
+  return state.set(filterKey, payload[filterKey])
+}
 
 function _updateTable (state, payload) {
-  return state.set('tableData', _fromJS(payload))
+  return state.set('innerTableIncidentData', _fromJS(payload))
+              .update('loadingData', () => false)
+              .setIn(['error', 'table'], false)
+}
+
+function _resetInnerTable (state, payload) {
+  return state.set('innerTableIncidentData', null)
               .update('loadingData', () => false)
               .setIn(['error', 'table'], false)
 }
@@ -93,6 +104,7 @@ function _resetReducedTable (state, payload) {
   return state.set('reducedData', _fromJS({
     reducedRows: null,
     animation: true,
-    columnTitle: null
+    columnTitle: null,
+    selectedBucket: null
   }))
 }

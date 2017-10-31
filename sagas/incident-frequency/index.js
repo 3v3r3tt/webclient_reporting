@@ -41,7 +41,6 @@ function _getIncidentFrequencyTable ({create}, logError) {
       // const incidentFrequencyReportData = yield call(create, IncidentFrequencyReportEndpoint, data)
       // TODO: remove this once API works
       const incidentFrequencyReportData = mockTableData
-
       yield put(incidentFrequencyTableUpdate(incidentFrequencyReportData))
     } catch (err) {
       yield call(logError, err)
