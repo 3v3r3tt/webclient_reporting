@@ -12,7 +12,7 @@ function iframeModal (props) {
         <div>
           <div className='js-profile-header profile-header'>
             <div className='shadow-cover'>
-              <span className='icon-remove' data-dismiss='modal' onClick={() => props.modalActions.hideModal()} aria-hidden='true' title='Click or [esc] to close' />
+              <span className='icon-remove' data-dismiss='modal' onClick={() => props.modalActions.hideIframeModal()} aria-hidden='true' title='Click or [esc] to close' />
               <h4><span className='subtitle'>Profile:</span> @{username}</h4>
             </div>
           </div>

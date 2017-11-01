@@ -64,6 +64,7 @@ class IncidentFrequencyGraph extends Component {
       })
     })
 
+    const selectedBucket = this.props.selectedBucket
     return {
       colors: this.props.colorList,
       legend: { enabled: false },
@@ -97,8 +98,17 @@ class IncidentFrequencyGraph extends Component {
           color: 'black',
           width: 2,
           zIndex: 20,
-          value: this.props.selectedBucket
-        }]
+          value: selectedBucket
+        }],
+        labels: {
+          formatter: function () {
+            if (selectedBucket === this.pos) {
+              return `<span style="fill: black;">${this.value}</span>`
+            } else {
+              return `<span style="fill-opacity: .7;">${this.value}</span>`
+            }
+          }
+        }
       },
       yAxis: {
         type: 'linear',

@@ -162,7 +162,7 @@ class Header extends Component {
                 {(hasPhone) ? <p>Enter a phone number to ensure we are able to reach you when an incident is routed to you.</p> : null}
                 {(hasPolicy) ? <p>Customize your paging policy to ensure we are able to reach you when an incident is routed to you.</p> : null}
               </div> : null}
-              <a className='js-show-profile button-add' onClick={() => { this.props.modalActions.toggleModal() && this._toggleCompleteModal() }} >Complete your profile</a>
+              <a className='js-show-profile button-add' onClick={() => { this.props.modalActions.toggleIframeModal() && this._toggleCompleteModal() }} >Complete your profile</a>
             </div>
           </li>
         </ul>
@@ -175,7 +175,7 @@ class Header extends Component {
     const orgslug = config.get('orgslug', '')
 
     const dropdownItemsVariations = [
-      { label: 'Your Profile', handleClick: () => { this.props.modalActions.toggleModal() } },
+      { label: 'Your Profile', handleClick: () => { this.props.modalActions.toggleIframeModal() } },
       { label: 'divider', content: <div className='dropdown-divider' /> },
       { label: 'Log out', handleClick: () => { window.location = '/auth/logout' } }
     ]

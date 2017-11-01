@@ -3,6 +3,7 @@ import { withRouter } from 'react-router'
 import Header from 'reporting/components/header'
 import Footer from 'reporting/components/footer'
 import IframeProfile from '../../components/iframe-profile'
+import Modal from '../../components/modal'
 
 function renderChildren (props) {
   return React.Children.map(props.children, child => {
@@ -43,8 +44,10 @@ class MainWrapper extends Component {
 
         <main
           role='main'
-          className='content-wrapper clearfix'>
+          className='content-wrapper clearfix'
+        >
           { renderChildren(this.props) }
+          <Modal id='reporting-modal' />
         </main>
         <Footer />
       </div>

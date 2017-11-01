@@ -3,6 +3,8 @@ import Victory from '@victorops/victory'
 
 import moment from 'moment'
 
+import InnerIncidentModal from './inner-incident-modal'
+
 const {
   ExpandingCard,
   Table
@@ -14,6 +16,7 @@ class IncidentFrequencyTable extends Component {
 
     this._setExpanded = this._setExpanded.bind(this)
     this._generateInnerIncidentRows = this._generateInnerIncidentRows.bind(this)
+    this._rowClickFnGenerator = this._rowClickFnGenerator.bind(this)
   }
 
   _setExpanded () {
@@ -66,6 +69,26 @@ class IncidentFrequencyTable extends Component {
     return generatedRows
   }
 
+  _rowClickFnGenerator (rowId) {
+    return () => {
+      const incidentId = rowId.match(/^\[#(.*)\]/) && rowId.match(/^\[#(.*)\]/)[1]
+      this._openIncidentDetailModal(incidentId)
+    }
+  }
+
+  _openIncidentDetailModal (incidentId) {
+    const modalConfig = {
+      modalType: 'confirm',
+      modalProps: {
+        title: `Incident #${incidentId}`,
+        component: <InnerIncidentModal />,
+        onCancel: () => this.props.hideModal(),
+        cancelButtonText: 'OK'
+      }
+    }
+    this.props.showModal(modalConfig)
+  }
+
   render () {
     let currentSegment = null
     let innerIncidents = null
@@ -115,7 +138,8 @@ class IncidentFrequencyTable extends Component {
         }],
       rowItems: this._generateInnerIncidentRows(innerIncidents),
       customClasses: ['incident-frequency--inner-incident-table'],
-      columnWidths: ['20%', '15%', '20%', '15%', '15%', '15%']
+      columnWidths: ['20%', '15%', '20%', '15%', '15%', '15%'],
+      generateRowClickFn: this._rowClickFnGenerator
     }
 
     const ExpandedContent =

@@ -3,12 +3,17 @@ import { connect } from 'react-redux'
 
 import moment from 'moment'
 
-import InnerTable from './inner-table'
+import InnerTable from './inner-incident-table'
 
 import {
   incidentFrequencyTableGet,
   incidentFrequencyInnerTableReset
 } from 'reporting/actions/incident-frequency'
+
+import {
+  hideModal,
+  showModal
+} from 'reporting/actions/modal'
 
 import Victory from '@victorops/victory'
 const { Table } = Victory
@@ -26,7 +31,9 @@ function mapStateToProps (state) {
 function mapDispatchToProps (dispatch) {
   return {
     getTableData: (payload) => dispatch(incidentFrequencyTableGet(payload)),
-    resetTableData: (payload) => dispatch(incidentFrequencyInnerTableReset(payload))
+    resetTableData: (payload) => dispatch(incidentFrequencyInnerTableReset(payload)),
+    hideModal: (payload) => dispatch(hideModal(payload)),
+    showModal: (payload) => dispatch(showModal(payload))
   }
 }
 
@@ -48,7 +55,9 @@ class IncidentFrequencyTable extends Component {
             resetInnerTableData: this.props.resetTableData,
             innerTableIncidentData: this.props.innerTableIncidentData,
             colorList: this.props.colorList,
-            outerTableIndex: index
+            outerTableIndex: index,
+            showModal: this.props.showModal,
+            hideModal: this.props.hideModal
           }
         }]
       })
