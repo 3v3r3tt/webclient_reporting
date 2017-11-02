@@ -82,6 +82,35 @@ request.setRequestHeader('Accept', 'application/json')
 request.onload = function () {
   if (request.status >= 200 && request.status < 300) {
     window.VO_CONFIG = JSON.parse(request.responseText)
+    // init third-party stuff
+    if (window.VO_CONFIG.billing.state === 'paid') {
+      try {
+        require('../reporting-tools/ramen-init')(window.VO_CONFIG)
+      } catch (err) {
+        sendError('3rdParty:init', 'ramen could not be initialized', err)
+      }
+    } else if (window.VO_CONFIG.billing.state === 'trial') {
+      try {
+        const myOlark = () => {
+          /* eslint-disable */
+          olark('api.visitor.updateFullName', {
+            fullName: `${window.VO_CONFIG.auth.user.firstName} ${window.VO_CONFIG.auth.user.lastName}`
+          })
+          /* eslint-enable */
+
+          // TODO find customer email address
+          // This where we can pass an email address
+          // olark('api.visitor.updateEmailAddress', {
+          //   emailAddress: ``
+          // })
+        }
+        require('../reporting-tools/olark-embed.js')
+          .then(myOlark())
+      } catch (err) {
+        sendError('3rdParty:init', 'olark could not be initialized', err)
+      }
+    }
+
     document.getElementsByTagName('title')[0].text = 'Reporting - ' + window.VO_CONFIG.orgname
     require('./app').default()
   } else if (request.status >= 400 && request.status < 500) {
