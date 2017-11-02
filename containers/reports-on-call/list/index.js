@@ -86,15 +86,15 @@ class ReportsOnCallList extends Component {
     const onCallTableConfig = {
       columnHeaders: [
         {
-          label: 'Team member',
+          label: 'Title',
           isSortable: true
         },
         {
-          label: 'Hours on-call',
+          label: 'Time Range',
           isSortable: true
         },
         {
-          label: '# of incidents worked',
+          label: 'Created By',
           isSortable: true
         }],
       columnWidths: ['40%', '30%', '30%'],
