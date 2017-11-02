@@ -9,6 +9,9 @@ export const INCIDENT_FREQUENCY_GRAPH_ERROR = 'INCIDENT_FREQUENCY_GRAPH_ERROR'
 export const INCIDENT_FREQUENCY_FILTER_UPDATE = 'INCIDENT_FREQUENCY_FILTER_UPDATE'
 export const INCIDENT_FREQUENCY_TABLE_REDUCE = 'INCIDENT_FREQUENCY_TABLE_REDUCE'
 export const INCIDENT_FREQUENCY_TABLE_RESET = 'INCIDENT_FREQUENCY_TABLE_RESET'
+export const INCIDENT_FREQUENCY_INCIDENT_DETAIL_GET = 'INCIDENT_FREQUENCY_INCIDENT_DETAIL_GET'
+export const INCIDENT_FREQUENCY_INCIDENT_DETAIL_UPDATE = 'INCIDENT_FREQUENCY_INCIDENT_DETAIL_UPDATE'
+export const INCIDENT_FREQUENCY_INCIDENT_DETAIL_ERROR = 'INCIDENT_FREQUENCY_INCIDENT_DETAIL_ERROR'
 
 export function incidentFrequencyFilterUpdate (payload = {}) {
   return {
@@ -76,6 +79,27 @@ export function incidentFrequencyTableReduce (payload = {}) {
 export function incidentFrequencyTableReset (payload = {}) {
   return {
     type: INCIDENT_FREQUENCY_TABLE_RESET,
+    payload
+  }
+}
+
+export function incidentFrequencyIncidentDetailGet (payload = {}) {
+  return {
+    type: INCIDENT_FREQUENCY_INCIDENT_DETAIL_GET,
+    payload
+  }
+}
+
+export function incidentFrequencyIncidentDetailUpdate (payload = {}) {
+  return {
+    type: INCIDENT_FREQUENCY_INCIDENT_DETAIL_UPDATE,
+    payload
+  }
+}
+
+export function incidentFrequencyIncidentDetailError (payload = {}) {
+  return {
+    type: INCIDENT_FREQUENCY_INCIDENT_DETAIL_ERROR,
     payload
   }
 }

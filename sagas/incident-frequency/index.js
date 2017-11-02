@@ -9,10 +9,13 @@ import {
 import {
   INCIDENT_FREQUENCY_TABLE_GET,
   INCIDENT_FREQUENCY_GRAPH_GET,
+  INCIDENT_FREQUENCY_INCIDENT_DETAIL_GET,
   incidentFrequencyGraphUpdate,
   incidentFrequencyGraphError,
   incidentFrequencyTableUpdate,
-  incidentFrequencyTableError
+  incidentFrequencyTableError,
+  incidentFrequencyIncidentDetailUpdate,
+  incidentFrequencyIncidentDetailError
 } from 'reporting/actions/incident-frequency'
 
 import config from 'components/__utils/config'
@@ -21,6 +24,7 @@ import config from 'components/__utils/config'
 /*eslint-disable */
 import mockGraphData from './sampleData/graphData'
 import mockTableData from './sampleData/tableData'
+import mockIncidentModalData from './sampleData/incidentModalData'
 
 export const _getincidentFrequencyState = (state) => state.incidentFrequency
 
@@ -44,7 +48,7 @@ function _getIncidentFrequencyTable ({create}, logError) {
       yield put(incidentFrequencyTableUpdate(incidentFrequencyReportData))
     } catch (err) {
       yield call(logError, err)
-      yield put(incidentFrequencyTableError({error: {list: true}}))
+      yield put(incidentFrequencyTableError({error: {table: true}}))
     }
   }
 }
@@ -70,7 +74,28 @@ function _getIncidentFrequencyGraph ({create}, logError) {
       yield put(incidentFrequencyGraphUpdate(incidentFrequencyReportData))
     } catch (err) {
       yield call(logError, err)
-      yield put(incidentFrequencyGraphError({error: {list: true}}))
+      yield put(incidentFrequencyGraphError({error: {graph: true}}))
+    }
+  }
+}
+
+function _getIncidentFrequencyIncidentDetails ({fetch}, logError) {
+  return function * (action) {
+    try {
+      const {
+        incidentNumber
+      } = action.payload
+      const IncidentFrequencyIncidentDetailEndpoint = `/api/v2/org/${config.auth.org.slug}/incidents?incidentNumber=${incidentNumber}`
+
+      // const incidentFrequencyIncidentData = yield call(fetch, IncidentFrequencyIncidentDetailEndpoint)
+      // TODO: remove this once API works
+      const incidentFrequencyIncidentData = mockIncidentModalData
+      const incidentData = incidentFrequencyIncidentData.incidents[0]
+
+      yield put(incidentFrequencyIncidentDetailUpdate(incidentData))
+    } catch (err) {
+      yield call(logError, err)
+      yield put(incidentFrequencyIncidentDetailError({error: {modal: true}}))
     }
   }
 }
@@ -80,12 +105,19 @@ function _getIncidentFrequencyGraph ({create}, logError) {
 
 export const Test = {
   _getIncidentFrequencyTable,
+  _getIncidentFrequencyGraph,
+  _getIncidentFrequencyIncidentDetails,
   _getincidentFrequencyState
 }
 
 export function * watchGetIncidentFrequencyTable (api, logError) {
   yield * takeEvery(INCIDENT_FREQUENCY_TABLE_GET, _getIncidentFrequencyTable(api, logError))
 }
+
 export function * watchGetIncidentFrequencyGraph (api, logError) {
   yield * takeEvery(INCIDENT_FREQUENCY_GRAPH_GET, _getIncidentFrequencyGraph(api, logError))
+}
+
+export function * watchGetIncidentFrequencyIncidentDetails (api, logError) {
+  yield * takeEvery(INCIDENT_FREQUENCY_INCIDENT_DETAIL_GET, _getIncidentFrequencyIncidentDetails(api, logError))
 }

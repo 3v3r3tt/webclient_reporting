@@ -15,7 +15,8 @@ import {
 
 import {
  watchGetIncidentFrequencyTable,
- watchGetIncidentFrequencyGraph
+ watchGetIncidentFrequencyGraph,
+ watchGetIncidentFrequencyIncidentDetails
 } from './incident-frequency'
 
 // lib
@@ -30,5 +31,6 @@ export default function makeRootSaga (api) {
     yield fork(watchGetOnCallUserReport, api, error)
     yield fork(watchGetIncidentFrequencyTable, api, error)
     yield fork(watchGetIncidentFrequencyGraph, api, error)
+    yield fork(watchGetIncidentFrequencyIncidentDetails, api, error)
   }
 }

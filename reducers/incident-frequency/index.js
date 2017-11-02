@@ -12,7 +12,10 @@ import {
   INCIDENT_FREQUENCY_TABLE_ERROR,
   INCIDENT_FREQUENCY_FILTER_UPDATE,
   INCIDENT_FREQUENCY_TABLE_REDUCE,
-  INCIDENT_FREQUENCY_TABLE_RESET
+  INCIDENT_FREQUENCY_TABLE_RESET,
+  INCIDENT_FREQUENCY_INCIDENT_DETAIL_GET,
+  INCIDENT_FREQUENCY_INCIDENT_DETAIL_UPDATE,
+  INCIDENT_FREQUENCY_INCIDENT_DETAIL_ERROR
 } from 'reporting/actions/incident-frequency'
 
 export const initialState = _fromJS({
@@ -26,6 +29,7 @@ export const initialState = _fromJS({
   resolutionType: 'Display weekly',
   graphData: null,
   innerTableIncidentData: null,
+  incidentDetailData: null,
   error: {
     graph: false,
     table: false
@@ -42,6 +46,7 @@ export default function incidentFrequencyReport (state = initialState, action) {
   switch (action.type) {
     case INCIDENT_FREQUENCY_TABLE_GET:
     case INCIDENT_FREQUENCY_GRAPH_GET:
+    case INCIDENT_FREQUENCY_INCIDENT_DETAIL_GET:
       return _loadingData(state)
     case INCIDENT_FREQUENCY_GRAPH_UPDATE:
       return _updateGraph(state, action.payload)
@@ -59,6 +64,10 @@ export default function incidentFrequencyReport (state = initialState, action) {
       return _updateReducedTable(state, action.payload)
     case INCIDENT_FREQUENCY_TABLE_RESET:
       return _resetReducedTable(state, action.payload)
+    case INCIDENT_FREQUENCY_INCIDENT_DETAIL_UPDATE:
+      return _updateIncidentDetail(state, action.payload)
+    case INCIDENT_FREQUENCY_INCIDENT_DETAIL_ERROR:
+      return _setIncidentFrequencyIncidentDetailError(state, action.payload)
     default : return state
   }
 }
@@ -107,4 +116,12 @@ function _resetReducedTable (state, payload) {
     columnTitle: null,
     selectedBucket: null
   }))
+}
+
+function _setIncidentFrequencyIncidentDetailError (state, payload) {
+  return state.setIn(['error', 'modal'], _fromJS(payload.error))
+}
+
+function _updateIncidentDetail (state, payload) {
+  return state.set('incidentDetailData', _fromJS(payload))
 }
