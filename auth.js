@@ -96,6 +96,7 @@ request.onload = function () {
           olark('api.visitor.updateFullName', {
             fullName: `${window.VO_CONFIG.auth.user.firstName} ${window.VO_CONFIG.auth.user.lastName}`
           })
+          olark.configure('system.group', 'bd61e7b49f6958ac9b87ab2a3804d350')
           /* eslint-enable */
 
           // TODO find customer email address
