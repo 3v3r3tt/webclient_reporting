@@ -71,12 +71,12 @@ class IncidentFrequencyTable extends Component {
 
   _rowClickFnGenerator (rowId) {
     return () => {
-      const incidentId = rowId.match(/^\[#(.*)\]/) && rowId.match(/^\[#(.*)\]/)[1]
-      this._openIncidentDetailModal(incidentId)
+      this._openIncidentDetailModal(rowId)
     }
   }
 
-  _openIncidentDetailModal (incidentId) {
+  _openIncidentDetailModal (rowId) {
+    const incidentId = rowId.match(/^\[#(.*)\]/) && rowId.match(/^\[#(.*)\]/)[1]
     const modalConfig = {
       modalType: 'confirm',
       modalProps: {

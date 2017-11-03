@@ -28,6 +28,14 @@ const graphData = {
         {
           segment_name: 'Zendesk',
           bucket_total: 1
+        },
+        {
+          segment_name: 'Datadog',
+          bucket_total: 3
+        },
+        {
+          segment_name: 'Email',
+          bucket_total: 9
         }
       ]
     },
@@ -49,6 +57,14 @@ const graphData = {
         {
           segment_name: 'Zendesk',
           bucket_total: 6
+        },
+        {
+          segment_name: 'Datadog',
+          bucket_total: 10
+        },
+        {
+          segment_name: 'Email',
+          bucket_total: 1
         }
       ]
     },
@@ -70,6 +86,14 @@ const graphData = {
         {
           segment_name: 'Zendesk',
           bucket_total: 3
+        },
+        {
+          segment_name: 'Datadog',
+          bucket_total: 2
+        },
+        {
+          segment_name: 'Email',
+          bucket_total: 6
         }
       ]
     },
@@ -91,6 +115,14 @@ const graphData = {
         {
           segment_name: 'Zendesk',
           bucket_total: 9
+        },
+        {
+          segment_name: 'Datadog',
+          bucket_total: 6
+        },
+        {
+          segment_name: 'Email',
+          bucket_total: 2
         }
       ]
     },
@@ -112,6 +144,14 @@ const graphData = {
         {
           segment_name: 'Zendesk',
           bucket_total: 6
+        },
+        {
+          segment_name: 'Datadog',
+          bucket_total: 11
+        },
+        {
+          segment_name: 'Email',
+          bucket_total: 3
         }
       ]
     },
@@ -133,6 +173,14 @@ const graphData = {
         {
           segment_name: 'Zendesk',
           bucket_total: 11
+        },
+        {
+          segment_name: 'Datadog',
+          bucket_total: 1
+        },
+        {
+          segment_name: 'Email',
+          bucket_total: 4
         }
       ]
     }
@@ -153,6 +201,14 @@ const graphData = {
     {
       segment_name: 'Zendesk',
       bucket_total: 36
+    },
+    {
+      segment_name: 'Datadog',
+      bucket_total: 20
+    },
+    {
+      segment_name: 'Email',
+      bucket_total: 4
     }
   ]
 }

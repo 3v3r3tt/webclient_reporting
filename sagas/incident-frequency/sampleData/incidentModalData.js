@@ -24,7 +24,10 @@ const incidentModalData = {
       'pagedTeams': [
         'operations-support'
       ],
-      'pagedUsers': [],
+      'pagedUsers': [
+        'paulevmo',
+        'brochest'
+      ],
       'transitions': [
         {
           'name': 'triggered',

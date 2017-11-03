@@ -22,7 +22,7 @@ function mapDispatchToProps (dispatch) {
 class InnerIncidentModal extends Component {
   componentDidMount () {
     const payload = {
-      incidentNumber: 12345
+      incidentNumber: 12345 // TODO: this should be made dynamic when API works
     }
     this.props.getIncidentDetails(payload)
   }
@@ -30,7 +30,10 @@ class InnerIncidentModal extends Component {
   render () {
     const incident = this.props.incidentDetail
     if (incident) {
-      const startTime = moment(incident.get('startTime')).format('MMM. DD, YYYY - h:mm A')
+      const transitions = incident.get('transitions')
+      const startTime = moment(transitions.find((obj) => obj.get('name') === 'triggered').get('at'))
+      const endTime = moment(transitions.find((obj) => obj.get('name') === 'resolved').get('at'))
+      const incidentDuration = endTime.diff(startTime, 'minutes', true)
 
       return (
         <div className='container'>
@@ -39,11 +42,14 @@ class InnerIncidentModal extends Component {
               <h5>{incident.get('entityDisplayName')}</h5>
             </div>
             <div className='col-12 margin-bottom-10'>
-              {startTime}
+              {startTime.format('MMM. DD, YYYY - h:mm A')}
             </div>
 
             <div className='col-4'>Host</div>
             <div className='col-8'>{incident.get('host')}</div>
+
+            <div className='col-4'>Service</div>
+            <div className='col-8'>{incident.get('service')}</div>
 
             <div className='col-4'>Routing Key</div>
             <div className='col-8'>{incident.get('routingKey')}</div>
@@ -51,8 +57,14 @@ class InnerIncidentModal extends Component {
             <div className='col-4'>Paged Teams</div>
             <div className='col-8'>{incident.get('pagedTeams').join(', ')}</div>
 
+            <div className='col-4'>Paged Users</div>
+            <div className='col-8'>{incident.get('pagedUsers').join(', ')}</div>
+
             <div className='col-4'>Alert Count</div>
             <div className='col-8'>{incident.get('alertCount')}</div>
+
+            <div className='col-4'>Duration</div>
+            <div className='col-8'>{incidentDuration} minutes</div>
           </div>
         </div>
       )
