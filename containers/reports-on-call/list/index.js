@@ -60,7 +60,7 @@ class ReportsOnCallList extends Component {
         },
         {
           content: userData.get('total_hours_on_call', 0),
-          value: userData.get('total_hours_on_call', 0).replace(':', '.'),
+          value: userData.get('total_hours_on_call', '').replace(':', '.'),
           id: 'on-call-hours',
           type: 'cell'
         },
