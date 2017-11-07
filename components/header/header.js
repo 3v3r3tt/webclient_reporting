@@ -4,6 +4,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import moment from 'vendor/moment'
+import { List } from 'immutable'
 
 import {
   browserHistory,
@@ -72,7 +73,11 @@ class Header extends Component {
 
   _getOrgs () {
     const config = this.props.auth.config
-    const orgs = config.get('orgs', [])
+
+    // Sort orgs alphabetically
+    let orgs = config.get('orgs', List()).sort(
+      (a, b) => a.get('name').localeCompare(b.get('name'))
+    )
 
     if (orgs.size > 1) {
       return (
