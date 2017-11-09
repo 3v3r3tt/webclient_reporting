@@ -9,6 +9,7 @@
 // }
 
 const graphData = {
+  'has_data_flag': false,
   'display_buckets': [
     {
       bucket_start_date: '1501459200000',

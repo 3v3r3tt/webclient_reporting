@@ -25,7 +25,9 @@ function mapStateToProps (state) {
     endDate: state.incidentFrequency.get('endDate'),
     chartType: state.incidentFrequency.get('chartType'),
     segmentationType: state.incidentFrequency.get('segmentationType'),
-    resolutionType: state.incidentFrequency.get('resolutionType')
+    resolutionType: state.incidentFrequency.get('resolutionType'),
+    graphError: state.incidentFrequency.getIn(['error', 'graph']),
+    graphDataSegments: state.incidentFrequency.getIn(['graphData', 'segments'])
   }
 }
 
@@ -171,6 +173,8 @@ class IncidentFrequencyGraph extends Component {
 
   render () {
     const highchartData = this._transformGraphData(this.props.data, this._generateReducedGraph)
+    const graphIsEmpty = this.props.graphDataSegments != null && this.props.graphDataSegments.size === 0
+
     const GraphContent = highchartData
       ? <ReactHighcharts config={highchartData} />
       : <p>Loading Graph...</p>
@@ -178,16 +182,19 @@ class IncidentFrequencyGraph extends Component {
     let buttonClass = 'btn btn-outline-warning incident-frequency--graph--button'
     const drawButton = this.props.reducedData.get('reducedRows') !== null
 
-    return (
+    const graphError = <div className='incident-frequency--error--graph'>Could not fetch data from server - reload to try again.</div>
+
+    const graph =
       <div className='incident-frequency--graph'>
         {GraphContent}
-
+        {graphIsEmpty ? <h1 className='incident-frequency--graph--no-data'>No data for this time period</h1> : null}
         <Button
           content='Reset'
           type={!drawButton ? buttonClass + ' display--none' : buttonClass}
           clickHandler={() => { this.props.resetReducedTable() }} />
       </div>
-    )
+
+    return (this.props.graphError ? graphError : graph)
   }
 }
 

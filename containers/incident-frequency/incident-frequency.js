@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router'
+import { connect } from 'react-redux'
 import Victory from '@victorops/victory'
 
 import Filter from './filter'
@@ -16,11 +17,17 @@ const COLOR_LIST = [
   '#72EA31', '#51A8CA', '#DCA326', '#5A3EBA', '#B7B7B7'
 ]
 
+function mapStateToProps (state) {
+  return {
+    graphDataExists: state.incidentFrequency.getIn(['graphData', 'has_data_flag'], true)
+  }
+}
+
 class IncidentFrequency extends Component {
   render () {
     const ReportHomeLink = <Link className='link--default' to={`/reports/${config.orgslug}`}>Reports</Link>
 
-    return (
+    const incidentFrequencyReport =
       <div className='container module-wrapper'>
         <BreadCrumbs breadcrumbs={[
           {label: ReportHomeLink, active: true},
@@ -35,8 +42,35 @@ class IncidentFrequency extends Component {
 
         <IncidentFrequencyTable colorList={COLOR_LIST} />
       </div>
-    )
+
+    const notEnoughDataView =
+      <div>
+        <div className='container module-wrapper'>
+          <BreadCrumbs breadcrumbs={[
+            {label: ReportHomeLink, active: true},
+            {label: 'Incident Frequency', uri: '#reports/incident-frequcy', active: true}
+          ]} light />
+
+          <h1 className='heading-3'>Incident Frequency Report</h1>
+        </div>
+
+        <div className='incident-frequency--not-enough-data'>
+          <div className='incident-frequency--not-enough-data--content'>
+            <h2 className='header'>You don't have enough data to graph (yet)</h2>
+            <p className='details'>Incident Frequency is a powerful tool for <strong>uncovering your noisiest services, hosts and integrations,</strong> but you haven’t been using VictorOps long enough to benefit from it.</p>
+
+            <p className='details'><strong>Here are a few examples</strong> of Incident Frequency reports that you might see once you use VictorOps a bit more:</p>
+            <div className='images'>
+              <img className='image' src='/public/img/IFR_demoimg.png' />
+              <img className='image' src='/public/img/IFR_demoimg.png' />
+              <img className='image' src='/public/img/IFR_demoimg.png' />
+            </div>
+          </div>
+        </div>
+      </div>
+
+    return (this.props.graphDataExists ? incidentFrequencyReport : notEnoughDataView)
   }
 }
 
-export default IncidentFrequency
+export default connect(mapStateToProps)(IncidentFrequency)
