@@ -103,9 +103,9 @@ class Reports extends React.Component {
             </ul>
           </div>
           <div className='js-advancedrep'>
+            <h4>Advanced Reporting</h4>
             { (!featchingFeatureFlags)
               ? <ul className='reports-nav'>
-                <h4>Advanced Reporting</h4>
                 { this._getIncidentFrequencyTile() }
                 { this._getOnCallTile() }
               </ul>
