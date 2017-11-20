@@ -2,9 +2,11 @@ import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import ReactHighcharts from 'react-highcharts'
 import Victory from '@victorops/victory'
+import defaultHighChartsOptions from './highcharts-config'
 
 import moment from 'moment'
 import { fromJS } from 'immutable'
+import { merge as _merge } from 'vendor/lodash'
 
 import {
   incidentFrequencyTableReduce,
@@ -67,9 +69,10 @@ class IncidentFrequencyGraph extends Component {
     })
 
     const selectedBucket = this.props.selectedBucket
-    return {
+
+    const config = {
       colors: this.props.colorList,
-      legend: { enabled: false },
+
       chart: {
         type: this.props.chartType.toLowerCase(),
         events: {
@@ -87,19 +90,7 @@ class IncidentFrequencyGraph extends Component {
 
       xAxis: {
         categories: startDateBuckets,
-        type: 'linear',
-        gridLineWidth: 1,
-        tickInterval: 1,
-        tickColor: '#d6d6d6',
-        tickmarkPlacement: 'on',
-        crosshair: {
-          width: 1,
-          color: '#7e7e7e'
-        },
         plotLines: [{
-          color: 'black',
-          width: 2,
-          zIndex: 20,
           value: selectedBucket
         }],
         labels: {
@@ -113,31 +104,17 @@ class IncidentFrequencyGraph extends Component {
         }
       },
       yAxis: {
-        type: 'linear',
         title: {
           text: 'Number of Incidents'
-        },
-        gridLineWidth: 0
-      },
-
-      tooltip: {
-        crosshairs: true,
-        shared: true,
-        backgroundColor: 'white',
-        borderColor: '#7e7e7e'
+        }
       },
 
       plotOptions: {
         line: {
-          enableMouseTracking: true,
-          marker: {
-            enabled: false
-          },
           animation: this.props.reducedData.animation
         },
 
         area: {
-          stacking: 'normal',
           animation: this.props.reducedData.animation
         },
 
@@ -154,6 +131,8 @@ class IncidentFrequencyGraph extends Component {
 
       series: segmentSeriesData
     }
+
+    return _merge(defaultHighChartsOptions, config)
   }
 
   _generateReducedGraph (name, series, pointIndex) {
