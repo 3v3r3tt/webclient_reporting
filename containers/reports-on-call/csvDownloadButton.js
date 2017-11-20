@@ -28,9 +28,9 @@ class OnCallCSVDownloadButton extends Component {
             target='_blank'
             className='dropdown-item'
             download
-            >
-              Hours On-Call
-            </a>
+          >
+            Hours On-Call
+          </a>
         },
         {
           label: 'Incidents Worked',
