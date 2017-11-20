@@ -103,17 +103,19 @@ class IncidentFrequencyFilter extends Component {
   _setFilter (type, value) {
     const payload = {[type]: value}
     this.props.setFilterIncidentFrequency(payload)
-    this.props.getTeamIncidentFrequencyGraph()
+    this._getNewTableData()
   }
 
   _endDateChange (momentDate) {
     this.props.setFilterIncidentFrequency({endDate: momentDate.valueOf()})
     this._checkDateRange(moment(this.props.beginDate), momentDate)
+    this._getNewTableData()
   }
 
   _beginDateChange (momentDate) {
     this.props.setFilterIncidentFrequency({beginDate: momentDate.valueOf()})
     this._checkDateRange(momentDate, moment(this.props.endDate))
+    this._getNewTableData()
   }
 
   _checkDateRange (begin, end) {
