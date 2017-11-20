@@ -203,7 +203,7 @@ class Header extends Component {
             </li>
 
             <li className='primary-nav-item'>
-              <Link className='link--default' to={`/reports/${orgslug}`}>Reports</Link>
+              <Link className='current' to={`/reports/${orgslug}`}>Reports</Link>
             </li>
 
             { this._getBuyNowAdmin() }
