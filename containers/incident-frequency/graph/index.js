@@ -46,6 +46,19 @@ class IncidentFrequencyGraph extends Component {
 
     this._transformGraphData = this._transformGraphData.bind(this)
     this._generateReducedGraph = this._generateReducedGraph.bind(this)
+    this._determineBucketLabel = this._determineBucketLabel.bind(this)
+  }
+
+  _determineBucketLabel (bucket) {
+    const currentStartDate = moment(Number(bucket.bucket_start_date))
+    let currentIncrement = this.props.resolutionType.match(/Display (.)>*/)[1]
+    let bucketLabel = currentStartDate.format('MMM D')
+    if (currentIncrement !== 'd') {
+      currentIncrement = currentIncrement === 'm' ? 'M' : currentIncrement // Otherwise momentjs thinks millis
+      const currentEndDate = currentStartDate.clone().add(1, currentIncrement).subtract(1, 'd')
+      bucketLabel = `${currentStartDate.format('MMM D')} - ${currentEndDate.format('MMM D')}`
+    }
+    return bucketLabel
   }
 
   _transformGraphData (rawData, generateGraph) {
@@ -55,7 +68,8 @@ class IncidentFrequencyGraph extends Component {
     let startDateBuckets = []
     let segmentSeriesData = []
     rawData.display_buckets.forEach((bucket, outerIndex) => {
-      startDateBuckets.push(moment(Number(bucket.bucket_start_date)).format('MMM D'))
+      const bucketLabel = this._determineBucketLabel(bucket)
+      startDateBuckets.push(bucketLabel)
       bucket.segments_and_values.forEach((segment, index) => {
         if (outerIndex === 0) {
           segmentSeriesData[index] = {
@@ -101,7 +115,9 @@ class IncidentFrequencyGraph extends Component {
               return `<span style="fill-opacity: .7;">${this.value}</span>`
             }
           }
-        }
+        },
+        min: 0.5,
+        max: startDateBuckets.length - 1.5
       },
       yAxis: {
         title: {

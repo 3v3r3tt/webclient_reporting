@@ -10,7 +10,7 @@ export default {
     gridLineWidth: 1,
     tickInterval: 1,
     tickColor: '#d6d6d6',
-    tickmarkPlacement: 'on',
+    tickmarkPlacement: 'between',
     crosshair: {
       width: 1,
       color: '#7e7e7e'
