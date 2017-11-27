@@ -187,7 +187,7 @@ class IncidentFrequencyFilter extends Component {
     const LabelComponent =
       <span className='filter--team-label'>
         <i className='fal fa-users' />
-        <span className='filter--team-label-text'>{selectedTeamName}</span>
+        <span className='filter--team-label-text'>{this._truncate(selectedTeamName, 35)}</span>
         <i className='fas fa-angle-down' />
       </span>
 
@@ -201,6 +201,13 @@ class IncidentFrequencyFilter extends Component {
     )
   }
 
+  _truncate (longString, truncateLength) {
+    if (longString.length > truncateLength) {
+      return longString.substr(0, truncateLength).concat('...')
+    }
+    return longString
+  }
+
   render () {
     const ServiceDropdownLabel = <span>{this.props.segmentationType}&nbsp;&nbsp;&nbsp;<i className='fa fa-angle-down' /></span>
     const ChartTypeDropdownLabel = <span>{this.props.chartType}&nbsp;&nbsp;&nbsp;<i className='fa fa-angle-down' /></span>
@@ -209,10 +216,10 @@ class IncidentFrequencyFilter extends Component {
     return (
       <div className='incident-frequency--filter'>
         <div className='row'>
-          <div className='col-12 col-sm-2'>
+          <div className='col-12 col-sm-3'>
             { this._renderTeamsDropdown() }
           </div>
-          <div className='col-12 col-md-2'>
+          <div className='col-12 col-sm-2'>
             <div className='incident-frequency--filter-type'>
               <Dropdown
                 dropdownItems={this.segmentationTypes}
@@ -221,31 +228,35 @@ class IncidentFrequencyFilter extends Component {
               />
             </div>
           </div>
-          <div className='col-12 col-sm-5'>
-            <div className='incident-frequency--filter_dateselector'>
-              <DateRangePicker
-                beginDate={{
-                  isValidDate: this._isValidBeginDate,
-                  onChange: this._beginDateChange,
-                  defaultValue: this.props.beginDate,
-                  value: this.props.beginDate
-                }}
-                endDate={{
-                  isValidDate: this._isValidEndDate,
-                  onChange: this._endDateChange,
-                  defaultValue: this.props.endDate,
-                  value: this.props.endDate
-                }}
-              />
-            </div>
-          </div>
-          <div className='col-12 col-sm-2 pull-left'>
-            <div className='incident-frequency--filter-type'>
-              <Dropdown
-                dropdownItems={this.resolutionTypes}
-                labelComponent={ResolutionTypeDropdownLabel}
-                triggerClasses={['btn', 'btn-secondary', 'dropdown-btn']}
-              />
+          <div className='col-12 col-sm-6'>
+            <div className='row'>
+              <div className='col-sm-9'>
+                <div className='incident-frequency--filter_dateselector'>
+                  <DateRangePicker
+                    beginDate={{
+                      isValidDate: this._isValidBeginDate,
+                      onChange: this._beginDateChange,
+                      defaultValue: this.props.beginDate,
+                      value: this.props.beginDate
+                    }}
+                    endDate={{
+                      isValidDate: this._isValidEndDate,
+                      onChange: this._endDateChange,
+                      defaultValue: this.props.endDate,
+                      value: this.props.endDate
+                    }}
+                  />
+                </div>
+              </div>
+              <div className='col-sm-3 pull-left'>
+                <div className='incident-frequency--filter-type'>
+                  <Dropdown
+                    dropdownItems={this.resolutionTypes}
+                    labelComponent={ResolutionTypeDropdownLabel}
+                    triggerClasses={['btn', 'btn-secondary', 'dropdown-btn']}
+                  />
+                </div>
+              </div>
             </div>
           </div>
           <div className='col-12 col-sm-1'>
