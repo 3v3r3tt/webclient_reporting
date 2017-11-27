@@ -2,6 +2,11 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
 import moment from 'moment'
+import { Map } from 'immutable'
+import {
+  clone,
+  takeWhile
+} from 'lodash'
 
 import Victory from '@victorops/victory'
 
@@ -71,17 +76,56 @@ class IncidentFrequencyFilter extends Component {
     ]
 
     this.segmentationTypes = [
-      {label: 'Segment by host', handleClick: () => { this._setFilter('segmentationType', 'Segment by host') }},
-      {label: 'Segment by integration', handleClick: () => { this._setFilter('segmentationType', 'Segment by integration') }},
-      {label: 'Segment by route key', handleClick: () => { this._setFilter('segmentationType', 'Segment by route key') }},
-      {label: 'Segment by service', handleClick: () => { this._setFilter('segmentationType', 'Segment by service') }}
+      {
+        label: 'Segment by host',
+        handleClick: () => {
+          this._setFilter('segmentationType', Map({name: 'Segment by host', key: 'host'}))
+        }
+      },
+      {
+        label: 'Segment by integration',
+        handleClick: () => {
+          this._setFilter('segmentationType', Map({name: 'Segment by integration', key: 'integration'}))
+        }
+      },
+      {
+        label: 'Segment by route key',
+        handleClick: () => {
+          this._setFilter('segmentationType', Map({name: 'Segment by route key', key: 'route'}))
+        }
+      },
+      {
+        label: 'Segment by service',
+        handleClick: () => {
+          this._setFilter('segmentationType', Map({name: 'Segment by service', key: 'service'}))
+        }
+      }
     ]
 
-    this.resolutionTypes = [
-      {label: 'Display daily', handleClick: () => { this._setFilter('resolutionType', 'Display daily') }},
-      {label: 'Display weekly', handleClick: () => { this._setFilter('resolutionType', 'Display weekly') }},
-      {label: 'Display monthly', handleClick: () => { this._setFilter('resolutionType', 'Display monthly') }}
+    this.allResolutionTypes = [
+      {
+        label: 'Display daily',
+        type: 'day',
+        handleClick: () => {
+          this._setFilter('resolutionType', Map({name: 'Display daily', type: 'day'}))
+        }
+      },
+      {
+        label: 'Display weekly',
+        type: 'week',
+        handleClick: () => {
+          this._setFilter('resolutionType', Map({name: 'Display weekly', type: 'week'}))
+        }
+      },
+      {
+        label: 'Display monthly',
+        type: 'month',
+        handleClick: () => {
+          this._setFilter('resolutionType', Map({name: 'Display monthly', type: 'month'}))
+        }
+      }
     ]
+    this.resolutionTypes = clone(this.allResolutionTypes)
 
     this._beginDateChange = this._beginDateChange.bind(this)
     this._endDateChange = this._endDateChange.bind(this)
@@ -121,27 +165,19 @@ class IncidentFrequencyFilter extends Component {
   _checkDateRange (begin, end) {
     const rangeIsUnderWeek = !begin.clone().add(1, 'week').isBefore(end)
     const rangeIsUnderMonth = !begin.clone().add(1, 'month').isBefore(end)
+    const resolutionTypeKey = this.props.resolutionType.get('type')
     if (rangeIsUnderWeek) {
-      this.resolutionTypes = [
-        {label: 'Display daily', handleClick: () => { this._setFilter('resolutionType', 'Display daily') }}
-      ]
-      if (this.props.resolutionType === 'Display weekly' || this.props.resolutionType === 'Display monthly') {
-        this._setFilter('resolutionType', 'Display daily')
+      this.resolutionTypes = takeWhile(this.allResolutionTypes, (t) => t.type === 'day')
+      if (resolutionTypeKey === 'week' || resolutionTypeKey === 'month') {
+        this._setFilter('resolutionType', Map({name: 'Display daily', key: 'day'}))
       }
     } else if (rangeIsUnderMonth) {
-      this.resolutionTypes = [
-        {label: 'Display daily', handleClick: () => { this._setFilter('resolutionType', 'Display daily') }},
-        {label: 'Display weekly', handleClick: () => { this._setFilter('resolutionType', 'Display weekly') }}
-      ]
-      if (this.props.resolutionType === 'Display monthly') {
-        this._setFilter('resolutionType', 'Display weekly')
+      this.resolutionTypes = takeWhile(this.allResolutionTypes, (t) => t.type !== 'month')
+      if (resolutionTypeKey === 'month') {
+        this._setFilter('resolutionType', Map({name: 'Display weekly', key: 'week'}))
       }
     } else {
-      this.resolutionTypes = [
-        {label: 'Display daily', handleClick: () => { this._setFilter('resolutionType', 'Display daily') }},
-        {label: 'Display weekly', handleClick: () => { this._setFilter('resolutionType', 'Display weekly') }},
-        {label: 'Display monthly', handleClick: () => { this._setFilter('resolutionType', 'Display monthly') }}
-      ]
+      this.resolutionTypes = clone(this.allResolutionTypes)
     }
     this._getNewTableData()
   }
@@ -209,9 +245,9 @@ class IncidentFrequencyFilter extends Component {
   }
 
   render () {
-    const ServiceDropdownLabel = <span>{this.props.segmentationType}&nbsp;&nbsp;&nbsp;<i className='fa fa-angle-down' /></span>
+    const ServiceDropdownLabel = <span>{this.props.segmentationType.get('name')}&nbsp;&nbsp;&nbsp;<i className='fa fa-angle-down' /></span>
     const ChartTypeDropdownLabel = <span>{this.props.chartType}&nbsp;&nbsp;&nbsp;<i className='fa fa-angle-down' /></span>
-    const ResolutionTypeDropdownLabel = <span>{this.props.resolutionType}&nbsp;&nbsp;&nbsp;<i className='fa fa-angle-down' /></span>
+    const ResolutionTypeDropdownLabel = <span>{this.props.resolutionType.get('name')}&nbsp;&nbsp;&nbsp;<i className='fa fa-angle-down' /></span>
 
     return (
       <div className='incident-frequency--filter'>

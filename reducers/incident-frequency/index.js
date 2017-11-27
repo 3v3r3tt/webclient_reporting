@@ -25,8 +25,14 @@ export const initialState = _fromJS({
   timezoneOffset: moment().utcOffset() / 60,
   selectedTeam: '',
   chartType: 'Area',
-  segmentationType: 'Segment by integration',
-  resolutionType: 'Display weekly',
+  segmentationType: {
+    name: 'Segment by service',
+    key: 'service'
+  },
+  resolutionType: {
+    name: 'Display weekly',
+    type: 'week'
+  },
   graphData: null,
   innerTableIncidentData: null,
   incidentDetailData: null,
@@ -98,7 +104,7 @@ function _setIncidentFrequencyTableError (state, payload) {
 function _updateGraph (state, payload) {
   return state.set('graphData', _fromJS(payload))
               .update('loadingData', () => false)
-              .setIn(['error', 'table'], false)
+              .setIn(['error', 'graph'], false)
 }
 
 function _setIncidentFrequencyGraphError (state, payload) {

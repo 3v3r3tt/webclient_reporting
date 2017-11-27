@@ -6,7 +6,10 @@ import defaultHighChartsOptions from './highcharts-config'
 
 import moment from 'moment'
 import { fromJS } from 'immutable'
-import { merge as _merge } from 'vendor/lodash'
+import {
+  merge as _merge,
+  clone as _clone
+} from 'vendor/lodash'
 
 import {
   incidentFrequencyTableReduce,
@@ -20,16 +23,16 @@ const {
 function mapStateToProps (state) {
   return {
     data: state.incidentFrequency.get('graphData'),
+    graphDataSegments: state.incidentFrequency.getIn(['graphData', 'segments']),
+    graphDisplayBuckets: state.incidentFrequency.getIn(['graphData', 'display_buckets']),
     reducedData: state.incidentFrequency.get('reducedData'),
     selectedBucket: state.incidentFrequency.getIn(['reducedData', 'selectedBucket']),
     selectedTeam: state.incidentFrequency.get('selectedTeam'),
     beginDate: state.incidentFrequency.get('beginDate'),
     endDate: state.incidentFrequency.get('endDate'),
     chartType: state.incidentFrequency.get('chartType'),
-    segmentationType: state.incidentFrequency.get('segmentationType'),
     resolutionType: state.incidentFrequency.get('resolutionType'),
-    graphError: state.incidentFrequency.getIn(['error', 'graph']),
-    graphDataSegments: state.incidentFrequency.getIn(['graphData', 'segments'])
+    graphError: state.incidentFrequency.getIn(['error', 'graph'])
   }
 }
 
@@ -50,8 +53,8 @@ class IncidentFrequencyGraph extends Component {
   }
 
   _determineBucketLabel (bucket) {
-    const currentStartDate = moment(Number(bucket.bucket_start_date))
-    let currentIncrement = this.props.resolutionType.match(/Display (.)>*/)[1]
+    const currentStartDate = moment(Number(bucket.get('bucket_start')))
+    let currentIncrement = this.props.resolutionType.get('type').charAt(0)
     let bucketLabel = currentStartDate.format('MMM D')
     if (currentIncrement !== 'd') {
       currentIncrement = currentIncrement === 'm' ? 'M' : currentIncrement // Otherwise momentjs thinks millis
@@ -61,23 +64,21 @@ class IncidentFrequencyGraph extends Component {
     return bucketLabel
   }
 
-  _transformGraphData (rawData, generateGraph) {
-    if (!rawData) return false
-    rawData = rawData.toJS()
-
+  _transformGraphData (generateGraph) {
+    if (!this.props.data) return false
     let startDateBuckets = []
     let segmentSeriesData = []
-    rawData.display_buckets.forEach((bucket, outerIndex) => {
+    this.props.graphDisplayBuckets.forEach((bucket, outerIndex) => {
       const bucketLabel = this._determineBucketLabel(bucket)
       startDateBuckets.push(bucketLabel)
-      bucket.segments_and_values.forEach((segment, index) => {
+      bucket.get('segments_and_values').forEach((segment, index) => {
         if (outerIndex === 0) {
           segmentSeriesData[index] = {
-            name: segment.segment_name,
-            data: [segment.bucket_total]
+            name: segment.get('segment_name'),
+            data: [segment.get('bucket_total')]
           }
         } else {
-          segmentSeriesData[index].data.push(segment.bucket_total)
+          segmentSeriesData[index].data.push(segment.get('bucket_total'))
         }
       })
     })
@@ -116,8 +117,9 @@ class IncidentFrequencyGraph extends Component {
             }
           }
         },
-        min: 0.5,
-        max: startDateBuckets.length - 1.5
+        min: startDateBuckets.length <= 2 ? null : 0.5,
+        max: startDateBuckets.length <= 2 ? null : startDateBuckets.length - 1.5,
+        tickmarkPlacement: startDateBuckets.length === 1 ? 'on' : 'between'
       },
       yAxis: {
         title: {
@@ -148,14 +150,14 @@ class IncidentFrequencyGraph extends Component {
       series: segmentSeriesData
     }
 
-    return _merge(defaultHighChartsOptions, config)
+    return _merge(_clone(defaultHighChartsOptions), _clone(config))
   }
 
   _generateReducedGraph (name, series, pointIndex) {
     const reducedRows = series.map((segment, index) => {
       return ({
         segment_name: segment.name,
-        bucket_total: segment.yData[pointIndex]
+        total_incidents: segment.yData[pointIndex]
       })
     })
     this.props.updateReducedTable({
@@ -167,7 +169,7 @@ class IncidentFrequencyGraph extends Component {
   }
 
   render () {
-    const highchartData = this._transformGraphData(this.props.data, this._generateReducedGraph)
+    const highchartData = this._transformGraphData(this._generateReducedGraph)
     const graphIsEmpty = this.props.graphDataSegments != null && this.props.graphDataSegments.size === 0
 
     const GraphContent = highchartData

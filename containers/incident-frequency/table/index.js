@@ -20,7 +20,6 @@ const { Table } = Victory
 
 function mapStateToProps (state) {
   return {
-    rows: state.incidentFrequency.getIn(['graphData', 'segments']),
     reducedData: state.incidentFrequency.get('reducedData'),
     reducedRows: state.incidentFrequency.getIn(['reducedData', 'reducedRows']),
     innerTableIncidentData: state.incidentFrequency.get('innerTableIncidentData'),
@@ -52,7 +51,7 @@ class IncidentFrequencyTable extends Component {
           component: InnerTable,
           content: {
             name: segment.segment_name,
-            bucketTotal: segment.bucket_total,
+            bucketTotal: segment.total_incidents,
             getInnerTableData: this.props.getTableData,
             resetInnerTableData: this.props.resetTableData,
             innerTableIncidentData: this.props.innerTableIncidentData,
@@ -97,8 +96,8 @@ class IncidentFrequencyTable extends Component {
     let generatedRows = []
     if (this.props.reducedRows) {
       generatedRows = this._generateIncidentFrequencyTableRows(this.props.reducedRows.toJS())
-    } else if (this.props.rows) {
-      generatedRows = this._generateIncidentFrequencyTableRows(this.props.rows.toJS())
+    } else if (this.props.graphDataSegments) {
+      generatedRows = this._generateIncidentFrequencyTableRows(this.props.graphDataSegments.toJS())
     }
 
     const TableHeader =

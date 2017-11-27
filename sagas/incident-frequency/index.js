@@ -60,17 +60,14 @@ function _getIncidentFrequencyGraph ({create}, logError) {
       const reportingState = yield select(_getincidentFrequencyState)
       const data = {
         team: reportingState.get('selectedTeam', ''),
-        start_time: reportingState.get('beginDate', ''),
-        end_time: reportingState.get('endDate', ''),
-        display_by: reportingState.get('display_by'),
-        segment_type: reportingState.get('selectedSegmentType'),
-        tz_offset: reportingState.get('tz_offset')
+        start: reportingState.get('beginDate', ''),
+        end: reportingState.get('endDate', ''),
+        tz_offset: reportingState.get('timezoneOffset', 0),
+        bucket:  reportingState.getIn(['resolutionType', 'type']),
+        segment: reportingState.getIn(['segmentationType', 'key'])
       }
 
-      // const IncidentFrequencyReportData = yield call(create, IncidentFrequencyReportEndpoint, data)
-      // TODO: remove this once API works
-      const incidentFrequencyReportData = mockGraphData
-
+      const incidentFrequencyReportData = yield call(create, IncidentFrequencyReportEndpoint, data)
       yield put(incidentFrequencyGraphUpdate(incidentFrequencyReportData))
     } catch (err) {
       yield call(logError, err)
