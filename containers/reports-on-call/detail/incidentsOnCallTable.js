@@ -3,6 +3,7 @@ import React from 'react'
 import moment from 'moment'
 
 import OnCallDownloadCSVRow from './onCallDownloadCSVRow'
+import _truncate from 'util/truncate'
 
 import Victory from '@victorops/victory'
 
@@ -10,10 +11,6 @@ const { Table } = Victory
 
 const INCIDENT_LIMIT = 100
 const INCIDENT_ACTION_LIMIT = 20
-
-const _truncate = (longString, truncateLength) => {
-  return longString.substr(0, truncateLength).concat('...')
-}
 
 class OnCallTimelineRows extends React.Component {
   render () {
@@ -37,9 +34,7 @@ class OnCallTimelineRows extends React.Component {
       <ul>
         {showableIncidents.map((timelineItem, index) => {
           const eventTime = moment(timelineItem.get('event_time')).format('MMM. D, YYYY - HH:mm')
-          const eventText = timelineItem.get('event').length > 60
-            ? _truncate(timelineItem.get('event'), 60)
-            : timelineItem.get('event')
+          const eventText = _truncate(timelineItem.get('event'), 60)
           const involvesUser = timelineItem.get('involves_user', false)
           return (
             <li className={`reporting--on-call--list-item ${involvesUser ? '' : 'half-fade'}`} key={index}>

@@ -7,6 +7,7 @@ import {
   clone,
   takeWhile
 } from 'lodash'
+import _truncate from 'util/truncate'
 
 import Victory from '@victorops/victory'
 
@@ -223,7 +224,7 @@ class IncidentFrequencyFilter extends Component {
     const LabelComponent =
       <span className='filter--team-label'>
         <i className='fal fa-users' />
-        <span className='filter--team-label-text'>{this._truncate(selectedTeamName, 35)}</span>
+        <span className='filter--team-label-text'>{_truncate(selectedTeamName, 35)}</span>
         <i className='fas fa-angle-down' />
       </span>
 
@@ -235,13 +236,6 @@ class IncidentFrequencyFilter extends Component {
         customClasses={['filter--dropdown-div']}
       />
     )
-  }
-
-  _truncate (longString, truncateLength) {
-    if (longString.length > truncateLength) {
-      return longString.substr(0, truncateLength).concat('...')
-    }
-    return longString
   }
 
   render () {
