@@ -50,6 +50,7 @@ class IncidentFrequencyGraph extends Component {
     this._transformGraphData = this._transformGraphData.bind(this)
     this._generateReducedGraph = this._generateReducedGraph.bind(this)
     this._determineBucketLabel = this._determineBucketLabel.bind(this)
+    this._determineGraphMinMax = this._determineGraphMinMax.bind(this)
   }
 
   _determineBucketLabel (bucket) {
@@ -62,6 +63,14 @@ class IncidentFrequencyGraph extends Component {
       bucketLabel = `${currentStartDate.format('MMM D')} - ${currentEndDate.format('MMM D')}`
     }
     return bucketLabel
+  }
+
+  _determineGraphMinMax (dateBuckets) {
+    if (dateBuckets.length <= 2 || this.props.chartType === 'Column') {
+      return [null, null]
+    } else {
+      return [0.5, dateBuckets.length - 1.5]
+    }
   }
 
   _transformGraphData (generateGraph) {
@@ -84,6 +93,7 @@ class IncidentFrequencyGraph extends Component {
     })
 
     const selectedBucket = this.props.selectedBucket
+    const [graphMin, graphMax] = this._determineGraphMinMax(startDateBuckets)
 
     const config = {
       colors: this.props.colorList,
@@ -117,8 +127,8 @@ class IncidentFrequencyGraph extends Component {
             }
           }
         },
-        min: startDateBuckets.length <= 2 ? null : 0.5,
-        max: startDateBuckets.length <= 2 ? null : startDateBuckets.length - 1.5,
+        min: graphMin,
+        max: graphMax,
         tickmarkPlacement: startDateBuckets.length === 1 ? 'on' : 'between'
       },
       yAxis: {

@@ -86,13 +86,13 @@ class IncidentFrequencyFilter extends Component {
       {
         label: 'Segment by integration',
         handleClick: () => {
-          this._setFilter('segmentationType', Map({name: 'Segment by integration', key: 'integration'}))
+          this._setFilter('segmentationType', Map({name: 'Segment by integration', key: 'monitor'}))
         }
       },
       {
         label: 'Segment by route key',
         handleClick: () => {
-          this._setFilter('segmentationType', Map({name: 'Segment by route key', key: 'route'}))
+          this._setFilter('segmentationType', Map({name: 'Segment by route key', key: 'route_key'}))
         }
       },
       {
@@ -170,12 +170,12 @@ class IncidentFrequencyFilter extends Component {
     if (rangeIsUnderWeek) {
       this.resolutionTypes = takeWhile(this.allResolutionTypes, (t) => t.type === 'day')
       if (resolutionTypeKey === 'week' || resolutionTypeKey === 'month') {
-        this._setFilter('resolutionType', Map({name: 'Display daily', key: 'day'}))
+        this._setFilter('resolutionType', Map({name: 'Display daily', type: 'day'}))
       }
     } else if (rangeIsUnderMonth) {
       this.resolutionTypes = takeWhile(this.allResolutionTypes, (t) => t.type !== 'month')
       if (resolutionTypeKey === 'month') {
-        this._setFilter('resolutionType', Map({name: 'Display weekly', key: 'week'}))
+        this._setFilter('resolutionType', Map({name: 'Display weekly', type: 'week'}))
       }
     } else {
       this.resolutionTypes = clone(this.allResolutionTypes)
