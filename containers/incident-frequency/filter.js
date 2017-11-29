@@ -224,7 +224,7 @@ class IncidentFrequencyFilter extends Component {
     const LabelComponent =
       <span className='filter--team-label'>
         <i className='fal fa-users' />
-        <span className='filter--team-label-text'>{_truncate(selectedTeamName, 35)}</span>
+        <span className='filter--team-label-text'>{_truncate(selectedTeamName, 30)}</span>
         <i className='fas fa-angle-down' />
       </span>
 
