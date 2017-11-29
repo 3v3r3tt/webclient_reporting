@@ -78,7 +78,8 @@ class HoursOnCallTable extends React.Component {
       const hours = this._isFullDay(onCallDuration) ? 24 : onCallDuration.hours()
       const minutes = onCallDuration.minutes() < 10 ? `0${onCallDuration.minutes()}` : onCallDuration.minutes()
       const endDurationTime = onCallEndTime.hours() === 0 ? '24:00' : onCallEndTime.format('HH:mm')
-      const durationText = <span><b>{hours}:{minutes}</b> ({onCallStartTime.format('HH:mm')} - {endDurationTime})</span>
+      const duration = `${hours}:${minutes}`
+      const durationText = <span><b>{duration}</b> ({onCallStartTime.format('HH:mm')} - {endDurationTime})</span>
       const shiftText = onCallPeriod.get('shift_name') ? `(${onCallPeriod.get('shift_name')})` : ''
 
       return ({
@@ -91,7 +92,7 @@ class HoursOnCallTable extends React.Component {
         },
         {
           content: durationText,
-          value: onCallDuration,
+          value: duration.replace(':', '.'),
           id: 'duration',
           type: 'cell'
         },
