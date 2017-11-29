@@ -77,17 +77,29 @@ class IncidentFrequencyGraph extends Component {
     if (!this.props.data) return false
     let startDateBuckets = []
     let segmentSeriesData = []
+    let indexOfSets = []
     this.props.graphDisplayBuckets.forEach((bucket, outerIndex) => {
+      let dupeCount = {}
       const bucketLabel = this._determineBucketLabel(bucket)
       startDateBuckets.push(bucketLabel)
       bucket.get('segments_and_values').forEach((segment, index) => {
+        const bucketTotal = segment.get('bucket_total')
         if (outerIndex === 0) {
+          let newSet = new Set()
+          indexOfSets[index] = newSet.add(bucketTotal)
           segmentSeriesData[index] = {
             name: segment.get('segment_name'),
-            data: [segment.get('bucket_total')]
+            data: [bucketTotal]
           }
         } else {
-          segmentSeriesData[index].data.push(segment.get('bucket_total'))
+          // must slightly offset equal y-values to be visible for line graph
+          if (indexOfSets[index].has(bucketTotal) && this.props.chartType === 'Line') {
+            dupeCount[bucketTotal] = dupeCount[bucketTotal] ? dupeCount[bucketTotal] + 1 : 1
+            segmentSeriesData[index].data.push(bucketTotal + dupeCount[bucketTotal] / 100)
+          } else {
+            indexOfSets[index].add(bucketTotal)
+            segmentSeriesData[index].data.push(bucketTotal)
+          }
         }
       })
     })

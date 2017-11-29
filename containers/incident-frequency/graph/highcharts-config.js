@@ -31,7 +31,8 @@ export default {
     crosshairs: true,
     shared: true,
     backgroundColor: 'white',
-    borderColor: '#7e7e7e'
+    borderColor: '#7e7e7e',
+    valueDecimals: 0
   },
 
   plotOptions: {
