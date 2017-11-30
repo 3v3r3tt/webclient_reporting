@@ -20,8 +20,9 @@ class IncidentFrequencyTable extends Component {
   }
 
   _setExpanded () {
-    if (!this.props.innerTableIncidentData) {
-      this.props.getInnerTableData()
+    const lastSelectedRow = this.props.innerTableIncidentData ? this.props.innerTableIncidentData.get('segment') : null
+    if (this.props.name !== lastSelectedRow) {
+      this.props.getInnerTableData({segmentName: this.props.name})
     } else {
       this.props.resetInnerTableData()
     }

@@ -66,21 +66,12 @@ class IncidentFrequencyTable extends Component {
     return generatedRows
   }
 
-  _determineResolutionMomentType (label) {
-    switch (label) {
-      case 'Display daily': return 'day'
-      case 'Display weekly': return 'week'
-      case 'Display monthly': return 'month'
-      default: throw new Error('Unexpected date resolution type!')
-    }
-  }
-
   _determineDateRangeLabel (columnTitle) {
     const clickDate = moment(columnTitle, 'MMM D').date()
     const clickMonth = moment(columnTitle, 'MMM D').month()
     const clickYear = moment().month() > clickMonth ? moment().year() : moment().year() - 1
     const fromDate = moment(new Date(clickYear, clickMonth, clickDate))
-    const dateResolution = this._determineResolutionMomentType(this.props.resolutionType)
+    const dateResolution = this.props.resolutionType.get('type')
     const toDate = fromDate.clone().add(1, dateResolution)
     return `# of Incidents (${fromDate.format('MMM D')} - ${toDate.format('MMM D')})`
   }

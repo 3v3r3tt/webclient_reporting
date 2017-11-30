@@ -224,7 +224,7 @@ class IncidentFrequencyFilter extends Component {
     const LabelComponent =
       <span className='filter--team-label'>
         <i className='fal fa-users' />
-        <span className='filter--team-label-text'>{_truncate(selectedTeamName, 30)}</span>
+        <span className='filter--team-label-text'>{_truncate(selectedTeamName, 16)}</span>
         <i className='fas fa-angle-down' />
       </span>
 
@@ -239,29 +239,31 @@ class IncidentFrequencyFilter extends Component {
   }
 
   render () {
-    const ServiceDropdownLabel = <span>{this.props.segmentationType.get('name')}&nbsp;&nbsp;&nbsp;<i className='fa fa-angle-down' /></span>
-    const ChartTypeDropdownLabel = <span>{this.props.chartType}&nbsp;&nbsp;&nbsp;<i className='fa fa-angle-down' /></span>
+    const ServiceDropdownLabel = <span>{this.props.segmentationType.get('name')}&nbsp;&nbsp;<i className='fa fa-angle-down' /></span>
+    const ChartTypeDropdownLabel = <span><i className='fa fa-chart-area' />&nbsp;{this.props.chartType} &nbsp;&nbsp;&nbsp;<i className='fa fa-angle-down' /></span>
     const ResolutionTypeDropdownLabel = <span>{this.props.resolutionType.get('name')}&nbsp;&nbsp;&nbsp;<i className='fa fa-angle-down' /></span>
 
     return (
       <div className='incident-frequency--filter'>
         <div className='row'>
-          <div className='col-12 col-sm-3'>
-            { this._renderTeamsDropdown() }
-          </div>
-          <div className='col-12 col-sm-2'>
-            <div className='incident-frequency--filter-type'>
-              <Dropdown
-                dropdownItems={this.segmentationTypes}
-                labelComponent={ServiceDropdownLabel}
-                triggerClasses={['btn', 'btn-secondary', 'dropdown-btn']}
-              />
+          <div className='col-12 col-sm-4'>
+            <div className='row'>
+              <div className='col-6'>
+                { this._renderTeamsDropdown() }
+              </div>
+              <div className='col-6 incident-frequency--filter-type'>
+                <Dropdown
+                  dropdownItems={this.segmentationTypes}
+                  labelComponent={ServiceDropdownLabel}
+                  triggerClasses={['btn', 'btn-secondary', 'dropdown-btn']}
+                />
+              </div>
             </div>
           </div>
-          <div className='col-12 col-sm-6'>
-            <div className='row'>
-              <div className='col-sm-9'>
-                <div className='incident-frequency--filter_dateselector'>
+          <div className='col-12 col-sm-7'>
+            <div className='incident-frequency--filter_dateselector'>
+              <div className='row margin-0'>
+                <div className='col-xs-10 margin-right-10'>
                   <DateRangePicker
                     beginDate={{
                       isValidDate: this._isValidBeginDate,
@@ -277,9 +279,8 @@ class IncidentFrequencyFilter extends Component {
                     }}
                   />
                 </div>
-              </div>
-              <div className='col-sm-3 pull-left'>
-                <div className='incident-frequency--filter-type'>
+
+                <div className='col-xs-2'>
                   <Dropdown
                     dropdownItems={this.resolutionTypes}
                     labelComponent={ResolutionTypeDropdownLabel}

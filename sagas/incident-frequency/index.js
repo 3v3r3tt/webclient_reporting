@@ -29,22 +29,19 @@ import mockIncidentModalData from './sampleData/incidentModalData'
 export const _getincidentFrequencyState = (state) => state.incidentFrequency
 
 function _getIncidentFrequencyTable ({create}, logError) {
-  return function * () {
+  return function * (action) {
     try {
       const IncidentFrequencyReportEndpoint = `/api/v1/org/${config.auth.org.slug}/reports/incidentfrequencysegmentincidents`
       const reportingState = yield select(_getincidentFrequencyState)
       const data = {
         team: reportingState.get('selectedTeam', ''),
-        start_time: reportingState.get('beginDate', ''),
-        end_time: reportingState.get('endDate', ''),
-        segment_name: reportingState.get('selectedSegment'),
-        segment_type: reportingState.get('selectedSegmentType'),
+        start: reportingState.get('beginDate', ''),
+        end: reportingState.get('endDate', ''),
+        segment_name: action.payload.segmentName,
+        segment_type: reportingState.getIn(['segmentationType', 'key']),
         tz_offset: reportingState.get('tz_offset')
       }
-
-      // const incidentFrequencyReportData = yield call(create, IncidentFrequencyReportEndpoint, data)
-      // TODO: remove this once API works
-      const incidentFrequencyReportData = mockTableData
+      const incidentFrequencyReportData = yield call(create, IncidentFrequencyReportEndpoint, data)
       yield put(incidentFrequencyTableUpdate(incidentFrequencyReportData))
     } catch (err) {
       yield call(logError, err)
