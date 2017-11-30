@@ -77,29 +77,28 @@ class IncidentFrequencyGraph extends Component {
     if (!this.props.data) return false
     let startDateBuckets = []
     let segmentSeriesData = []
-    let indexOfSets = []
+    let lineDupeTracker = [{}]
     this.props.graphDisplayBuckets.forEach((bucket, outerIndex) => {
-      let dupeCount = {}
       const bucketLabel = this._determineBucketLabel(bucket)
       startDateBuckets.push(bucketLabel)
+      lineDupeTracker.push({})
       bucket.get('segments_and_values').forEach((segment, index) => {
         const bucketTotal = segment.get('bucket_total')
+        const dupesNeedHandled = lineDupeTracker[outerIndex][bucketTotal] && this.props.chartType === 'Line'
+        if (dupesNeedHandled) {
+          lineDupeTracker[outerIndex][bucketTotal] = lineDupeTracker[outerIndex][bucketTotal] + 1
+        } else if (this.props.chartType === 'Line') {
+          lineDupeTracker[outerIndex][bucketTotal] = 1
+        }
+
+        const jitterAmount = dupesNeedHandled ? lineDupeTracker[outerIndex][bucketTotal] / 100 : 0
         if (outerIndex === 0) {
-          let newSet = new Set()
-          indexOfSets[index] = newSet.add(bucketTotal)
           segmentSeriesData[index] = {
             name: segment.get('segment_name'),
-            data: [bucketTotal]
+            data: [bucketTotal + jitterAmount]
           }
         } else {
-          // must slightly offset equal y-values to be visible for line graph
-          if (indexOfSets[index].has(bucketTotal) && this.props.chartType === 'Line') {
-            dupeCount[bucketTotal] = dupeCount[bucketTotal] ? dupeCount[bucketTotal] + 1 : 1
-            segmentSeriesData[index].data.push(bucketTotal + dupeCount[bucketTotal] / 100)
-          } else {
-            indexOfSets[index].add(bucketTotal)
-            segmentSeriesData[index].data.push(bucketTotal)
-          }
+          segmentSeriesData[index].data.push(bucketTotal + jitterAmount)
         }
       })
     })

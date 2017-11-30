@@ -24,7 +24,9 @@ export default {
 
   yAxis: {
     type: 'linear',
-    gridLineWidth: 0
+    gridLineWidth: 0,
+    minRange: 1,
+    allowDecimals: false
   },
 
   tooltip: {
