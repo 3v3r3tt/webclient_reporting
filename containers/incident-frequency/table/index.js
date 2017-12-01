@@ -51,7 +51,7 @@ class IncidentFrequencyTable extends Component {
           component: InnerTable,
           content: {
             name: segment.segment_name,
-            bucketTotal: segment.total_incidents,
+            bucketTotal: Math.floor(segment.total_incidents),
             getInnerTableData: this.props.getTableData,
             resetInnerTableData: this.props.resetTableData,
             innerTableIncidentData: this.props.innerTableIncidentData,
@@ -59,7 +59,8 @@ class IncidentFrequencyTable extends Component {
             outerTableIndex: index,
             showModal: this.props.showModal,
             hideModal: this.props.hideModal
-          }
+          },
+          value: Math.floor(segment.total_incidents)
         }]
       })
     })
@@ -104,7 +105,8 @@ class IncidentFrequencyTable extends Component {
     const incidentFrequencyTableConfig = {
       columnHeaders: [
         {
-          label: TableHeader
+          label: TableHeader,
+          isSortable: true
         }],
       rowItems: generatedRows,
       customClasses: ['incident-frequency--main-incident-table']

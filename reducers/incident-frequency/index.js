@@ -1,6 +1,7 @@
 import { fromJS as _fromJS } from 'immutable'
 
 import moment from 'moment'
+import { clone } from 'lodash'
 
 import {
   INCIDENT_FREQUENCY_GRAPH_GET,
@@ -102,6 +103,41 @@ function _setIncidentFrequencyTableError (state, payload) {
 }
 
 function _updateGraph (state, payload) {
+  const resolutionType = state.getIn(['resolutionType', 'type'])
+  let filledBucketData = []
+  const segmentValues = payload.display_buckets[0].segments_and_values
+  const zeroBucketPlaceholder = segmentValues.map((s) => {
+    let clonedSegments = clone(s)
+    clonedSegments['bucket_total'] = 0
+    return clonedSegments
+  })
+
+  payload.display_buckets.forEach((bucket, index) => {
+    if (index === payload.display_buckets.length - 1) {
+      filledBucketData.push(bucket)
+    } else {
+      const current = moment(bucket.bucket_start)
+      const next = moment(payload.display_buckets[index + 1].bucket_start)
+      const dayBeforeNext = next.clone().subtract(1, 'day')
+      let gapsToFill = !current.isSame(dayBeforeNext, resolutionType)
+
+      if (gapsToFill) {
+        do {
+          filledBucketData.push({
+            bucket_start: current.valueOf(),
+            segments_and_values: zeroBucketPlaceholder
+          })
+          current.add(1, resolutionType)
+          gapsToFill = !current.isSame(next, resolutionType)
+        } while (gapsToFill)
+      } else {
+        filledBucketData.push(bucket)
+      }
+    }
+  })
+
+  payload.display_buckets = filledBucketData
+
   return state.set('graphData', _fromJS(payload))
               .update('loadingData', () => false)
               .setIn(['error', 'graph'], false)

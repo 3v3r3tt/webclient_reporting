@@ -79,7 +79,7 @@ function _getIncidentFrequencyIncidentDetails ({fetch}, logError) {
       const {
         incidentNumber
       } = action.payload
-      const IncidentFrequencyIncidentDetailEndpoint = `/api/v2/org/${config.auth.org.slug}/incidents?incidentNumber=${incidentNumber}`
+      const IncidentFrequencyIncidentDetailEndpoint = `/api/v1/org/${config.auth.org.slug}/reports/incidentModal?incidentNumber=${incidentNumber}`
 
       // const incidentFrequencyIncidentData = yield call(fetch, IncidentFrequencyIncidentDetailEndpoint)
       // TODO: remove this once API works
