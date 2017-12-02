@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import ReactHighcharts from 'react-highcharts'
-import Victory from '@victorops/victory'
 import defaultHighChartsOptions from './highcharts-config'
 
 import moment from 'moment'
@@ -12,34 +11,27 @@ import {
 } from 'vendor/lodash'
 
 import {
-  incidentFrequencyTableReduce,
-  incidentFrequencyTableReset
+  incidentFrequencyTableReduce
 } from 'reporting/actions/incident-frequency'
-
-const {
-  Button
-} = Victory
 
 function mapStateToProps (state) {
   return {
     data: state.incidentFrequency.get('graphData'),
     graphDataSegments: state.incidentFrequency.getIn(['graphData', 'segments']),
     graphDisplayBuckets: state.incidentFrequency.getIn(['graphData', 'display_buckets']),
-    reducedData: state.incidentFrequency.get('reducedData'),
-    selectedBucket: state.incidentFrequency.getIn(['reducedData', 'selectedBucket']),
     selectedTeam: state.incidentFrequency.get('selectedTeam'),
     beginDate: state.incidentFrequency.get('beginDate'),
     endDate: state.incidentFrequency.get('endDate'),
     chartType: state.incidentFrequency.get('chartType'),
+    graphError: state.incidentFrequency.getIn(['error', 'graph']),
     resolutionType: state.incidentFrequency.get('resolutionType'),
-    graphError: state.incidentFrequency.getIn(['error', 'graph'])
+    needsReset: state.incidentFrequency.get('needsReset')
   }
 }
 
 function mapDispatchToProps (dispatch) {
   return {
-    updateReducedTable: (payload) => dispatch(incidentFrequencyTableReduce(payload)),
-    resetReducedTable: (payload) => dispatch(incidentFrequencyTableReset(payload))
+    updateReducedTable: (payload) => dispatch(incidentFrequencyTableReduce(payload))
   }
 }
 
@@ -103,39 +95,38 @@ class IncidentFrequencyGraph extends Component {
       })
     })
 
-    const selectedBucket = this.props.selectedBucket
     const [graphMin, graphMax] = this._determineGraphMinMax(startDateBuckets)
 
     const config = {
       colors: this.props.colorList,
-
       chart: {
         type: this.props.chartType.toLowerCase(),
         events: {
           click: function (e) {
-            let chart = this
-            let point = chart.series[0].searchPoint(chart.pointer.normalize(e))
+            let point = this.series[0].searchPoint(this.pointer.normalize(e))
+            let chart = this.xAxis[0]
+            chart.removePlotLine('selected-bucket')
+            chart.addPlotLine({
+              value: point.x,
+              color: '#7e7e7e',
+              width: 3,
+              id: 'selected-bucket',
+              zIndex: '9999'
+            })
+            chart.labelFormatter(point.x)
             generateGraph(point.category, point.series.chart.series, point.x)
+          },
+          load: function (e) {
+            let chart = this.xAxis[0]
+            chart.removePlotLine('selected-bucket')
           }
         }
       },
-
-      title: {
-        text: 'Incident Frequency Report'
-      },
-
       xAxis: {
         categories: startDateBuckets,
-        plotLines: [{
-          value: selectedBucket
-        }],
         labels: {
-          formatter: function () {
-            if (selectedBucket === this.pos) {
-              return `<span style="fill: black;">${this.value}</span>`
-            } else {
-              return `<span style="fill-opacity: .7;">${this.value}</span>`
-            }
+          formatter: function (selectedBucket) {
+            return `<span style="fill: black; font-size: 14px;">${this.value}</span>`
           }
         },
         min: graphMin,
@@ -147,27 +138,27 @@ class IncidentFrequencyGraph extends Component {
           text: 'Number of Incidents'
         }
       },
-
       plotOptions: {
-        line: {
-          animation: this.props.reducedData.animation
-        },
-
-        area: {
-          animation: this.props.reducedData.animation
-        },
-
         series: {
           point: {
             events: {
               click: function (e) {
+                let chart = this.series.chart.xAxis[0]
+                chart.removePlotLine('selected-bucket')
+                chart.addPlotLine({
+                  value: this.x,
+                  color: '#7e7e7e',
+                  width: 3,
+                  id: 'selected-bucket',
+                  zIndex: '9999'
+                })
+                chart.labelFormatter(this.x)
                 generateGraph(this.category, this.series.chart.series, this.x)
               }
             }
           }
         }
       },
-
       series: segmentSeriesData
     }
 
@@ -197,19 +188,12 @@ class IncidentFrequencyGraph extends Component {
       ? <ReactHighcharts config={highchartData} />
       : <p>Loading Graph...</p>
 
-    let buttonClass = 'btn btn-outline-warning incident-frequency--graph--button'
-    const drawButton = this.props.reducedData.get('reducedRows') !== null
-
     const graphError = <div className='incident-frequency--error--graph'>Could not fetch data from server - reload to try again.</div>
 
     const graph =
       <div className='incident-frequency--graph'>
         {GraphContent}
         {graphIsEmpty ? <h1 className='incident-frequency--graph--no-data'>No data for this time period</h1> : null}
-        <Button
-          content='Reset'
-          type={!drawButton ? buttonClass + ' display--none' : buttonClass}
-          clickHandler={() => { this.props.resetReducedTable() }} />
       </div>
 
     return (this.props.graphError ? graphError : graph)

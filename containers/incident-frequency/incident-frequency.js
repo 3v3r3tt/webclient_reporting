@@ -7,7 +7,12 @@ import Filter from './filter'
 import IncidentFrequencyGraph from './graph'
 import IncidentFrequencyTable from './table'
 
-const { BreadCrumbs } = Victory
+import { incidentFrequencyTableReset } from 'reporting/actions/incident-frequency'
+
+const {
+  BreadCrumbs,
+  Button
+} = Victory
 
 const config = window.VO_CONFIG
 
@@ -19,13 +24,24 @@ const COLOR_LIST = [
 
 function mapStateToProps (state) {
   return {
-    graphDataExists: state.incidentFrequency.getIn(['graphData', 'has_data_flag'], true)
+    graphDataExists: state.incidentFrequency.getIn(['graphData', 'has_data_flag'], true),
+    reducedData: state.incidentFrequency.getIn(['reducedData', 'reducedRows'])
+  }
+}
+
+function mapDispatchToProps (dispatch) {
+  return {
+    resetReducedTable: (payload) => dispatch(incidentFrequencyTableReset(payload))
   }
 }
 
 class IncidentFrequency extends Component {
   render () {
     const ReportHomeLink = <Link className='link--default' to={`/reports/${config.orgslug}`}>Reports</Link>
+    const ClearBucketSelectionButton = <Button
+      content='Reset'
+      type='btn btn-warning incident-frequency--graph--button'
+      clickHandler={() => { this.props.resetReducedTable() }} />
 
     const incidentFrequencyReport =
       <div className='container module-wrapper'>
@@ -37,6 +53,8 @@ class IncidentFrequency extends Component {
         <h1 className='heading-3'>Incident Frequency Report</h1>
 
         <Filter />
+
+        { this.props.reducedData ? ClearBucketSelectionButton : null }
 
         <IncidentFrequencyGraph colorList={COLOR_LIST} />
 
@@ -73,4 +91,4 @@ class IncidentFrequency extends Component {
   }
 }
 
-export default connect(mapStateToProps)(IncidentFrequency)
+export default connect(mapStateToProps, mapDispatchToProps)(IncidentFrequency)

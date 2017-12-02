@@ -239,19 +239,19 @@ class IncidentFrequencyFilter extends Component {
   }
 
   render () {
-    const ServiceDropdownLabel = <span>{this.props.segmentationType.get('name')}&nbsp;&nbsp;<i className='fa fa-angle-down' /></span>
-    const ChartTypeDropdownLabel = <span><i className='fa fa-chart-area' />&nbsp;{this.props.chartType} &nbsp;&nbsp;&nbsp;<i className='fa fa-angle-down' /></span>
-    const ResolutionTypeDropdownLabel = <span>{this.props.resolutionType.get('name')}&nbsp;&nbsp;&nbsp;<i className='fa fa-angle-down' /></span>
+    const ServiceDropdownLabel = <span>{this.props.segmentationType.get('name')}&nbsp;&nbsp;&nbsp;<i className='fa fa-angle-down' /></span>
+    const ChartTypeDropdownLabel = <span><i className='fa fa-chart-area' />&nbsp;&nbsp;{this.props.chartType} &nbsp;&nbsp;&nbsp;<i className='fa fa-angle-down' /></span>
+    const ResolutionTypeDropdownLabel = <span>{this.props.resolutionType.get('name')}&nbsp;&nbsp;&nbsp;&nbsp;<i className='fa fa-angle-down' /></span>
 
     return (
       <div className='incident-frequency--filter'>
         <div className='row'>
-          <div className='col-12 col-sm-4'>
+          <div className='col-12 col-lg-4'>
             <div className='row'>
-              <div className='col-6'>
+              <div className='col-12 col-sm-6'>
                 { this._renderTeamsDropdown() }
               </div>
-              <div className='col-6 incident-frequency--filter-type'>
+              <div className='col-12 col-sm-6 incident-frequency--filter-type'>
                 <Dropdown
                   dropdownItems={this.segmentationTypes}
                   labelComponent={ServiceDropdownLabel}
@@ -260,7 +260,7 @@ class IncidentFrequencyFilter extends Component {
               </div>
             </div>
           </div>
-          <div className='col-12 col-sm-7'>
+          <div className='col-12 col-lg-6'>
             <div className='incident-frequency--filter_dateselector'>
               <div className='row margin-0'>
                 <div className='col-xs-10 margin-right-10'>
@@ -290,7 +290,7 @@ class IncidentFrequencyFilter extends Component {
               </div>
             </div>
           </div>
-          <div className='col-12 col-sm-1'>
+          <div className='col-12 col-lg-2'>
             <div className='incident-frequency--filter-type'>
               <Dropdown
                 dropdownItems={this.chartTypes}

@@ -99,7 +99,7 @@ class IncidentFrequencyTable extends Component {
     }
 
     const CollapsedContent =
-      <div className='row'>
+      <div className='row' onClick={this._setExpanded}>
         <div className='col-8 margin-bottom-20'>
           <span className='incident-frequency--inner-incident-table--card-header'>
             <i className='fa fa-sm fa-circle margin-right-10' style={{color: `${this.props.colorList[this.props.outerTableIndex]}`}} />
@@ -152,7 +152,7 @@ class IncidentFrequencyTable extends Component {
           </span>
         </div>
         <div className='col-4'>
-          <span className='pull-right incident-frequency--inner-incident-table--card-header'>{this.props.bucketTotal}</span>
+          <span className='pull-right'>{this.props.bucketTotal}</span>
         </div>
 
         <div className='col-12'>

@@ -2,7 +2,7 @@ export default {
   legend: { enabled: false },
 
   title: {
-    text: 'Untitled'
+    text: ''
   },
 
   xAxis: {
@@ -34,7 +34,10 @@ export default {
     shared: true,
     backgroundColor: 'white',
     borderColor: '#7e7e7e',
-    valueDecimals: 0
+    valueDecimals: 0,
+    borderRadius: 10,
+    borderWidth: 2,
+    headerFormat: '<span style="font-size: 14px; text-decoration: underline; font-weight: bold;">{point.key}</span><br/>'
   },
 
   plotOptions: {
