@@ -69,10 +69,13 @@ class IncidentFrequencyGraph extends Component {
     let startDateBuckets = []
     let segmentSeriesData = []
     let lineDupeTracker = [{}]
+    let graphYMax = 0
     this.props.graphDisplayBuckets.forEach((bucket, outerIndex) => {
       const bucketLabel = this._determineBucketLabel(bucket)
       startDateBuckets.push(bucketLabel)
       lineDupeTracker.push({})
+      let currentGraphYMax = 0
+
       bucket.get('segments_and_values').forEach((segment, index) => {
         const bucketTotal = segment.get('bucket_total')
         const dupesNeedHandled = lineDupeTracker[outerIndex][bucketTotal] && this.props.chartType === 'Line'
@@ -91,10 +94,18 @@ class IncidentFrequencyGraph extends Component {
         } else {
           segmentSeriesData[index].data.push(bucketTotal + jitterAmount)
         }
+
+        if (this.props.chartType === 'Area') {
+          currentGraphYMax += bucketTotal
+          graphYMax = graphYMax < currentGraphYMax ? currentGraphYMax : graphYMax
+        } else {
+          currentGraphYMax = bucketTotal
+          graphYMax = graphYMax < currentGraphYMax ? currentGraphYMax : graphYMax
+        }
       })
     })
 
-    const [graphMin, graphMax] = this._determineGraphMinMax(startDateBuckets)
+    const [graphXMin, graphXMax] = this._determineGraphMinMax(startDateBuckets)
 
     const config = {
       colors: this.props.colorList,
@@ -128,14 +139,15 @@ class IncidentFrequencyGraph extends Component {
             return `<span style="fill: black; font-size: 14px;">${this.value}</span>`
           }
         },
-        min: graphMin,
-        max: graphMax,
+        min: graphXMin,
+        max: graphXMax,
         tickmarkPlacement: startDateBuckets.length === 1 ? 'on' : 'between'
       },
       yAxis: {
         title: {
           text: 'Number of Incidents'
-        }
+        },
+        max: graphYMax + 1
       },
       plotOptions: {
         series: {
