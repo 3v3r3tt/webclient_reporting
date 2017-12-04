@@ -36,12 +36,26 @@ function mapDispatchToProps (dispatch) {
 }
 
 class IncidentFrequency extends Component {
+  constructor (props) {
+    super(props)
+
+    this._resetTableData = this._resetTableData.bind(this)
+  }
+
+  _resetTableData () {
+    const plotLine = document.getElementsByClassName('highcharts-plot-lines-9999')[0]
+    plotLine.style.display = 'none'
+    this.props.resetReducedTable()
+  }
+
   render () {
     const ReportHomeLink = <Link className='link--default' to={`/reports/${config.orgslug}`}>Reports</Link>
-    const ClearBucketSelectionButton = <Button
-      content='Reset'
-      type='btn btn-warning incident-frequency--graph--button'
-      clickHandler={() => { this.props.resetReducedTable() }} />
+    const ClearBucketSelectionButton =
+      <Button
+        content='Reset'
+        type='btn btn-warning incident-frequency--graph--button'
+        clickHandler={this._resetTableData}
+      />
 
     const incidentFrequencyReport =
       <div className='container module-wrapper'>

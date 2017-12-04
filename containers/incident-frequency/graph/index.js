@@ -24,8 +24,7 @@ function mapStateToProps (state) {
     endDate: state.incidentFrequency.get('endDate'),
     chartType: state.incidentFrequency.get('chartType'),
     graphError: state.incidentFrequency.getIn(['error', 'graph']),
-    resolutionType: state.incidentFrequency.get('resolutionType'),
-    needsReset: state.incidentFrequency.get('needsReset')
+    resolutionType: state.incidentFrequency.get('resolutionType')
   }
 }
 
@@ -172,6 +171,8 @@ class IncidentFrequencyGraph extends Component {
         total_incidents: segment.yData[pointIndex]
       })
     })
+    const plotLine = document.getElementsByClassName('highcharts-plot-lines-9999')[0]
+    plotLine.style.display = 'unset'
     this.props.updateReducedTable({
       reducedRows: fromJS(reducedRows),
       animation: false,
@@ -191,7 +192,7 @@ class IncidentFrequencyGraph extends Component {
     const graphError = <div className='incident-frequency--error--graph'>Could not fetch data from server - reload to try again.</div>
 
     const graph =
-      <div className='incident-frequency--graph'>
+      <div className='incident-frequency--graph' id='incident-frequency-graph'>
         {GraphContent}
         {graphIsEmpty ? <h1 className='incident-frequency--graph--no-data'>No data for this time period</h1> : null}
       </div>

@@ -46,8 +46,7 @@ export const initialState = _fromJS({
     animation: true,
     columnTitle: null,
     selectedBucket: null
-  },
-  needsReset: false
+  }
 })
 
 export default function incidentFrequencyReport (state = initialState, action) {
@@ -153,13 +152,11 @@ function _updateReducedTable (state, payload) {
 }
 
 function _resetReducedTable (state, payload) {
-  const last = state.get('needsReset')
   return state.set('reducedData', _fromJS({
     reducedRows: null,
     animation: true,
     columnTitle: null,
     selectedBucket: null}))
-              .set('needsReset', !last)
 }
 
 function _setIncidentFrequencyIncidentDetailError (state, payload) {
