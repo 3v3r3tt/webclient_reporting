@@ -109,8 +109,9 @@ export const getIncidentFrequencyFilledBuckets = createSelector(
       return clonedSegments
     })
 
-    function _fillMiddleBuckets (dataStart, dataEnd, zeroBucket) {
+    function _fillMiddleBuckets (dataStart, zeroBucket) {
       let filledBuckets = []
+      let dataEnd = null
       filledGraphData.display_buckets.forEach((bucket, index) => {
         if (index === filledGraphData.display_buckets.length - 1) {
           dataEnd = moment(bucket.bucket_start)
@@ -135,7 +136,7 @@ export const getIncidentFrequencyFilledBuckets = createSelector(
           }
         }
       })
-      return filledBuckets
+      return [filledBuckets, dataEnd]
     }
 
     function _fillEdgeBuckets (dataStart, dataEnd, zeroBucket, filledBuckets) {
@@ -170,9 +171,8 @@ export const getIncidentFrequencyFilledBuckets = createSelector(
     }
 
     let dataStartDate = moment(filledGraphData.display_buckets[0].bucket_start)
-    let dataEndDate = null
 
-    let filledBucketData = _fillMiddleBuckets(dataStartDate, dataEndDate, zeroBucketPlaceholder)
+    let [filledBucketData, dataEndDate] = _fillMiddleBuckets(dataStartDate, zeroBucketPlaceholder)
     filledBucketData = _fillEdgeBuckets(dataStartDate, dataEndDate, zeroBucketPlaceholder, filledBucketData)
 
     filledGraphData.display_buckets = filledBucketData
