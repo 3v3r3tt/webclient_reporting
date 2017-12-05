@@ -11,14 +11,16 @@ import {
 } from 'vendor/lodash'
 
 import {
+  getIncidentFrequencyFilledBuckets
+} from 'reporting/selectors'
+
+import {
   incidentFrequencyTableReduce
 } from 'reporting/actions/incident-frequency'
 
 function mapStateToProps (state) {
   return {
-    data: state.incidentFrequency.get('graphData'),
-    graphDataSegments: state.incidentFrequency.getIn(['graphData', 'segments']),
-    graphDisplayBuckets: state.incidentFrequency.getIn(['graphData', 'display_buckets']),
+    data: getIncidentFrequencyFilledBuckets(state),
     selectedTeam: state.incidentFrequency.get('selectedTeam'),
     beginDate: state.incidentFrequency.get('beginDate'),
     endDate: state.incidentFrequency.get('endDate'),
@@ -45,7 +47,7 @@ class IncidentFrequencyGraph extends Component {
   }
 
   _determineBucketLabel (bucket) {
-    const currentStartDate = moment(Number(bucket.get('bucket_start')))
+    const currentStartDate = moment(Number(bucket.bucket_start))
     let currentIncrement = this.props.resolutionType.get('type').charAt(0)
     let bucketLabel = currentStartDate.format('MMM D')
     if (currentIncrement !== 'd') {
@@ -70,14 +72,14 @@ class IncidentFrequencyGraph extends Component {
     let segmentSeriesData = []
     let lineDupeTracker = [{}]
     let graphYMax = 0
-    this.props.graphDisplayBuckets.forEach((bucket, outerIndex) => {
+    this.props.data.display_buckets.forEach((bucket, outerIndex) => {
       const bucketLabel = this._determineBucketLabel(bucket)
       startDateBuckets.push(bucketLabel)
       lineDupeTracker.push({})
       let currentGraphYMax = 0
 
-      bucket.get('segments_and_values').forEach((segment, index) => {
-        const bucketTotal = segment.get('bucket_total')
+      bucket.segments_and_values.forEach((segment, index) => {
+        const bucketTotal = segment.bucket_total
         const dupesNeedHandled = lineDupeTracker[outerIndex][bucketTotal] && this.props.chartType === 'Line'
         if (dupesNeedHandled) {
           lineDupeTracker[outerIndex][bucketTotal] = lineDupeTracker[outerIndex][bucketTotal] + 1
@@ -88,7 +90,7 @@ class IncidentFrequencyGraph extends Component {
         const jitterAmount = dupesNeedHandled ? lineDupeTracker[outerIndex][bucketTotal] / 100 : 0
         if (outerIndex === 0) {
           segmentSeriesData[index] = {
-            name: segment.get('segment_name'),
+            name: segment.segment_name,
             data: [bucketTotal + jitterAmount]
           }
         } else {
@@ -195,7 +197,7 @@ class IncidentFrequencyGraph extends Component {
 
   render () {
     const highchartData = this._transformGraphData(this._generateReducedGraph)
-    const graphIsEmpty = this.props.graphDataSegments != null && this.props.graphDataSegments.size === 0
+    const graphIsEmpty = !this.props.data || (this.props.data.segments != null && this.props.data.segments.length === 0)
 
     const GraphContent = highchartData
       ? <ReactHighcharts config={highchartData} />

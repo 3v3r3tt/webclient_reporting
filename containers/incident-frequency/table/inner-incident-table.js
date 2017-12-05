@@ -72,7 +72,8 @@ class IncidentFrequencyTable extends Component {
 
   _rowClickFnGenerator (rowId) {
     return () => {
-      this._openIncidentDetailModal(rowId)
+      // TODO: Once IFR Modal Endpoing is finished
+      // this._openIncidentDetailModal(rowId)
     }
   }
 
