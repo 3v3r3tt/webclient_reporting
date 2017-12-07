@@ -22,8 +22,6 @@ import config from 'components/__utils/config'
 
 // TODO: remove this once API working
 /*eslint-disable */
-import mockGraphData from './sampleData/graphData'
-import mockTableData from './sampleData/tableData'
 import mockIncidentModalData from './sampleData/incidentModalData'
 
 export const _getincidentFrequencyState = (state) => state.incidentFrequency

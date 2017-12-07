@@ -14,15 +14,15 @@ const incidentModalData = {
       'entityDisplayName': 'VictorOps - SalesOps Test Account (Zuora)(3): Org to Make Paid',
       'entityId': '00020392',
       'entityType': 'service',
-      'host': 'server.somecluster.host.com',
+      'host': 'dmapp1.prod.acme.com',
       'incidentNumber': '21248',
       'lastAlertId': 'cbd5a8fc-e4e4-438d-b0e1-2a4fd5c0d00d',
       'lastAlertTime': '2017-11-01T19:15:15Z',
       'routingKey': 'support',
-      'service': '00020392',
+      'service': 'DiskCheck',
       'startTime': '2017-11-01T19:01:42Z',
       'pagedTeams': [
-        'operations-support'
+        'alpha-team'
       ],
       'pagedUsers': [
         'paulevmo',
