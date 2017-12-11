@@ -196,22 +196,30 @@ class IncidentFrequencyGraph extends Component {
   }
 
   render () {
-    const highchartData = this._transformGraphData(this._generateReducedGraph)
+    if (this.props.graphError) {
+      return (
+        <h1 className='incident-frequency--graph--no-data'>
+          Could not fetch data from server - reload to try again.
+        </h1>
+      )
+    }
+
     const graphIsEmpty = !this.props.data || (this.props.data.segments != null && this.props.data.segments.length === 0)
+    if (graphIsEmpty) {
+      return (
+        <h1 className='incident-frequency--graph--no-data'>
+          No data for this time period - change filters to try again.
+        </h1>
+      )
+    }
 
-    const GraphContent = highchartData
-      ? <ReactHighcharts config={highchartData} />
-      : <p>Loading Graph...</p>
+    const highchartData = this._transformGraphData(this._generateReducedGraph)
 
-    const graphError = <div className='incident-frequency--error--graph'>Could not fetch data from server - reload to try again.</div>
-
-    const graph =
+    return (
       <div className='incident-frequency--graph' id='incident-frequency-graph'>
-        {GraphContent}
-        {graphIsEmpty ? <h1 className='incident-frequency--graph--no-data'>No data for this time period</h1> : null}
+        <ReactHighcharts config={highchartData} />
       </div>
-
-    return (this.props.graphError ? graphError : graph)
+    )
   }
 }
 

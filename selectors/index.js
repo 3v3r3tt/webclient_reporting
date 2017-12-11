@@ -100,7 +100,7 @@ export const getIncidentFrequencyFilledBuckets = createSelector(
     state => state.incidentFrequency.get('graphData')
   ],
   (requestStartDate, requestEndDate, resolutionType, graphData) => {
-    if (!graphData) return
+    if (!graphData || graphData.get('display_buckets').isEmpty()) return
     let filledGraphData = graphData.toJS()
     const segmentValues = filledGraphData.display_buckets[0].segments_and_values
     const zeroBucketPlaceholder = segmentValues.map((s) => {

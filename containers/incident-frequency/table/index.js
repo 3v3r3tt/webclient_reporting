@@ -25,6 +25,7 @@ function mapStateToProps (state) {
     innerTableIncidentData: state.incidentFrequency.get('innerTableIncidentData'),
     resolutionType: state.incidentFrequency.get('resolutionType'),
     tableError: state.incidentFrequency.getIn(['error', 'table']),
+    graphError: state.incidentFrequency.getIn(['error', 'graph']),
     graphDataSegments: state.incidentFrequency.getIn(['graphData', 'segments'])
   }
 }
@@ -79,6 +80,16 @@ class IncidentFrequencyTable extends Component {
 
   render () {
     const graphIsEmpty = this.props.graphDataSegments != null && this.props.graphDataSegments.size === 0
+    if (this.props.graphError || graphIsEmpty) return null
+
+    if (this.props.tableError) {
+      return (
+        <div className='incident-frequency--error--table'>
+          Could not fetch data from server - reload to try again.
+        </div>
+      )
+    }
+
     const columnTitle = this.props.reducedData.get('columnTitle')
     let incidentColumnLabel = '# of Incidents'
     if (columnTitle) {
@@ -112,14 +123,14 @@ class IncidentFrequencyTable extends Component {
       customClasses: ['incident-frequency--main-incident-table']
     }
 
-    const table =
+    return (
       <div className='has-loading-gradient margin-top-10'>
-        {graphIsEmpty ? null : <Table {...incidentFrequencyTableConfig} showLoader={this.props.isLoading} />}
+        <Table
+          {...incidentFrequencyTableConfig}
+          showLoader={this.props.isLoading}
+        />
       </div>
-
-    const tableError = <div className='incident-frequency--error--table'>Could not fetch data from server - reload to try again.</div>
-
-    return (this.props.tableError ? tableError : table)
+    )
   }
 }
 
