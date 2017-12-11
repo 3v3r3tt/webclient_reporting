@@ -26,8 +26,8 @@ export const initialState = _fromJS({
   selectedTeam: '',
   chartType: 'Area',
   segmentationType: {
-    name: 'Segment by service',
-    key: 'service'
+    name: 'Segment by integration',
+    key: 'monitor'
   },
   resolutionType: {
     name: 'Display weekly',
