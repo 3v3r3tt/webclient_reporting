@@ -1,7 +1,9 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import ReactHighcharts from 'react-highcharts'
+
 import defaultHighChartsOptions from './highcharts-config'
+import Placeholder from './placeholder'
 
 import moment from 'moment'
 import { fromJS } from 'immutable'
@@ -207,9 +209,7 @@ class IncidentFrequencyGraph extends Component {
     const graphIsEmpty = !this.props.data || (this.props.data.segments != null && this.props.data.segments.length === 0)
     if (graphIsEmpty) {
       return (
-        <h1 className='incident-frequency--graph--no-data'>
-          No data for this time period - change filters to try again.
-        </h1>
+        <Placeholder />
       )
     }
 
