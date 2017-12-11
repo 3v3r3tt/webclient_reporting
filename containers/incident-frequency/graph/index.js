@@ -11,6 +11,7 @@ import {
   merge as _merge,
   clone as _clone
 } from 'vendor/lodash'
+import _truncate from 'util/truncate'
 
 import {
   getIncidentFrequencyFilledBuckets
@@ -92,7 +93,7 @@ class IncidentFrequencyGraph extends Component {
         const jitterAmount = dupesNeedHandled ? lineDupeTracker[outerIndex][bucketTotal] / 100 : 0
         if (outerIndex === 0) {
           segmentSeriesData[index] = {
-            name: segment.segment_name,
+            name: _truncate(segment.segment_name, 15) + ' ',
             data: [bucketTotal + jitterAmount]
           }
         } else {
