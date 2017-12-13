@@ -61,7 +61,7 @@ class IncidentFrequency extends Component {
       <div className='container module-wrapper'>
         <BreadCrumbs breadcrumbs={[
           {label: ReportHomeLink, active: true},
-          {label: 'Incident Frequency', uri: '#reports/incident-frequcy', active: true}
+          {label: 'Incident Frequency Report', uri: '#reports/incident-frequcy', active: true}
         ]} light />
 
         <h1 className='heading-3'>Incident Frequency Report</h1>
