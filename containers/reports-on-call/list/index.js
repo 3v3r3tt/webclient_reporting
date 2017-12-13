@@ -118,7 +118,12 @@ class ReportsOnCallList extends Component {
         />
 
         <div className='has-loading-gradient oncall--team-table'>
-          <Table customClasses={['rows--have_hover']} showLoader={this.props.isLoading} {...onCallTableConfig} />
+          <Table
+            customClasses={['rows--have_hover']}
+            showLoader={this.props.isLoading}
+            filteredBy={this.props.selectedTeam}
+            {...onCallTableConfig}
+          />
           {(!this.props.isLoading && !this.props.teamOnCallData.getIn(['teamData', 'members']).size) ? <p>No data found</p> : null}
         </div>
       </div>
