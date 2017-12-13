@@ -9,6 +9,8 @@ import {
 } from 'lodash'
 import _truncate from 'util/truncate'
 
+import IncidentFrequencyCSVButton from './csvDownloadButton'
+
 import Victory from '@victorops/victory'
 
 import { getTeams } from 'reporting/actions/teams'
@@ -269,6 +271,7 @@ class IncidentFrequencyFilter extends Component {
             />
           </div>
         </div>
+
         <div className='incident-frequency--daterange incident-frequency--filteritem'>
           <div className='incident-frequency--filter_dateselector'>
             <div className='row margin-0'>
@@ -299,6 +302,13 @@ class IncidentFrequencyFilter extends Component {
             </div>
           </div>
         </div>
+
+        <div className='incident-frequency--exportcsv'>
+          <div className='incident-frequency--filter-type'>
+            <IncidentFrequencyCSVButton {...this.props} />
+          </div>
+        </div>
+
         <div className='incident-frequency--charttype incident-frequency--filteritem'>
           <div className='incident-frequency--filter-type'>
             <Dropdown
