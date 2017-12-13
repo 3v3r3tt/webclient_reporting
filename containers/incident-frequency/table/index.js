@@ -117,8 +117,7 @@ class IncidentFrequencyTable extends Component {
     const incidentFrequencyTableConfig = {
       columnHeaders: [
         {
-          label: TableHeader,
-          isSortable: true
+          label: TableHeader
         }],
       rowItems: generatedRows,
       customClasses: ['incident-frequency--main-incident-table']
