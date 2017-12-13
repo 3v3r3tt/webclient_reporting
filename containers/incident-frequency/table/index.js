@@ -24,6 +24,7 @@ function mapStateToProps (state) {
     reducedRows: state.incidentFrequency.getIn(['reducedData', 'reducedRows']),
     innerTableIncidentData: state.incidentFrequency.get('innerTableIncidentData'),
     resolutionType: state.incidentFrequency.get('resolutionType'),
+    segmentationLabel: state.incidentFrequency.getIn(['segmentationType', 'label']),
     tableError: state.incidentFrequency.getIn(['error', 'table']),
     graphError: state.incidentFrequency.getIn(['error', 'graph']),
     graphDataSegments: state.incidentFrequency.getIn(['graphData', 'segments'])
@@ -106,7 +107,7 @@ class IncidentFrequencyTable extends Component {
     const TableHeader =
       <div className='row'>
         <div className='col-8'>
-          <span>Service</span>
+          <span>{this.props.segmentationLabel}</span>
         </div>
         <div className='col-4'>
           <span className='pull-right'>{incidentColumnLabel}</span>

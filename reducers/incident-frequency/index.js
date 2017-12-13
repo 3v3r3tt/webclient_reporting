@@ -27,6 +27,7 @@ export const initialState = _fromJS({
   chartType: 'Area',
   segmentationType: {
     name: 'Segment by integration',
+    label: 'Integration',
     key: 'monitor'
   },
   resolutionType: {

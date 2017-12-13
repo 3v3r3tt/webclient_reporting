@@ -80,25 +80,41 @@ class IncidentFrequencyFilter extends Component {
       {
         label: 'Segment by host',
         handleClick: () => {
-          this._setFilter('segmentationType', Map({name: 'Segment by host', key: 'host'}))
+          this._setFilter('segmentationType', Map({
+            name: 'Segment by host',
+            label: 'Host',
+            key: 'host'
+          }))
         }
       },
       {
         label: 'Segment by integration',
         handleClick: () => {
-          this._setFilter('segmentationType', Map({name: 'Segment by integration', key: 'monitor'}))
+          this._setFilter('segmentationType', Map({
+            name: 'Segment by integration',
+            label: 'Integration',
+            key: 'monitor'
+          }))
         }
       },
       {
         label: 'Segment by route key',
         handleClick: () => {
-          this._setFilter('segmentationType', Map({name: 'Segment by route key', key: 'route_key'}))
+          this._setFilter('segmentationType', Map({
+            name: 'Segment by route key',
+            label: 'Route Key',
+            key: 'route_key'
+          }))
         }
       },
       {
         label: 'Segment by service',
         handleClick: () => {
-          this._setFilter('segmentationType', Map({name: 'Segment by service', key: 'service'}))
+          this._setFilter('segmentationType', Map({
+            name: 'Segment by service',
+            label: 'Service',
+            key: 'service'
+          }))
         }
       }
     ]
