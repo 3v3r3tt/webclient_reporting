@@ -115,7 +115,7 @@ class IncidentFrequencyTable extends Component {
     const innerIncidentTableConfig = {
       columnHeaders: [
         {
-          label: 'Incidents',
+          label: 'Incident',
           isSortable: true
         },
         {
