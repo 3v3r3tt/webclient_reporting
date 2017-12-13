@@ -41,9 +41,15 @@ function mapDispatchToProps (dispatch) {
 }
 
 class IncidentFrequencyTable extends Component {
+  _tableDataSorter (a, b) {
+    if (a.total_incidents > b.total_incidents) return -1
+    if (a.total_incidents < b.total_incidents) return 1
+    return 0
+  }
+
   _generateIncidentFrequencyTableRows (incidentFrequencyData) {
     if (!incidentFrequencyData) return []
-    const generatedRows = incidentFrequencyData.map((segment, index) => {
+    const generatedRows = incidentFrequencyData.sort(this._tableDataSorter).map((segment, index) => {
       return ({
         id: segment.segment_name,
         key: index,
