@@ -42,8 +42,8 @@ class IncidentFrequencyTable extends Component {
         }, {
           id: 'date',
           type: 'cell',
-          content: moment(rowItem.date).format('MMM. D, YYYY'),
-          value: rowItem.date
+          content: moment(rowItem.start_time).format('MMM. D, YYYY'),
+          value: rowItem.start_time
         }, {
           id: 'service',
           type: 'cell',
