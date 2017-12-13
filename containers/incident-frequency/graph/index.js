@@ -160,7 +160,6 @@ class IncidentFrequencyGraph extends Component {
           point: {
             events: {
               click: function (e) {
-                console.log('==>', hoverCol)
                 let chart = this.series.chart.xAxis[0]
                 chart.removePlotLine('selected-bucket')
                 chart.addPlotLine({
