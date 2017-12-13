@@ -85,6 +85,7 @@ function _filterUpdate (state, payload) {
   const filterKey = Object.keys(payload)[0]
   return state.set(filterKey, payload[filterKey])
               .set('reducedData', initialState.get('reducedData'))
+              .set('innerTableIncidentData', null)
 }
 
 function _updateTable (state, payload) {
