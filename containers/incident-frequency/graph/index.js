@@ -65,7 +65,7 @@ class IncidentFrequencyGraph extends Component {
     if (dateBuckets.length <= 2 || this.props.chartType === 'Column') {
       return [null, null]
     } else {
-      return [0.5, dateBuckets.length - 1.5]
+      return [0.4, dateBuckets.length - 1.4]
     }
   }
 
