@@ -42,14 +42,14 @@ function mapDispatchToProps (dispatch) {
 
 class IncidentFrequencyTable extends Component {
   _tableDataSorter (a, b) {
-    if (a.total_incidents > b.total_incidents) return -1
-    if (a.total_incidents < b.total_incidents) return 1
+    if (a.columns[0].value > b.columns[0].value) return -1
+    if (a.columns[0].value < b.columns[0].value) return 1
     return 0
   }
 
   _generateIncidentFrequencyTableRows (incidentFrequencyData) {
     if (!incidentFrequencyData) return []
-    const generatedRows = incidentFrequencyData.sort(this._tableDataSorter).map((segment, index) => {
+    const generatedRows = incidentFrequencyData.map((segment, index) => {
       return ({
         id: segment.segment_name,
         key: index,
@@ -72,7 +72,7 @@ class IncidentFrequencyTable extends Component {
         }]
       })
     })
-    return generatedRows
+    return generatedRows.sort(this._tableDataSorter)
   }
 
   _determineDateRangeLabel (columnTitle) {
