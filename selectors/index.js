@@ -146,7 +146,7 @@ export const getIncidentFrequencyFilledBuckets = createSelector(
         return requestStart.isBefore(dataStart.clone().subtract(1, 'day'))
       }
       const needsBackFilled = (requestEnd, dataEnd) => {
-        return requestEnd.clone().subtract(1, 'day').isAfter(dataEnd)
+        return requestEnd.isAfter(dataEnd.clone().add(1, resolutionType))
       }
 
       if (needsFrontFilled(requestStart, dataStart)) {

@@ -84,6 +84,7 @@ const _loadingData = (state) => state.update('loadingData', () => true)
 function _filterUpdate (state, payload) {
   const filterKey = Object.keys(payload)[0]
   return state.set(filterKey, payload[filterKey])
+              .set('reducedData', initialState.get('reducedData'))
 }
 
 function _updateTable (state, payload) {
