@@ -112,24 +112,25 @@ class IncidentFrequencyGraph extends Component {
 
     const [graphXMin, graphXMax] = this._determineGraphMinMax(startDateBuckets)
 
+    var hoverCol = null
+
     const config = {
       colors: this.props.colorList,
       chart: {
         type: this.props.chartType.toLowerCase(),
         events: {
           click: function (e) {
-            let point = this.series[0].searchPoint(this.pointer.normalize(e))
             let chart = this.xAxis[0]
             chart.removePlotLine('selected-bucket')
             chart.addPlotLine({
-              value: point.x,
+              value: hoverCol.x,
               color: '#7e7e7e',
               width: 3,
               id: 'selected-bucket',
               zIndex: '9999'
             })
-            chart.labelFormatter(point.x)
-            generateGraph(point.category, point.series.chart.series, point.x)
+            chart.labelFormatter(hoverCol.x)
+            generateGraph(hoverCol.category, hoverCol.series.chart.series, hoverCol.x)
           },
           load: function (e) {
             let chart = this.xAxis[0]
@@ -159,17 +160,21 @@ class IncidentFrequencyGraph extends Component {
           point: {
             events: {
               click: function (e) {
+                console.log('==>', hoverCol)
                 let chart = this.series.chart.xAxis[0]
                 chart.removePlotLine('selected-bucket')
                 chart.addPlotLine({
-                  value: this.x,
+                  value: hoverCol.x,
                   color: '#7e7e7e',
                   width: 3,
                   id: 'selected-bucket',
                   zIndex: '9999'
                 })
                 chart.labelFormatter(this.x)
-                generateGraph(this.category, this.series.chart.series, this.x)
+                generateGraph(hoverCol.category, hoverCol.series.chart.series, hoverCol.x)
+              },
+              mouseOver: function (e) {
+                hoverCol = this
               }
             }
           }

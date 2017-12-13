@@ -43,15 +43,13 @@ export default {
   plotOptions: {
     line: {
       enableMouseTracking: true,
-      stickyTracking: false,
       marker: {
         enabled: false
       }
     },
 
     area: {
-      stacking: 'normal',
-      stickyTracking: false
+      stacking: 'normal'
     }
   }
 }
