@@ -5,6 +5,11 @@ export default {
     text: ''
   },
 
+  loading: {
+    hideDuration: 100,
+    showDuration: 100
+  },
+
   xAxis: {
     type: 'linear',
     gridLineWidth: 1,

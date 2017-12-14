@@ -19,7 +19,8 @@ import {
 } from 'reporting/actions/incident-frequency'
 
 export const initialState = _fromJS({
-  loadingData: true,
+  loadingGraphData: true,
+  loadingTableData: true,
   beginDate: moment().subtract(1, 'month').valueOf(),
   endDate: moment().valueOf(),
   timezoneOffset: moment().utcOffset() / 60,
@@ -52,9 +53,10 @@ export const initialState = _fromJS({
 export default function incidentFrequencyReport (state = initialState, action) {
   switch (action.type) {
     case INCIDENT_FREQUENCY_TABLE_GET:
-    case INCIDENT_FREQUENCY_GRAPH_GET:
     case INCIDENT_FREQUENCY_INCIDENT_DETAIL_GET:
-      return _loadingData(state)
+      return _loadingTableData(state)
+    case INCIDENT_FREQUENCY_GRAPH_GET:
+      return _loadingGraphData(state)
     case INCIDENT_FREQUENCY_GRAPH_UPDATE:
       return _updateGraph(state, action.payload)
     case INCIDENT_FREQUENCY_TABLE_UPDATE:
@@ -79,24 +81,26 @@ export default function incidentFrequencyReport (state = initialState, action) {
   }
 }
 
-const _loadingData = (state) => state.update('loadingData', () => true)
+const _loadingGraphData = (state) => state.update('loadingGraphData', () => true)
+const _loadingTableData = (state) => state.update('loadingTableData', () => true)
 
 function _filterUpdate (state, payload) {
   const filterKey = Object.keys(payload)[0]
   return state.set(filterKey, payload[filterKey])
               .set('reducedData', initialState.get('reducedData'))
+              .update('loadingTableData', () => true)
               .set('innerTableIncidentData', null)
 }
 
 function _updateTable (state, payload) {
   return state.set('innerTableIncidentData', _fromJS(payload))
-              .update('loadingData', () => false)
+              .update('loadingTableData', () => false)
               .setIn(['error', 'table'], false)
 }
 
 function _resetInnerTable (state, payload) {
   return state.set('innerTableIncidentData', null)
-              .update('loadingData', () => false)
+              .update('loadingTableData', () => false)
               .setIn(['error', 'table'], false)
 }
 
@@ -130,6 +134,6 @@ function _updateIncidentDetail (state, payload) {
 
 function _updateGraph (state, payload) {
   return state.set('graphData', _fromJS(payload))
-              .update('loadingData', () => false)
+              .update('loadingGraphData', () => false)
               .setIn(['error', 'graph'], false)
 }

@@ -14,12 +14,29 @@ class IncidentFrequencyTable extends Component {
   constructor (props) {
     super(props)
 
+    this.state = {
+      isExpanded: false
+    }
     this._setExpanded = this._setExpanded.bind(this)
     this._generateInnerIncidentRows = this._generateInnerIncidentRows.bind(this)
     this._rowClickFnGenerator = this._rowClickFnGenerator.bind(this)
   }
 
+  componentWillReceiveProps (nextProps) {
+    const currentSegment = nextProps.innerTableIncidentData.get('segment', null)
+    if (nextProps.name !== currentSegment && this.state.isExpanded) {
+      this._toggleExpansion()
+    }
+  }
+
+  _toggleExpansion () {
+    this.setState({
+      isExpanded: !this.state.isExpanded
+    })
+  }
+
   _setExpanded () {
+    this._toggleExpansion()
     const lastSelectedRow = this.props.innerTableIncidentData ? this.props.innerTableIncidentData.get('segment') : null
     if (this.props.name !== lastSelectedRow) {
       this.props.getInnerTableData({segmentName: this.props.name})
@@ -92,10 +109,9 @@ class IncidentFrequencyTable extends Component {
   }
 
   render () {
-    let currentSegment = null
     let innerIncidents = null
+
     if (this.props.innerTableIncidentData) {
-      currentSegment = this.props.innerTableIncidentData.get('segment')
       innerIncidents = this.props.innerTableIncidentData.get('incidents').toJS()
     }
 
@@ -159,7 +175,10 @@ class IncidentFrequencyTable extends Component {
         </div>
         <div className='row'>
           <div className='col-12'>
-            <Table {...innerIncidentTableConfig} />
+            <Table
+              {...innerIncidentTableConfig}
+              showLoader={this.props.loadingTableData}
+            />
           </div>
         </div>
       </div>
@@ -169,7 +188,7 @@ class IncidentFrequencyTable extends Component {
         headerComponent={CollapsedContent}
         contentComponent={ExpandedContent}
         handleClick={this._setExpanded}
-        isExpanded={currentSegment === this.props.name}
+        isExpanded={this.state.isExpanded}
       />
     )
   }

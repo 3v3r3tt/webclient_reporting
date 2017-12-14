@@ -26,6 +26,7 @@ function mapStateToProps (state) {
     resolutionType: state.incidentFrequency.get('resolutionType'),
     segmentationLabel: state.incidentFrequency.getIn(['segmentationType', 'label']),
     tableError: state.incidentFrequency.getIn(['error', 'table']),
+    loadingTableData: state.incidentFrequency.get('loadingTableData', false),
     graphError: state.incidentFrequency.getIn(['error', 'graph']),
     graphDataSegments: state.incidentFrequency.getIn(['graphData', 'segments'])
   }
@@ -66,7 +67,8 @@ class IncidentFrequencyTable extends Component {
             colorList: this.props.colorList,
             outerTableIndex: index,
             showModal: this.props.showModal,
-            hideModal: this.props.hideModal
+            hideModal: this.props.hideModal,
+            loadingTableData: this.props.loadingTableData
           },
           value: Math.floor(segment.total_incidents)
         }]
@@ -92,7 +94,7 @@ class IncidentFrequencyTable extends Component {
 
   render () {
     const graphIsEmpty = this.props.graphDataSegments != null && this.props.graphDataSegments.size === 0
-    if (this.props.graphError || graphIsEmpty) return null
+    if (this.props.graphError || graphIsEmpty || this.props.graphIsEmpty) return null
 
     if (this.props.tableError) {
       return (
@@ -138,7 +140,6 @@ class IncidentFrequencyTable extends Component {
       <div className='has-loading-gradient margin-top-10'>
         <Table
           {...incidentFrequencyTableConfig}
-          showLoader={this.props.isLoading}
         />
       </div>
     )

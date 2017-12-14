@@ -14,21 +14,17 @@ import {
 import _truncate from 'util/truncate'
 
 import {
-  getIncidentFrequencyFilledBuckets
-} from 'reporting/selectors'
-
-import {
   incidentFrequencyTableReduce
 } from 'reporting/actions/incident-frequency'
 
 function mapStateToProps (state) {
   return {
-    data: getIncidentFrequencyFilledBuckets(state),
     selectedTeam: state.incidentFrequency.get('selectedTeam'),
     beginDate: state.incidentFrequency.get('beginDate'),
     endDate: state.incidentFrequency.get('endDate'),
     chartType: state.incidentFrequency.get('chartType'),
     graphError: state.incidentFrequency.getIn(['error', 'graph']),
+    loadingData: state.incidentFrequency.get('loadingGraphData'),
     resolutionType: state.incidentFrequency.get('resolutionType')
   }
 }
@@ -47,6 +43,25 @@ class IncidentFrequencyGraph extends Component {
     this._generateReducedGraph = this._generateReducedGraph.bind(this)
     this._determineBucketLabel = this._determineBucketLabel.bind(this)
     this._determineGraphMinMax = this._determineGraphMinMax.bind(this)
+  }
+
+  componentDidMount () {
+    this._manageLoadingState(this.props.loadingData)
+  }
+
+  componentDidUpdate (nextProps) {
+    if (nextProps.loadingData !== this.props.loadingData) {
+      this._manageLoadingState(this.props.loadingData)
+    }
+  }
+
+  _manageLoadingState (loadingData) {
+    let chart = this.refs.chart.getChart()
+    if (loadingData) {
+      chart.showLoading()
+    } else {
+      chart.hideLoading()
+    }
   }
 
   _determineBucketLabel (bucket) {
@@ -70,7 +85,8 @@ class IncidentFrequencyGraph extends Component {
   }
 
   _transformGraphData (generateGraph) {
-    if (!this.props.data) return false
+    if (!this.props.data || this.props.loadingData) return defaultHighChartsOptions
+
     let startDateBuckets = []
     let segmentSeriesData = []
     let lineDupeTracker = [{}]
@@ -211,8 +227,7 @@ class IncidentFrequencyGraph extends Component {
       )
     }
 
-    const graphIsEmpty = !this.props.data || (this.props.data.segments != null && this.props.data.segments.length === 0)
-    if (graphIsEmpty) {
+    if (this.props.graphIsEmpty) {
       return (
         <Placeholder />
       )
@@ -222,7 +237,7 @@ class IncidentFrequencyGraph extends Component {
 
     return (
       <div className='incident-frequency--graph' id='incident-frequency-graph'>
-        <ReactHighcharts config={highchartData} />
+        <ReactHighcharts config={highchartData} ref='chart' />
       </div>
     )
   }
