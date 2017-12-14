@@ -69,11 +69,11 @@ class IncidentFrequencyGraph extends Component {
   _determineBucketLabel (bucket) {
     const currentStartDate = moment(Number(bucket.bucket_start))
     let currentIncrement = this.props.resolutionType.get('type').charAt(0)
-    let bucketLabel = currentStartDate.format('MMM D')
+    let bucketLabel = currentStartDate.utc().format('MMM D')
     if (currentIncrement !== 'd') {
       currentIncrement = currentIncrement === 'm' ? 'M' : currentIncrement // Otherwise momentjs thinks millis
       const currentEndDate = currentStartDate.clone().add(1, currentIncrement).subtract(1, 'd')
-      bucketLabel = `${currentStartDate.format('MMM D')} - ${currentEndDate.format('MMM D')}`
+      bucketLabel = `${currentStartDate.utc().format('MMM D')} - ${currentEndDate.utc().format('MMM D')}`
     }
     return bucketLabel
   }
