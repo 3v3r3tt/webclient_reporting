@@ -23,8 +23,7 @@ class IncidentFrequencyTable extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    const currentSegment = nextProps.innerTableIncidentData.get('segment', null)
-    if (nextProps.name !== currentSegment && this.state.isExpanded) {
+    if (nextProps.name !== nextProps.innerTableIncidentData && this.state.isExpanded) {
       this._toggleExpansion()
     }
   }

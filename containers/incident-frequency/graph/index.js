@@ -56,11 +56,13 @@ class IncidentFrequencyGraph extends Component {
   }
 
   _manageLoadingState (loadingData) {
-    let chart = this.refs.chart.getChart()
-    if (loadingData) {
-      chart.showLoading()
-    } else {
-      chart.hideLoading()
+    if (this.refs.chart) {
+      let chart = this.refs.chart.getChart()
+      if (loadingData) {
+        chart.showLoading()
+      } else {
+        chart.hideLoading()
+      }
     }
   }
 

@@ -22,7 +22,7 @@ function mapStateToProps (state) {
   return {
     reducedData: state.incidentFrequency.get('reducedData'),
     reducedRows: state.incidentFrequency.getIn(['reducedData', 'reducedRows']),
-    innerTableIncidentData: state.incidentFrequency.get('innerTableIncidentData'),
+    innerTableIncidentData: state.incidentFrequency.getIn(['innerTableIncidentData', 'segment'], null),
     resolutionType: state.incidentFrequency.get('resolutionType'),
     segmentationLabel: state.incidentFrequency.getIn(['segmentationType', 'label']),
     tableError: state.incidentFrequency.getIn(['error', 'table']),
