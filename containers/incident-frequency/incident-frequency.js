@@ -30,6 +30,7 @@ function mapStateToProps (state) {
   return {
     data: getIncidentFrequencyFilledBuckets(state),
     graphDataExists: state.incidentFrequency.getIn(['graphData', 'has_data_flag'], true),
+    graphData: state.incidentFrequency.getIn(['graphData', 'display_buckets']),
     loadingData: state.incidentFrequency.get('loadingGraphData', false),
     reducedData: state.incidentFrequency.getIn(['reducedData', 'reducedRows'])
   }
@@ -55,9 +56,9 @@ class IncidentFrequency extends Component {
   }
 
   render () {
-    const graphIsEmpty = !this.props.data || (this.props.data.segments != null && this.props.data.segments.length === 0)
-
+    const graphIsEmpty = this.props.graphData.size === 0 && !this.props.loadingData
     const ReportHomeLink = <Link className='link--default' to={`/reports/${config.orgslug}`}>Reports</Link>
+
     const ClearBucketSelectionButton =
       <Button
         content='Reset'

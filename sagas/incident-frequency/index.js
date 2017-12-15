@@ -42,6 +42,7 @@ function _getIncidentFrequencyTable ({create}, logError) {
       const incidentFrequencyReportData = yield call(create, IncidentFrequencyReportEndpoint, data)
       yield put(incidentFrequencyTableUpdate(incidentFrequencyReportData))
     } catch (err) {
+      console.log("err", err)
       yield call(logError, err)
       yield put(incidentFrequencyTableError({error: {table: true}}))
     }
@@ -65,6 +66,7 @@ function _getIncidentFrequencyGraph ({create}, logError) {
       const incidentFrequencyReportData = yield call(create, IncidentFrequencyReportEndpoint, data)
       yield put(incidentFrequencyGraphUpdate(incidentFrequencyReportData))
     } catch (err) {
+      console.log("err", err)
       yield call(logError, err)
       yield put(incidentFrequencyGraphError({error: {graph: true}}))
     }

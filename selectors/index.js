@@ -101,6 +101,7 @@ export const getIncidentFrequencyFilledBuckets = createSelector(
   ],
   (requestStartDate, requestEndDate, resolutionType, graphData) => {
     if (!graphData || graphData.get('display_buckets').isEmpty()) return
+
     let filledGraphData = graphData.toJS()
     const segmentValues = filledGraphData.display_buckets[0].segments_and_values
     const zeroBucketPlaceholder = segmentValues.map((s) => {
@@ -117,6 +118,10 @@ export const getIncidentFrequencyFilledBuckets = createSelector(
           dataEnd = moment(bucket.bucket_start)
           filledBuckets.push(bucket)
         } else {
+          // Fill Current
+          filledBuckets.push(bucket)
+
+          // Add blank until next date
           const current = moment(bucket.bucket_start)
           const next = moment(filledGraphData.display_buckets[index + 1].bucket_start)
           const dayBeforeNext = next.clone().subtract(1, 'day')
@@ -131,20 +136,21 @@ export const getIncidentFrequencyFilledBuckets = createSelector(
               current.add(1, resolutionType)
               gapsToFill = !current.isSame(next, resolutionType)
             }
-          } else {
-            filledBuckets.push(bucket)
           }
         }
       })
+
       return [filledBuckets, dataEnd]
     }
 
     function _fillEdgeBuckets (dataStart, dataEnd, zeroBucket, filledBuckets) {
       const requestStart = moment(requestStartDate)
       const requestEnd = moment(requestEndDate)
+
       const needsFrontFilled = (requestStart, dataStart) => {
         return requestStart.isBefore(dataStart.clone().subtract(1, 'day'))
       }
+
       const needsBackFilled = (requestEnd, dataEnd) => {
         return requestEnd.isAfter(dataEnd.clone().add(1, resolutionType))
       }

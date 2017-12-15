@@ -35,8 +35,13 @@ export const initialState = _fromJS({
     name: 'Display weekly',
     type: 'week'
   },
-  graphData: null,
-  innerTableIncidentData: null,
+  graphData: {
+    display_buckets: []
+  },
+  innerTableIncidentData: {
+    segments: [],
+    incidents: []
+  },
   incidentDetailData: null,
   error: {
     graph: false,

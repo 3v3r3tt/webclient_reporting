@@ -23,7 +23,7 @@ class IncidentFrequencyTable extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.name !== nextProps.innerTableIncidentData && this.state.isExpanded) {
+    if (nextProps.name !== nextProps.innerTableIncidentSegment && this.state.isExpanded) {
       this._toggleExpansion()
     }
   }
@@ -108,12 +108,7 @@ class IncidentFrequencyTable extends Component {
   }
 
   render () {
-    let innerIncidents = null
-
-    if (this.props.innerTableIncidentData) {
-      innerIncidents = this.props.innerTableIncidentData.get('incidents').toJS()
-    }
-
+    let innerIncidents = this.props.innerTableIncidentIncidents ? this.props.innerTableIncidentIncidents.toJS() : null
     const CollapsedContent =
       <div className='row hoverable' onClick={this._setExpanded}>
         <div className='col-8 margin-bottom-20'>

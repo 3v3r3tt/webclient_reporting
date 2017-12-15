@@ -9,7 +9,8 @@ import moment from 'moment'
 import { fromJS } from 'immutable'
 import {
   merge as _merge,
-  clone as _clone
+  clone as _clone,
+  uniq as _uniq
 } from 'vendor/lodash'
 import _truncate from 'util/truncate'
 
@@ -87,13 +88,19 @@ class IncidentFrequencyGraph extends Component {
   }
 
   _transformGraphData (generateGraph) {
-    if (!this.props.data || this.props.loadingData) return defaultHighChartsOptions
+    if (!this.props.data || !this.props.data.display_buckets || this.props.loadingData) return defaultHighChartsOptions
 
     let startDateBuckets = []
     let segmentSeriesData = []
     let lineDupeTracker = [{}]
     let graphYMax = 0
-    this.props.data.display_buckets.forEach((bucket, outerIndex) => {
+
+    // uniqBy is a hack because when there is only 2 data points, the data gets funny.
+    let buckets = _uniq(this.props.data.display_buckets, function (e) {
+      return e.bucket_start
+    })
+
+    buckets.forEach((bucket, outerIndex) => {
       const bucketLabel = this._determineBucketLabel(bucket)
       startDateBuckets.push(bucketLabel)
       lineDupeTracker.push({})
