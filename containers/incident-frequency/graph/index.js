@@ -119,7 +119,10 @@ class IncidentFrequencyGraph extends Component {
         if (outerIndex === 0) {
           segmentSeriesData[index] = {
             name: _truncate(segment.segment_name, 15) + ' ',
-            data: [bucketTotal + jitterAmount]
+            data: [bucketTotal + jitterAmount],
+            options: {
+              fullName: segment.segment_name
+            }
           }
         } else {
           segmentSeriesData[index].data.push(bucketTotal + jitterAmount)
@@ -213,7 +216,7 @@ class IncidentFrequencyGraph extends Component {
   _generateReducedGraph (name, series, pointIndex) {
     const reducedRows = series.map((segment, index) => {
       return ({
-        segment_name: segment.name,
+        segment_name: segment['options'].options.fullName,
         total_incidents: segment.yData[pointIndex]
       })
     })
