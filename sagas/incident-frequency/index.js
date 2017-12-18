@@ -33,8 +33,8 @@ function _getIncidentFrequencyTable ({create}, logError) {
       const reportingState = yield select(_getincidentFrequencyState)
       const data = {
         team: reportingState.get('selectedTeam', ''),
-        start: reportingState.get('beginDate', ''),
-        end: reportingState.get('endDate', ''),
+        start: reportingState.getIn(['reducedData', 'reducedStart']) || reportingState.get('beginDate', ''),
+        end: reportingState.getIn(['reducedData', 'reducedEnd']) || reportingState.get('endDate', ''),
         segment_name: action.payload.segmentName,
         segment_type: reportingState.getIn(['segmentationType', 'key']),
         tz_offset: reportingState.get('tz_offset')

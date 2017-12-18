@@ -51,7 +51,9 @@ export const initialState = _fromJS({
     reducedRows: null,
     animation: true,
     columnTitle: null,
-    selectedBucket: null
+    selectedBucket: null,
+    reducedStart: null,
+    reducedEnd: null
   }
 })
 
@@ -119,14 +121,12 @@ function _setIncidentFrequencyGraphError (state, payload) {
 
 function _updateReducedTable (state, payload) {
   return state.set('reducedData', _fromJS(payload))
+              .set('innerTableIncidentData', null)
 }
 
 function _resetReducedTable (state, payload) {
-  return state.set('reducedData', _fromJS({
-    reducedRows: null,
-    animation: true,
-    columnTitle: null,
-    selectedBucket: null}))
+  return state.set('reducedData', initialState.get('reducedData'))
+              .set('innerTableIncidentData', null)
 }
 
 function _setIncidentFrequencyIncidentDetailError (state, payload) {

@@ -222,11 +222,16 @@ class IncidentFrequencyGraph extends Component {
     })
     const plotLine = document.getElementsByClassName('highcharts-plot-lines-9999')[0]
     plotLine.style.display = 'unset'
+    const [startLabel, endLabel] = name.split(' - ')
+    const reducedStart = moment(startLabel, 'MMM D').valueOf()
+    const reducedEnd = moment(endLabel, 'MMM D').valueOf() || moment(startLabel, 'MMM D').add(1, 'day').valueOf()
     this.props.updateReducedTable({
       reducedRows: fromJS(reducedRows),
       animation: false,
       columnTitle: name,
-      selectedBucket: pointIndex
+      selectedBucket: pointIndex,
+      reducedStart: reducedStart,
+      reducedEnd: reducedEnd
     })
   }
 
