@@ -110,7 +110,7 @@ class IncidentFrequencyTable extends Component {
   render () {
     let innerIncidents = this.props.innerTableIncidentIncidents ? this.props.innerTableIncidentIncidents.toJS() : null
     const CollapsedContent =
-      <div className='row hoverable' onClick={this._setExpanded}>
+      <div className='row hoverable top-row' onClick={this._setExpanded}>
         <div className='col-8 margin-bottom-20'>
           <span className='incident-frequency--inner-incident-table--card-header'>
             <i className='fa fa-sm fa-circle margin-right-10' style={{color: `${this.props.colorList[this.props.outerTableIndex]}`}} />
@@ -156,7 +156,7 @@ class IncidentFrequencyTable extends Component {
 
     const ExpandedContent =
       <div>
-        <div className='row hoverable' onClick={this._setExpanded}>
+        <div className='row hoverable top-row' onClick={this._setExpanded}>
           <div className='col-8 margin-bottom-20'>
             <span className='incident-frequency--inner-incident-table--card-header'>
               <i className='fa fa-sm fa-circle margin-right-10' style={{color: `${this.props.colorList[this.props.outerTableIndex]}`}} />
