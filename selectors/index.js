@@ -91,13 +91,18 @@ export const getReportingUserOnCall = createSelector(
   }
 )
 
+const _getIncidentFrequencyStart = state => state.incidentFrequency.get('beginDate')
+const _getIncidentFrequencyEnd = state => state.incidentFrequency.get('endDate')
+const _getIncidentFrequencyResolutionType = state => state.incidentFrequency.getIn(['resolutionType', 'type'])
+const _getIncidentFrequencyGraphData = state => state.incidentFrequency.get('graphData')
+
 // The backend does not return continuous time data.. so we must fill in missing buckets to span full x-axis
 export const getIncidentFrequencyFilledBuckets = createSelector(
   [
-    state => state.incidentFrequency.get('beginDate'),
-    state => state.incidentFrequency.get('endDate'),
-    state => state.incidentFrequency.getIn(['resolutionType', 'type']),
-    state => state.incidentFrequency.get('graphData')
+    _getIncidentFrequencyStart,
+    _getIncidentFrequencyEnd,
+    _getIncidentFrequencyResolutionType,
+    _getIncidentFrequencyGraphData
   ],
   (requestStartDate, requestEndDate, resolutionType, graphData) => {
     if (!graphData || graphData.get('display_buckets').isEmpty()) return
