@@ -55,6 +55,12 @@ export default {
 
     area: {
       stacking: 'normal'
+    },
+
+    series: {
+      marker: {
+        symbol: 'circle'
+      }
     }
   }
 }
