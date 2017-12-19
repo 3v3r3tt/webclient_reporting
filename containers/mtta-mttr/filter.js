@@ -9,20 +9,18 @@ import {
 } from 'lodash'
 import _truncate from 'util/truncate'
 
-import IncidentFrequencyCSVButton from './csvDownloadButton'
-
 import Victory from '@victorops/victory'
 
 import { getTeams } from 'reporting/actions/teams'
 
 import {
-  incidentFrequencyFilterUpdate,
-  incidentFrequencyGraphGet,
-  incidentFrequencyTableGet,
-  incidentFrequencyInnerTableReset,
-  incidentFrequencyTableReduce,
-  incidentFrequencyTableReset
-} from 'reporting/actions/incident-frequency'
+  mttaMttrFilterUpdate,
+  mttaMttrGraphGet,
+  mttaMttrTableGet,
+  mttaMttrInnerTableReset,
+  mttaMttrTableReduce,
+  mttaMttrTableReset
+} from 'reporting/actions/mtta-mttr'
 
 const {
   Dropdown,
@@ -32,28 +30,28 @@ const {
 function mapStateToProps (state) {
   return {
     teams: state.teams,
-    selectedTeam: state.incidentFrequency.get('selectedTeam'),
-    beginDate: state.incidentFrequency.get('beginDate'),
-    endDate: state.incidentFrequency.get('endDate'),
-    chartType: state.incidentFrequency.get('chartType'),
-    segmentationType: state.incidentFrequency.get('segmentationType'),
-    resolutionType: state.incidentFrequency.get('resolutionType')
+    selectedTeam: state.mttaMttr.get('selectedTeam'),
+    beginDate: state.mttaMttr.get('beginDate'),
+    endDate: state.mttaMttr.get('endDate'),
+    chartType: state.mttaMttr.get('chartType'),
+    segmentationType: state.mttaMttr.get('segmentationType'),
+    resolutionType: state.mttaMttr.get('resolutionType')
   }
 }
 
 function mapDispatchToProps (dispatch) {
   return {
     getTeams: (payload) => dispatch(getTeams(payload)),
-    setFilterIncidentFrequency: (payload) => dispatch(incidentFrequencyFilterUpdate(payload)),
-    getTeamIncidentFrequencyGraph: (payload) => dispatch(incidentFrequencyGraphGet(payload)),
-    getInnerIncidentFrequencyTable: (payload) => dispatch(incidentFrequencyTableGet(payload)),
-    resetInnerIncidentFrequencyTable: (payload) => dispatch(incidentFrequencyInnerTableReset(payload)),
-    updateReducedTable: (payload) => dispatch(incidentFrequencyTableReduce(payload)),
-    resetReducedTable: (payload) => dispatch(incidentFrequencyTableReset(payload))
+    setFiltermttaMttr: (payload) => dispatch(mttaMttrFilterUpdate(payload)),
+    getTeammttaMttrGraph: (payload) => dispatch(mttaMttrGraphGet(payload)),
+    getInnermttaMttrTable: (payload) => dispatch(mttaMttrTableGet(payload)),
+    resetInnermttaMttrTable: (payload) => dispatch(mttaMttrInnerTableReset(payload)),
+    updateReducedTable: (payload) => dispatch(mttaMttrTableReduce(payload)),
+    resetReducedTable: (payload) => dispatch(mttaMttrTableReset(payload))
   }
 }
 
-class IncidentFrequencyFilter extends Component {
+class mttaMttrFilter extends Component {
   constructor (props) {
     super(props)
 
@@ -160,22 +158,22 @@ class IncidentFrequencyFilter extends Component {
   }
 
   _getNewTableData () {
-    this.props.getTeamIncidentFrequencyGraph()
+    this.props.getTeammttaMttrGraph()
   }
 
   _setFilter (type, value) {
     const payload = {[type]: value}
-    this.props.setFilterIncidentFrequency(payload)
+    this.props.setFiltermttaMttr(payload)
     this._getNewTableData()
   }
 
   _endDateChange (momentDate) {
-    this.props.setFilterIncidentFrequency({endDate: momentDate.valueOf()})
+    this.props.setFiltermttaMttr({endDate: momentDate.valueOf()})
     this._checkDateRange(moment(this.props.beginDate), momentDate)
   }
 
   _beginDateChange (momentDate) {
-    this.props.setFilterIncidentFrequency({beginDate: momentDate.valueOf()})
+    this.props.setFiltermttaMttr({beginDate: momentDate.valueOf()})
     this._checkDateRange(momentDate, moment(this.props.endDate))
   }
 
@@ -201,7 +199,7 @@ class IncidentFrequencyFilter extends Component {
 
   _teamChange (team = '') {
     return () => {
-      this.props.setFilterIncidentFrequency({selectedTeam: team})
+      this.props.setFiltermttaMttr({selectedTeam: team})
       this._getNewTableData()
     }
   }
@@ -255,21 +253,12 @@ class IncidentFrequencyFilter extends Component {
   }
 
   render () {
-    const ServiceDropdownLabel = <span>{this.props.segmentationType.get('name')}&nbsp;&nbsp;&nbsp;<i className='fa fa-angle-down' /></span>
-    const ChartTypeDropdownLabel = <span><i className='fa fa-chart-area' />&nbsp;&nbsp;{this.props.chartType} &nbsp;&nbsp;&nbsp;<i className='fa fa-angle-down' /></span>
     const ResolutionTypeDropdownLabel = <span>{this.props.resolutionType.get('name')}&nbsp;&nbsp;&nbsp;&nbsp;<i className='fa fa-angle-down' /></span>
 
     return (
       <div className='reports--filter clearfix'>
         <div className='reports--teamsegment reports--filteritem'>
           { this._renderTeamsDropdown() }
-          <div className='reports--filter-type'>
-            <Dropdown
-              dropdownItems={this.segmentationTypes}
-              labelComponent={ServiceDropdownLabel}
-              triggerClasses={['btn', 'btn-secondary', 'dropdown-btn']}
-            />
-          </div>
         </div>
 
         <div className='reports--daterange reports--filteritem'>
@@ -302,25 +291,9 @@ class IncidentFrequencyFilter extends Component {
             </div>
           </div>
         </div>
-
-        <div className='incident-frequency--exportcsv'>
-          <div className='incident-frequency--filter-type'>
-            <IncidentFrequencyCSVButton {...this.props} />
-          </div>
-        </div>
-
-        <div className='incident-frequency--charttype incident-frequency--filteritem'>
-          <div className='incident-frequency--filter-type'>
-            <Dropdown
-              dropdownItems={this.chartTypes}
-              labelComponent={ChartTypeDropdownLabel}
-              triggerClasses={['btn', 'btn-secondary', 'dropdown-btn']}
-            />
-          </div>
-        </div>
       </div>
     )
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(IncidentFrequencyFilter)
+export default connect(mapStateToProps, mapDispatchToProps)(mttaMttrFilter)

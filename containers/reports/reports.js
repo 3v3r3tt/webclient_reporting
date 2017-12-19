@@ -67,6 +67,7 @@ class Reports extends React.Component {
   }
 
   render () {
+    const orgslug = this.props.params.org
     const featchingFeatureFlags = this.props.featureFlags.get('isFetching', true)
     return (
       <div id='newadmin'>
@@ -87,12 +88,22 @@ class Reports extends React.Component {
                 </div>
                 <div className='preview' />
               </a>
-              <Link href={this._createLink('#/reports/view/MTTA_MTTR')} className='basic-b reports-nav-item'>
-                <div className='card-header'>
-                  <h6 className='card-header__heading'>Organization MTTA/MTTR</h6>
-                </div>
-                <div className='preview' />
-              </Link>
+              { (!featchingFeatureFlags && this.props.featureFlags.getIn(['featureFlags', 'feature:mttv2'], false))
+                ? <Link href={this._createLink('#/reports/view/MTTA_MTTR')} className='basic-b reports-nav-item'>
+                  <div className='card-header'>
+                    <h6 className='card-header__heading'>Organization MTTA/MTTR</h6>
+                  </div>
+                  <div className='preview' />
+                </Link>
+
+                : <Link to={`/reports/${orgslug}/mtta-mttr`} className='basic-b reports-nav-item mtta-mttr reports-nav-item'>
+                  <div className='card-header'>
+                    <h6 className='card-header__heading'>Organization MTTA/MTTR</h6>
+                  </div>
+                  <div className='preview' />
+                </Link>
+                }
+
               <Link href={this._createLink('#/reports/view/Trends')} data-report='Trends' className='basic-c reports-nav-item'>
                 <div className='card-header'>
                   <h6 className='card-header__heading'>Incident Trends</h6>
