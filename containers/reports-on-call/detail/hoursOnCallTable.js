@@ -27,18 +27,6 @@ class HoursOnCallTable extends React.Component {
     return {
       id: 'incidentsSeeMore',
       columns: [{
-        content: '',
-        value: 'ALWAYS_ON_BOTTOM',
-        id: 'placeholder1',
-        type: 'cell'
-      },
-      {
-        content: '',
-        value: 'ALWAYS_ON_BOTTOM',
-        id: 'placeholder2',
-        type: 'cell'
-      },
-      {
         component: OnCallDownloadCSVRow,
         id: 'downloadCSV',
         content: {
@@ -50,19 +38,8 @@ class HoursOnCallTable extends React.Component {
           selectedUser: this.props.selectedUser
         },
         type: 'component',
-        value: 'ALWAYS_ON_BOTTOM'
-      },
-      {
-        content: '',
         value: 'ALWAYS_ON_BOTTOM',
-        id: 'placeholder3',
-        type: 'cell'
-      },
-      {
-        content: '',
-        value: 'ALWAYS_ON_BOTTOM',
-        id: 'placeholder4',
-        type: 'cell'
+        colspan: 5
       }]
     }
   }

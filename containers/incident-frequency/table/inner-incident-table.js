@@ -4,11 +4,14 @@ import Victory from '@victorops/victory'
 import moment from 'moment'
 
 import InnerIncidentModal from './inner-incident-modal'
+import DownloadCSVRow from './download-csv-row'
 
 const {
   ExpandingCard,
   Table
 } = Victory
+
+const INCIDENT_FREQUENCY_LIMIT = 100
 
 class IncidentFrequencyTable extends Component {
   constructor (props) {
@@ -43,52 +46,75 @@ class IncidentFrequencyTable extends Component {
     }
   }
 
+  _generateDownloadCSVRow () {
+    return {
+      id: 'incidentsSeeMore',
+      columns: [{
+        component: DownloadCSVRow,
+        id: 'downloadCSV',
+        content: {
+          start: this.props.beginDate,
+          end: this.props.endDate,
+          team: this.props.selectedTeam
+        },
+        type: 'component',
+        colspan: 6
+      }]
+    }
+  }
+
   _generateInnerIncidentRows (incidents) {
     if (!incidents) return []
-    const generatedRows = incidents.map((rowItem, index) => {
-      return ({
-        id: rowItem.incident,
-        key: index,
-        columns: [{
-          id: 'incident',
-          type: 'cell',
-          content: rowItem.incident,
-          value: rowItem.incident
-        }, {
-          id: 'date',
-          type: 'cell',
-          content: moment(rowItem.start_time).format('MMM. D, YYYY'),
-          value: rowItem.start_time
-        }, {
-          id: 'service',
-          type: 'cell',
-          content: rowItem.service,
-          value: rowItem.service
-        }, {
-          id: 'host',
-          type: 'cell',
-          content: rowItem.host,
-          value: rowItem.host
-        }, {
-          id: 'integration',
-          type: 'cell',
-          content: rowItem.monitoring_tool,
-          value: rowItem.monitoring_tool
-        }, {
-          id: 'team',
-          type: 'cell',
-          content: Array.isArray(rowItem.teams) ? rowItem.teams.join(',') : '',
-          value: Array.isArray(rowItem.teams) ? rowItem.teams.join(',') : ''
-        }]
-      })
+    let generatedRows = []
+    incidents.forEach((rowItem, index) => {
+      if (index < INCIDENT_FREQUENCY_LIMIT) {
+        generatedRows.push({
+          id: rowItem.incident,
+          key: index,
+          columns: [{
+            id: 'incident',
+            type: 'cell',
+            content: rowItem.incident,
+            value: rowItem.incident
+          }, {
+            id: 'date',
+            type: 'cell',
+            content: moment(rowItem.start_time).format('MMM. D, YYYY'),
+            value: rowItem.start_time
+          }, {
+            id: 'service',
+            type: 'cell',
+            content: rowItem.service,
+            value: rowItem.service
+          }, {
+            id: 'host',
+            type: 'cell',
+            content: rowItem.host,
+            value: rowItem.host
+          }, {
+            id: 'integration',
+            type: 'cell',
+            content: rowItem.monitoring_tool,
+            value: rowItem.monitoring_tool
+          }, {
+            id: 'team',
+            type: 'cell',
+            content: Array.isArray(rowItem.teams) ? rowItem.teams.join(',') : '',
+            value: Array.isArray(rowItem.teams) ? rowItem.teams.join(',') : ''
+          }]
+        })
+      } else if (index === INCIDENT_FREQUENCY_LIMIT) {
+        generatedRows.push(this._generateDownloadCSVRow())
+      }
     })
+
     return generatedRows
   }
 
   _rowClickFnGenerator (rowId) {
     return () => {
-      // TODO: Once IFR Modal Endpoing is finished
-      this._openIncidentDetailModal(rowId)
+      // TODO: Once IFR Modal Endpoint is finished
+      // this._openIncidentDetailModal(rowId)
     }
   }
 
@@ -121,6 +147,8 @@ class IncidentFrequencyTable extends Component {
         </div>
       </div>
 
+    const generatedRows = this._generateInnerIncidentRows(innerIncidents)
+    const csvRowClass = generatedRows.length > INCIDENT_FREQUENCY_LIMIT ? ['incident-frequency--too-many-rows-table'] : ''
     const innerIncidentTableConfig = {
       columnHeaders: [
         {
@@ -147,8 +175,8 @@ class IncidentFrequencyTable extends Component {
           label: 'Team',
           isSortable: true
         }],
-      rowItems: this._generateInnerIncidentRows(innerIncidents),
-      customClasses: ['incident-frequency--inner-incident-table'],
+      rowItems: generatedRows,
+      customClasses: ['incident-frequency--inner-incident-table', csvRowClass],
       columnWidths: ['20%', '15%', '20%', '15%', '15%', '15%'],
       generateRowClickFn: this._rowClickFnGenerator
     }
