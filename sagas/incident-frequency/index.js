@@ -1,5 +1,7 @@
 import { takeEvery } from 'redux-saga'
 
+import moment from 'moment'
+
 import {
   put,
   call,
@@ -33,8 +35,8 @@ function _getIncidentFrequencyTable ({create}, logError) {
       const reportingState = yield select(_getincidentFrequencyState)
       const data = {
         team: reportingState.get('selectedTeam', ''),
-        start: reportingState.getIn(['reducedData', 'reducedStart']) || reportingState.get('beginDate', ''),
-        end: reportingState.getIn(['reducedData', 'reducedEnd']) || reportingState.get('endDate', ''),
+        start: moment(reportingState.getIn(['reducedData', 'reducedStart']) || reportingState.get('beginDate', '')).utc().startOf('day').valueOf(),
+        end: moment(reportingState.getIn(['reducedData', 'reducedEnd']) || reportingState.get('endDate', '')).utc().startOf('day').valueOf() - 1,
         segment_name: action.payload.segmentName,
         segment_type: reportingState.getIn(['segmentationType', 'key']),
         tz_offset: reportingState.get('timezoneOffset')
@@ -53,10 +55,12 @@ function _getIncidentFrequencyGraph ({create}, logError) {
     try {
       const IncidentFrequencyReportEndpoint = `/api/v1/org/${config.auth.org.slug}/reports/incidentfrequencygraph`
       const reportingState = yield select(_getincidentFrequencyState)
+      const startDate = moment(reportingState.get('beginDate', '')).utc().startOf('day').valueOf()
+      const endDate = moment(reportingState.get('endDate', '')).utc().endOf('day').valueOf()
       const data = {
         team: reportingState.get('selectedTeam', ''),
-        start: reportingState.get('beginDate', ''),
-        end: reportingState.get('endDate', ''),
+        start: startDate,
+        end: endDate,
         tz_offset: reportingState.get('timezoneOffset', 0),
         bucket:  reportingState.getIn(['resolutionType', 'type']),
         segment: reportingState.getIn(['segmentationType', 'key'])
