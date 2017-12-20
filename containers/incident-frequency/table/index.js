@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 import moment from 'moment'
 
@@ -138,11 +139,21 @@ class IncidentFrequencyTable extends Component {
       customClasses: ['incident-frequency--main-incident-table']
     }
 
+    const transitionKey = this.props.reducedData.get('reducedStart', 0)
+
     return (
-      <div className='has-loading-gradient margin-top-10'>
-        <Table
-          {...incidentFrequencyTableConfig}
-        />
+      <div className='has-loading-gradient margin-top-10' key={this.props.key}>
+        <ReactCSSTransitionGroup
+          transitionName='incident-frequency--transition'
+          transitionAppear
+          transitionAppearTimeout={500}
+          transitionEnterTimeout={500}
+          transitionLeaveTimeout={500}>
+          <Table
+            {...incidentFrequencyTableConfig}
+            key={transitionKey}
+          />
+        </ReactCSSTransitionGroup>
       </div>
     )
   }
