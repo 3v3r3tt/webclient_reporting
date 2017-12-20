@@ -113,22 +113,20 @@ class IncidentFrequencyTable extends Component {
 
   _rowClickFnGenerator (rowId) {
     return () => {
-      // TODO: Once IFR Modal Endpoint is finished
-      // this._openIncidentDetailModal(rowId)
+      this._openIncidentDetailModal(rowId)
     }
   }
 
   _openIncidentDetailModal (rowId) {
-    // const incidentId = rowId.match(/^\[#(.*)\]/) && rowId.match(/^\[#(.*)\]/)[1]
-    const title = `Incident #12345`
-
+    const integration = this.props.innerTableIncidentIncidents.find((x) => x.get('incident') === rowId).get('monitoring_tool')
     const modalConfig = {
       modalType: 'confirm',
       modalProps: {
-        title: title,
-        component: <InnerIncidentModal />,
+        title: rowId,
+        component: <InnerIncidentModal incidentName={rowId} integration={integration} />,
         onCancel: () => this.props.hideModal(),
-        cancelButtonText: 'OK'
+        cancelButtonText: 'OK',
+        cancelButtonType: 'info'
       }
     }
     this.props.showModal(modalConfig)

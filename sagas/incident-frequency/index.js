@@ -22,10 +22,6 @@ import {
 
 import config from 'components/__utils/config'
 
-// TODO: remove this once API working
-/*eslint-disable */
-import mockIncidentModalData from './sampleData/incidentModalData'
-
 export const _getincidentFrequencyState = (state) => state.incidentFrequency
 
 function _getIncidentFrequencyTable ({create}, logError) {
@@ -62,7 +58,7 @@ function _getIncidentFrequencyGraph ({create}, logError) {
         start: startDate,
         end: endDate,
         tz_offset: reportingState.get('timezoneOffset', 0),
-        bucket:  reportingState.getIn(['resolutionType', 'type']),
+        bucket: reportingState.getIn(['resolutionType', 'type']),
         segment: reportingState.getIn(['segmentationType', 'key'])
       }
 
@@ -79,25 +75,22 @@ function _getIncidentFrequencyIncidentDetails ({fetch}, logError) {
   return function * (action) {
     try {
       const {
-        incidentNumber
+        incidentNumber,
+        teamSlug,
+        start,
+        end
       } = action.payload
-      const IncidentFrequencyIncidentDetailEndpoint = `/api/v1/org/${config.auth.org.slug}/reports/incidentModal?incidentNumber=${incidentNumber}`
+      const IncidentFrequencyIncidentDetailEndpoint = `/api/v1/org/${config.auth.org.slug}/reports/incidentfrequencymodal?incidentNumber=${incidentNumber}&teamSlug=${teamSlug}&start=${start}&end=${end}`
 
-      // const incidentFrequencyIncidentData = yield call(fetch, IncidentFrequencyIncidentDetailEndpoint)
-      // TODO: remove this once API works
-      const incidentFrequencyIncidentData = mockIncidentModalData
-      const incidentData = incidentFrequencyIncidentData.incidents[0]
+      const incidentFrequencyIncidentData = yield call(fetch, IncidentFrequencyIncidentDetailEndpoint)
 
-      yield put(incidentFrequencyIncidentDetailUpdate(incidentData))
+      yield put(incidentFrequencyIncidentDetailUpdate(incidentFrequencyIncidentData))
     } catch (err) {
       yield call(logError, err)
       yield put(incidentFrequencyIncidentDetailError({error: {modal: true}}))
     }
   }
 }
-
-// TODO: remove this once API works
-/*eslint-enable */
 
 export const Test = {
   _getIncidentFrequencyTable,

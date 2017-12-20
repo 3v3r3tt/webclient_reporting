@@ -138,7 +138,7 @@ function _setIncidentFrequencyIncidentDetailError (state, payload) {
 
 function _updateIncidentDetail (state, payload) {
   return state.set('incidentDetailData', _fromJS(payload))
-              .update('loadingDetailData', () => false)
+              .set('loadingDetailData', false)
 }
 
 function _updateGraph (state, payload) {

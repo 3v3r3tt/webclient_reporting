@@ -9,8 +9,11 @@ import moment from 'moment'
 
 function mapStateToProps (state) {
   return {
-    incidentDetail: state.incidentFrequency.get('incidentDetailData'),
-    loadingDetailData: state.incidentFrequency.get('loadingDetailData')
+    incidentDetailData: state.incidentFrequency.get('incidentDetailData'),
+    loadingDetailData: state.incidentFrequency.get('loadingDetailData'),
+    selectedTeam: state.incidentFrequency.get('selectedTeam'),
+    beginDate: state.incidentFrequency.get('beginDate'),
+    endDate: state.incidentFrequency.get('endDate')
   }
 }
 
@@ -22,35 +25,37 @@ function mapDispatchToProps (dispatch) {
 
 class InnerIncidentModal extends Component {
   componentDidMount () {
+    const incidentId = Number(this.props.incidentName.match(/^\[(.*)\]/)[1])
     const payload = {
-      incidentNumber: 12345 // TODO: this should be made dynamic when API works
+      incidentNumber: incidentId,
+      teamSlug: this.props.selectedTeam,
+      start: this.props.beginDate,
+      end: this.props.endDate
     }
     this.props.getIncidentDetails(payload)
   }
 
   render () {
     if (!this.props.loadingDetailData) {
-      const incident = this.props.incidentDetail
-      const transitions = incident.get('transitions')
-      const startTime = moment(transitions.find((obj) => obj.get('name') === 'triggered').get('at'))
-      const endTime = moment(transitions.find((obj) => obj.get('name') === 'resolved').get('at'))
-      const incidentDuration = endTime.diff(startTime, 'minutes', true)
+      const incident = this.props.incidentDetailData
+      const startTime = moment(incident.get('startTime'))
+      const endTime = moment(incident.get('lastAlertTime'))
+      const incidentDuration = Math.round(endTime.diff(startTime, 'minutes', true))
 
       return (
-        <div className='container'>
-          <div className='row'>
-            <div className='col-12'>
-              <h5>{incident.get('entityDisplayName')}</h5>
-            </div>
-            <div className='col-12 margin-bottom-10'>
-              {startTime.format('MMM. DD, YYYY - h:mm A')}
-            </div>
+        <div className='container incident-frequency--incident-detail--modal'>
+          <div className='row margin-top-10'>
+            <div className='col-4'>Start Time</div>
+            <div className='col-8'>{startTime.format('MMM. DD, YYYY - h:mm A')}</div>
 
             <div className='col-4'>Host</div>
             <div className='col-8'>{incident.get('host')}</div>
 
             <div className='col-4'>Service</div>
             <div className='col-8'>{incident.get('service')}</div>
+
+            <div className='col-4'>Integration</div>
+            <div className='col-8'>{this.props.integration}</div>
 
             <div className='col-4'>Routing Key</div>
             <div className='col-8'>{incident.get('routingKey')}</div>
