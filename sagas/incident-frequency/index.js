@@ -37,12 +37,11 @@ function _getIncidentFrequencyTable ({create}, logError) {
         end: reportingState.getIn(['reducedData', 'reducedEnd']) || reportingState.get('endDate', ''),
         segment_name: action.payload.segmentName,
         segment_type: reportingState.getIn(['segmentationType', 'key']),
-        tz_offset: reportingState.get('tz_offset')
+        tz_offset: reportingState.get('timezoneOffset')
       }
       const incidentFrequencyReportData = yield call(create, IncidentFrequencyReportEndpoint, data)
       yield put(incidentFrequencyTableUpdate(incidentFrequencyReportData))
     } catch (err) {
-      console.log("err", err)
       yield call(logError, err)
       yield put(incidentFrequencyTableError({error: {table: true}}))
     }
@@ -66,7 +65,6 @@ function _getIncidentFrequencyGraph ({create}, logError) {
       const incidentFrequencyReportData = yield call(create, IncidentFrequencyReportEndpoint, data)
       yield put(incidentFrequencyGraphUpdate(incidentFrequencyReportData))
     } catch (err) {
-      console.log("err", err)
       yield call(logError, err)
       yield put(incidentFrequencyGraphError({error: {graph: true}}))
     }
