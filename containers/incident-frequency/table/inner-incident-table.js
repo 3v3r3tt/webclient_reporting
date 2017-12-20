@@ -120,10 +120,12 @@ class IncidentFrequencyTable extends Component {
 
   _openIncidentDetailModal (rowId) {
     // const incidentId = rowId.match(/^\[#(.*)\]/) && rowId.match(/^\[#(.*)\]/)[1]
+    const title = `Incident #12345`
+
     const modalConfig = {
       modalType: 'confirm',
       modalProps: {
-        title: `Incident #12345`,
+        title: title,
         component: <InnerIncidentModal />,
         onCancel: () => this.props.hideModal(),
         cancelButtonText: 'OK'
@@ -134,6 +136,7 @@ class IncidentFrequencyTable extends Component {
 
   render () {
     let innerIncidents = this.props.innerTableIncidentIncidents ? this.props.innerTableIncidentIncidents.toJS() : null
+
     const CollapsedContent =
       <div className='row hoverable top-row' onClick={this._setExpanded}>
         <div className='col-8 margin-bottom-20'>

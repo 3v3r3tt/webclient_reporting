@@ -9,7 +9,8 @@ import moment from 'moment'
 
 function mapStateToProps (state) {
   return {
-    incidentDetail: state.incidentFrequency.get('incidentDetailData')
+    incidentDetail: state.incidentFrequency.get('incidentDetailData'),
+    loadingDetailData: state.incidentFrequency.get('loadingDetailData')
   }
 }
 
@@ -28,8 +29,8 @@ class InnerIncidentModal extends Component {
   }
 
   render () {
-    const incident = this.props.incidentDetail
-    if (incident) {
+    if (!this.props.loadingDetailData) {
+      const incident = this.props.incidentDetail
       const transitions = incident.get('transitions')
       const startTime = moment(transitions.find((obj) => obj.get('name') === 'triggered').get('at'))
       const endTime = moment(transitions.find((obj) => obj.get('name') === 'resolved').get('at'))
@@ -70,7 +71,17 @@ class InnerIncidentModal extends Component {
       )
     } else {
       return (
-        <p>Loading incident data....</p>
+        <div className='container'>
+          <div className='row'>
+            <div className='loading-random-strings'>
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
+            </div>
+          </div>
+        </div>
       )
     }
   }
