@@ -1,23 +1,21 @@
 import React, { Component } from 'react'
 import config from 'components/__utils/config'
 
-class mttaMttrCSVDownloadButton extends Component {
+class IncidentFrequencyCSVDownloadButton extends Component {
   render () {
     const {
       beginDate,
       endDate,
-      selectedTeam,
-      segmentationType,
-      resolutionType
+      selectedTeam
     } = this.props
 
-    const mttaMttrCSVEndpoint = `/api/v1/org/${config.auth.org.slug}/reports/mttaMttrcsv?startDate=${beginDate}&endDate=${endDate}&selectedTeam=${selectedTeam}&segmentationType=${segmentationType}&resolutionType=${resolutionType}`
-    const mttaMttrCSVHref = encodeURI(mttaMttrCSVEndpoint)
+    const incidentFrequencyCSVEndpoint = `/api/v1/org/${config.auth.org.slug}/reports/incidentfrequencycsv?teamSlug=${selectedTeam}&start=${beginDate}&end=${endDate}`
+    const incidentFrequencyCSVHref = encodeURI(incidentFrequencyCSVEndpoint)
 
     return (
       <a
-        className='btn btn-secondary mtta-mttr--filter_csv'
-        href={mttaMttrCSVHref}
+        className='btn btn-secondary incident-frequency--filter_csv'
+        href={incidentFrequencyCSVHref}
         target='_blank'
         title='Export CSV'
         download
@@ -28,4 +26,4 @@ class mttaMttrCSVDownloadButton extends Component {
   }
 }
 
-export default mttaMttrCSVDownloadButton
+export default IncidentFrequencyCSVDownloadButton
