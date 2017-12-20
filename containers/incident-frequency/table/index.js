@@ -144,7 +144,7 @@ class IncidentFrequencyTable extends Component {
     const transitionKey = this.props.reducedData.get('reducedStart', 0)
 
     return (
-      <div className='has-loading-gradient margin-top-10' key={this.props.key}>
+      <div className='has-loading-gradient margin-top-10 incident-frequency--table-container' key={this.props.key}>
         <ReactCSSTransitionGroup
           transitionName='incident-frequency--transition'
           transitionAppear
