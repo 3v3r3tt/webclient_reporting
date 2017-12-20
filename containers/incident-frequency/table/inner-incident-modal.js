@@ -25,7 +25,7 @@ function mapDispatchToProps (dispatch) {
 
 class InnerIncidentModal extends Component {
   componentDidMount () {
-    const incidentId = Number(this.props.incidentName.match(/^\[(.*)\]/)[1])
+    const incidentId = Number(this.props.incidentName.match(/^\[(\d*)\]/)[1])
     const payload = {
       incidentNumber: incidentId,
       teamSlug: this.props.selectedTeam,
