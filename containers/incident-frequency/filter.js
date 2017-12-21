@@ -303,19 +303,19 @@ class IncidentFrequencyFilter extends Component {
           </div>
         </div>
 
-        <div className='incident-frequency--exportcsv'>
-          <div className='incident-frequency--filter-type'>
-            <IncidentFrequencyCSVButton {...this.props} />
-          </div>
-        </div>
-
-        <div className='incident-frequency--charttype incident-frequency--filteritem'>
-          <div className='incident-frequency--filter-type'>
+        <div className='reports--charttype reports--filteritem'>
+          <div className='reports--filter-type'>
             <Dropdown
               dropdownItems={this.chartTypes}
               labelComponent={ChartTypeDropdownLabel}
               triggerClasses={['btn', 'btn-secondary', 'dropdown-btn']}
             />
+          </div>
+        </div>
+
+        <div className='reports--exportcsv incident-frequency--exportcsv'>
+          <div className='reports--filter-type'>
+            <IncidentFrequencyCSVButton {...this.props} />
           </div>
         </div>
       </div>
