@@ -150,7 +150,7 @@ class IncidentFrequencyTable extends Component {
           transitionAppear
           transitionAppearTimeout={500}
           transitionEnterTimeout={500}
-          transitionLeaveTimeout={500}>
+          transitionLeaveTimeout={200}>
           <Table
             {...incidentFrequencyTableConfig}
             key={transitionKey}
