@@ -71,10 +71,23 @@ class IncidentFrequencyGraph extends Component {
     const currentStartDate = moment(Number(bucket.bucket_start))
     let currentIncrement = this.props.resolutionType.get('type').charAt(0)
     let bucketLabel = currentStartDate.utc().format('MMM D')
+
     if (currentIncrement !== 'd') {
       currentIncrement = currentIncrement === 'm' ? 'M' : currentIncrement // Otherwise momentjs thinks millis
       const currentEndDate = currentStartDate.clone().add(1, currentIncrement).subtract(1, 'd')
-      bucketLabel = `${currentStartDate.utc().format('MMM D')} - ${currentEndDate.utc().format('MMM D')}`
+
+      const isFirstBucket = this.props.data.display_buckets[0].bucket_start === currentStartDate.valueOf()
+      const isLastBucket = this.props.data.display_buckets[this.props.data.display_buckets.length - 1].bucket_start === currentStartDate.valueOf()
+
+      if (isFirstBucket) {
+        let newStartDate = moment(this.props.beginDate).startOf('day')
+        bucketLabel = `${newStartDate.utc().format('MMM D')} - ${currentEndDate.utc().format('MMM D')}`
+      } else if (isLastBucket) {
+        let newEndDate = moment(this.props.endDate).startOf('day')
+        bucketLabel = `${currentStartDate.utc().format('MMM D')} - ${newEndDate.utc().format('MMM D')}`
+      } else {
+        bucketLabel = `${currentStartDate.utc().format('MMM D')} - ${currentEndDate.utc().format('MMM D')}`
+      }
     }
     return bucketLabel
   }
