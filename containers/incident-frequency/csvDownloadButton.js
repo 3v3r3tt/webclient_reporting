@@ -18,7 +18,6 @@ class IncidentFrequencyCSVDownloadButton extends Component {
         href={incidentFrequencyCSVHref}
         target='_blank'
         title='Export CSV'
-        download
       >
         <i className='fal fa-file-alt' /> CSV
       </a>

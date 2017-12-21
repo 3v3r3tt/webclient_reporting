@@ -22,7 +22,6 @@ class IncidentFrequencyDownloadCSVRow extends React.Component {
       <a
         href={csvHref}
         target='_blank'
-        download
       >
         ...see more incidents by downloading the CSV
       </a>
