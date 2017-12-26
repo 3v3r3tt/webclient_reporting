@@ -356,7 +356,7 @@ export const displayWeeklyFilledResponse = {
 
 export const displayDailyState = {
   incidentFrequency: fromJS({
-    beginDate: 1511034133034,
+    beginDate: 1511049600000,
     endDate: 1513626133034,
     resolutionType: {
       type: 'day'

@@ -153,7 +153,7 @@ export const getIncidentFrequencyFilledBuckets = createSelector(
       const requestEnd = moment(requestEndDate)
 
       const needsFrontFilled = (requestStart, dataStart) => {
-        return requestStart.isBefore(dataStart.clone().subtract(1, 'day'))
+        return requestStart.isBefore(dataStart)
       }
 
       const needsBackFilled = (requestEnd, dataEnd) => {
