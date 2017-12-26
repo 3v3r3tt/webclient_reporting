@@ -38,6 +38,8 @@ class IncidentFrequencyTable extends Component {
   }
 
   _setExpanded () {
+    if (this.props.bucketTotal === 0) return
+
     this._toggleExpansion()
     if (this.props.name !== this.props.innerTableIncidentSegment) {
       this.props.getInnerTableData({segmentName: this.props.name})
@@ -134,17 +136,19 @@ class IncidentFrequencyTable extends Component {
 
   render () {
     let innerIncidents = this.props.innerTableIncidentIncidents ? this.props.innerTableIncidentIncidents.toJS() : null
+    const hideCaret = this.props.bucketTotal === 0
+    const cardHeaderClass = hideCaret ? '' : 'incident-frequency--inner-incident-table--card-header'
 
     const CollapsedContent =
-      <div className='row hoverable top-row' onClick={this._setExpanded}>
+      <div className='row top-row' onClick={this._setExpanded} >
         <div className='col-8'>
-          <span className='incident-frequency--inner-incident-table--card-header'>
+          <span className={cardHeaderClass}>
             <i className='fa fa-sm fa-circle margin-right-10' style={{color: `${this.props.colorList[this.props.outerTableIndex]}`}} />
             {this.props.name}
           </span>
         </div>
         <div className='col-4'>
-          <span className='pull-right incident-frequency--inner-incident-table--card-header'>{this.props.bucketTotal}</span>
+          <span className={`pull-right ${cardHeaderClass}`}>{this.props.bucketTotal}</span>
         </div>
       </div>
 
@@ -186,7 +190,7 @@ class IncidentFrequencyTable extends Component {
       <div>
         <div className='row hoverable top-row' onClick={this._setExpanded}>
           <div className='col-8 margin-bottom-20'>
-            <span className='incident-frequency--inner-incident-table--card-header'>
+            <span className={cardHeaderClass}>
               <i className='fa fa-sm fa-circle margin-right-10' style={{color: `${this.props.colorList[this.props.outerTableIndex]}`}} />
               {this.props.name}
             </span>
@@ -211,6 +215,7 @@ class IncidentFrequencyTable extends Component {
         contentComponent={ExpandedContent}
         handleClick={this._setExpanded}
         isExpanded={this.state.isExpanded}
+        hideCaret={hideCaret}
       />
     )
   }
