@@ -93,7 +93,7 @@ class IncidentFrequencyGraph extends Component {
   }
 
   _determineGraphMinMax (dateBuckets) {
-    if (dateBuckets.length <= 2 || this.props.chartType === 'Column') {
+    if (dateBuckets.length <= 2 || this.props.chartType === 'Column' || this.props.chartType === 'Bar') {
       return [null, null]
     } else {
       return [0.4, dateBuckets.length - 1.4]
