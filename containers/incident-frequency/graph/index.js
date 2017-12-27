@@ -121,10 +121,11 @@ class IncidentFrequencyGraph extends Component {
 
       bucket.segments_and_values.forEach((segment, index) => {
         const bucketTotal = segment.bucket_total
-        const dupesNeedHandled = lineDupeTracker[outerIndex][bucketTotal] && this.props.chartType === 'Line'
+        const chartTypeNeedsJitter = this.props.chartType === 'Line' || this.props.chartType === 'Spline'
+        const dupesNeedHandled = lineDupeTracker[outerIndex][bucketTotal] && chartTypeNeedsJitter
         if (dupesNeedHandled) {
           lineDupeTracker[outerIndex][bucketTotal] = lineDupeTracker[outerIndex][bucketTotal] + 1
-        } else if (this.props.chartType === 'Line') {
+        } else if (this.props.chartType === 'Line' || this.props.chartType === 'Spline') {
           lineDupeTracker[outerIndex][bucketTotal] = 1
         }
 
