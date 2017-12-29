@@ -84,17 +84,37 @@ class MttaMttrGraph extends Component {
         },
         title: {
           text: 'Date'
+        },
+        tickPositioner: function (min, max) {
+          let ticks = this.series[0].processedXData.slice()
+          ticks.info = this.tickPositions.info
+          return ticks
         }
       },
-      yAxis: {
+      yAxis: [{
         title: {
           text: 'Time (minutes)'
         }
+      }, {
+        title: {
+          text: 'Incident Occurances'
+        },
+        opposite: true,
+        allowDecimals: false
+      }],
+      tooltip: {
+        shared: true,
+        headerFormat: '<span style="font-size: 14px; text-decoration: underline; font-weight: bold;">{point.key}</span><br/>'
       },
       series: [{
-        name: 'Average Time to Ack',
+        name: 'Time to Acknowledge',
+        id: 'averageAckTime',
         type: 'spline',
         color: '#E29E39',
+        zIndex: 3,
+        tooltip: {
+          pointFormat: '<span style="color:{point.color}">\u25CF</span> Average {series.name}: <b>{point.y}</b> minutes<br/>'
+        },
         marker: {
           fillColor: '#E29E39',
           radius: 4,
@@ -102,9 +122,14 @@ class MttaMttrGraph extends Component {
         },
         data: ttaAverageData
       }, {
-        name: 'Average Time to Resolve',
+        name: 'Time to Resolve',
+        id: 'averageResolveTime',
         type: 'spline',
         color: '#00A7CB',
+        zIndex: 3,
+        tooltip: {
+          pointFormat: '<span style="color:{point.color}">\u25CF</span> Average {series.name}: <b>{point.y}</b> minutes<br/>'
+        },
         marker: {
           fillColor: '#00A7CB',
           radius: 4,
@@ -112,28 +137,44 @@ class MttaMttrGraph extends Component {
         },
         data: ttrAverageData
       }, {
-        name: 'Time to Ack',
+        name: 'Time to Acknowledge',
+        id: 'ackTimes',
+        linkedTo: 'averageAckTime',
         type: 'scatter',
+        zIndex: 2,
+        tooltip: {
+          pointFormat: '<b>{point.y}</b> minutes to Acknowledge<br/>'
+        },
         marker: {
-          fillColor: '#E29E39',
-          radius: 2,
+          fillColor: 'rgba(226, 158, 57, 0.75)',
+          radius: 3,
           symbol: 'circle'
         },
         data: ttaData
       },
       {
         name: 'Time to Resolve',
+        id: 'resolveTimes',
+        linkedTo: 'averageResolveTime',
         type: 'scatter',
+        zIndex: 2,
+        tooltip: {
+          pointFormat: '<b>{point.y}</b> minutes to Resolve<br/>'
+        },
         marker: {
-          fillColor: '#00A7CB',
-          radius: 2,
+          fillColor: 'rgba(0, 167, 203, 0.75)',
+          radius: 3,
           symbol: 'circle'
         },
         data: ttrData
       }, {
         name: 'Incident Occurances',
+        id: 'incidentOccurances',
         type: 'column',
-        color: '#CCD3DA',
+        zIndex: 1,
+        color: 'rgba(204, 211, 218, 0.5)',
+        pointPadding: 0,
+        yAxis: 1,
         data: incidentCountData
       }]
     }
