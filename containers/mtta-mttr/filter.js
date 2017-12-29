@@ -15,11 +15,7 @@ import { getTeams } from 'reporting/actions/teams'
 
 import {
   mttaMttrFilterUpdate,
-  mttaMttrGraphGet,
-  mttaMttrTableGet,
-  mttaMttrInnerTableReset,
-  mttaMttrTableReduce,
-  mttaMttrTableReset
+  mttaMttrGraphGet
 } from 'reporting/actions/mtta-mttr'
 
 const {
@@ -33,8 +29,6 @@ function mapStateToProps (state) {
     selectedTeam: state.mttaMttr.get('selectedTeam'),
     beginDate: state.mttaMttr.get('beginDate'),
     endDate: state.mttaMttr.get('endDate'),
-    chartType: state.mttaMttr.get('chartType'),
-    segmentationType: state.mttaMttr.get('segmentationType'),
     resolutionType: state.mttaMttr.get('resolutionType')
   }
 }
@@ -42,82 +36,14 @@ function mapStateToProps (state) {
 function mapDispatchToProps (dispatch) {
   return {
     getTeams: (payload) => dispatch(getTeams(payload)),
-    setFiltermttaMttr: (payload) => dispatch(mttaMttrFilterUpdate(payload)),
-    getTeammttaMttrGraph: (payload) => dispatch(mttaMttrGraphGet(payload)),
-    getInnermttaMttrTable: (payload) => dispatch(mttaMttrTableGet(payload)),
-    resetInnermttaMttrTable: (payload) => dispatch(mttaMttrInnerTableReset(payload)),
-    updateReducedTable: (payload) => dispatch(mttaMttrTableReduce(payload)),
-    resetReducedTable: (payload) => dispatch(mttaMttrTableReset(payload))
+    setFilterMttaMttr: (payload) => dispatch(mttaMttrFilterUpdate(payload)),
+    getMttaMttrGraph: (payload) => dispatch(mttaMttrGraphGet(payload))
   }
 }
 
 class mttaMttrFilter extends Component {
   constructor (props) {
     super(props)
-
-    this.chartTypes = [
-      { label: 'Line',
-        handleClick: () => {
-          this._setFilter('chartType', 'Line')
-          this.props.resetReducedTable()
-        }
-      },
-      { label: 'Column',
-        handleClick: () => {
-          this._setFilter('chartType', 'Column')
-          this.props.resetReducedTable()
-        }
-      },
-      { label: 'Area',
-        handleClick: () => {
-          this._setFilter('chartType', 'Area')
-          this.props.resetReducedTable()
-        }
-      }
-    ]
-
-    this.segmentationTypes = [
-      {
-        label: 'Segment by host',
-        handleClick: () => {
-          this._setFilter('segmentationType', Map({
-            name: 'Segment by host',
-            label: 'Host',
-            key: 'host'
-          }))
-        }
-      },
-      {
-        label: 'Segment by integration',
-        handleClick: () => {
-          this._setFilter('segmentationType', Map({
-            name: 'Segment by integration',
-            label: 'Integration',
-            key: 'monitor'
-          }))
-        }
-      },
-      {
-        label: 'Segment by route key',
-        handleClick: () => {
-          this._setFilter('segmentationType', Map({
-            name: 'Segment by route key',
-            label: 'Route Key',
-            key: 'route_key'
-          }))
-        }
-      },
-      {
-        label: 'Segment by service',
-        handleClick: () => {
-          this._setFilter('segmentationType', Map({
-            name: 'Segment by service',
-            label: 'Service',
-            key: 'service'
-          }))
-        }
-      }
-    ]
 
     this.allResolutionTypes = [
       {
@@ -154,26 +80,26 @@ class mttaMttrFilter extends Component {
 
   componentDidMount () {
     this.props.getTeams()
-    this._getNewTableData()
+    this._getNewGraphData()
   }
 
-  _getNewTableData () {
-    this.props.getTeammttaMttrGraph()
+  _getNewGraphData () {
+    this.props.getMttaMttrGraph()
   }
 
   _setFilter (type, value) {
     const payload = {[type]: value}
-    this.props.setFiltermttaMttr(payload)
-    this._getNewTableData()
+    this.props.setFilterMttaMttr(payload)
+    this._getNewGraphData()
   }
 
   _endDateChange (momentDate) {
-    this.props.setFiltermttaMttr({endDate: momentDate.valueOf()})
+    this.props.setFilterMttaMttr({endDate: momentDate.valueOf()})
     this._checkDateRange(moment(this.props.beginDate), momentDate)
   }
 
   _beginDateChange (momentDate) {
-    this.props.setFiltermttaMttr({beginDate: momentDate.valueOf()})
+    this.props.setFilterMttaMttr({beginDate: momentDate.valueOf()})
     this._checkDateRange(momentDate, moment(this.props.endDate))
   }
 
@@ -194,13 +120,13 @@ class mttaMttrFilter extends Component {
     } else {
       this.resolutionTypes = clone(this.allResolutionTypes)
     }
-    this._getNewTableData()
+    this._getNewGraphData()
   }
 
   _teamChange (team = '') {
     return () => {
-      this.props.setFiltermttaMttr({selectedTeam: team})
-      this._getNewTableData()
+      this.props.setFilterMttaMttr({selectedTeam: team})
+      this._getNewGraphData()
     }
   }
 
