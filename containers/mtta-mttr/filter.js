@@ -12,20 +12,28 @@ import _truncate from 'util/truncate'
 import Victory from '@victorops/victory'
 
 import { getTeams } from 'reporting/actions/teams'
+import { getRouteKeys } from 'reporting/actions/route-keys'
+
+import {
+  getReducedRouteKeys
+} from 'reporting/selectors'
 
 import {
   mttaMttrFilterUpdate,
-  mttaMttrGraphGet
+  mttaMttrGraphGet,
+  mttaMttrRouteKeyUpdate
 } from 'reporting/actions/mtta-mttr'
 
 const {
   Dropdown,
-  DateRangePicker
+  DateRangePicker,
+  MultiSelectDropdown
 } = Victory
 
 function mapStateToProps (state) {
   return {
     teams: state.teams,
+    routeKeys: getReducedRouteKeys(state),
     selectedTeam: state.mttaMttr.get('selectedTeam'),
     beginDate: state.mttaMttr.get('beginDate'),
     endDate: state.mttaMttr.get('endDate'),
@@ -36,8 +44,10 @@ function mapStateToProps (state) {
 function mapDispatchToProps (dispatch) {
   return {
     getTeams: (payload) => dispatch(getTeams(payload)),
+    getRouteKeys: (payload) => dispatch(getRouteKeys(payload)),
     setFilterMttaMttr: (payload) => dispatch(mttaMttrFilterUpdate(payload)),
-    getMttaMttrGraph: (payload) => dispatch(mttaMttrGraphGet(payload))
+    getMttaMttrGraph: (payload) => dispatch(mttaMttrGraphGet(payload)),
+    setRouteKeysMttaMttr: (payload) => dispatch(mttaMttrRouteKeyUpdate(payload))
   }
 }
 
@@ -80,6 +90,7 @@ class mttaMttrFilter extends Component {
 
   componentDidMount () {
     this.props.getTeams()
+    this.props.getRouteKeys()
     this._getNewGraphData()
   }
 
@@ -185,6 +196,18 @@ class mttaMttrFilter extends Component {
       <div className='reports--filter clearfix'>
         <div className='reports--teamsegment reports--filteritem'>
           { this._renderTeamsDropdown() }
+        </div>
+
+        <div className='reports--teamsegment reports--filteritem'>
+          <div className='dropdown filter--dropdown-div'>
+            <MultiSelectDropdown
+              customInputClasses={['reports--filter--multi-select-dropdown']}
+              iconClasses={['fal', 'fa-key']}
+              placeholder={'route key'}
+              filterName={'key'}
+              options={this.props.routeKeys.toJS()}
+              onChange={(items) => { this.props.setRouteKeysMttaMttr(items) }} />
+          </div>
         </div>
 
         <div className='reports--daterange reports--filteritem'>

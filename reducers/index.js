@@ -4,6 +4,7 @@ import iframeModal, { initialState as iframeModalState } from './iframemodal'
 import modal, { initialState as modalState } from './modal'
 import meta, { initialState as metaInitialState } from './meta'
 import reportingOnCall, { initialState as reportingOnCallInitialData } from './reporting-on-call'
+import routeKeys, {initialState as routeKeysInitialData} from './route-keys'
 import incidentFrequency, { initialState as incidentFrequencyInitialData } from './incident-frequency'
 import mttaMttr, { initialState as mttaMttrInitialState } from './mtta-mttr'
 import teams, { initialState as teamsInitialState } from './teams'
@@ -16,6 +17,7 @@ const reducers = {
   modal,
   mttaMttr,
   reportingOnCall,
+  routeKeys,
   teams
 }
 
@@ -27,6 +29,7 @@ export const initialState = {
   modal: modalState,
   mttaMttr: mttaMttrInitialState,
   reportingOnCall: reportingOnCallInitialData,
+  routeKeys: routeKeysInitialData,
   teams: teamsInitialState
 }
 

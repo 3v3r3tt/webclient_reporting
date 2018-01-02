@@ -6,7 +6,8 @@ import {
   MTTA_MTTR_GRAPH_GET,
   MTTA_MTTR_GRAPH_UPDATE,
   MTTA_MTTR_GRAPH_ERROR,
-  MTTA_MTTR_FILTER_UPDATE
+  MTTA_MTTR_FILTER_UPDATE,
+  MTTA_MTTR_ROUTE_KEY_UPDATE
 } from 'reporting/actions/mtta-mttr'
 
 export const initialState = _fromJS({
@@ -20,6 +21,7 @@ export const initialState = _fromJS({
     type: 'week'
   },
   graphData: {},
+  selectedRouteKeys: [],
   error: {
     graph: false
   }
@@ -29,13 +31,14 @@ export default function mttaMttrReport (state = initialState, action) {
   switch (action.type) {
     case MTTA_MTTR_FILTER_UPDATE:
       return _filterUpdate(state, action.payload)
-
     case MTTA_MTTR_GRAPH_GET:
       return _loadingGraphData(state)
     case MTTA_MTTR_GRAPH_UPDATE:
       return _updateGraph(state, action.payload)
     case MTTA_MTTR_GRAPH_ERROR:
       return _setmttaMttrGraphError(state, action.payload)
+    case MTTA_MTTR_ROUTE_KEY_UPDATE:
+      return _updateSelectedRouteKeys(state, action.payload)
 
     default : return state
   }
@@ -57,4 +60,8 @@ function _updateGraph (state, payload) {
   return state.set('graphData', _fromJS(payload))
               .update('loadingGraphData', () => false)
               .setIn(['error', 'graph'], false)
+}
+
+function _updateSelectedRouteKeys (state, payload) {
+  return state.set('selectedRouteKeys', _fromJS(payload))
 }

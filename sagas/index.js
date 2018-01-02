@@ -14,6 +14,10 @@ import {
 } from './reporting-on-call'
 
 import {
+ watchGetRouteKeys
+} from './route-keys'
+
+import {
  watchGetIncidentFrequencyTable,
  watchGetIncidentFrequencyGraph,
  watchGetIncidentFrequencyIncidentDetails
@@ -34,6 +38,8 @@ export default function makeRootSaga (api) {
 
     yield fork(watchGetOnCallTeamReport, api, error)
     yield fork(watchGetOnCallUserReport, api, error)
+
+    yield fork(watchGetRouteKeys, api, error)
 
     yield fork(watchGetIncidentFrequencyTable, api, error)
     yield fork(watchGetIncidentFrequencyGraph, api, error)

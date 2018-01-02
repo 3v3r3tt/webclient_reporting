@@ -13,6 +13,7 @@ import {
 } from 'lodash'
 
 import moment from 'moment-timezone'
+import { getReducedRouteKeys } from './route-keys'
 
 // ---------------------------------------------------------------------------
 
@@ -21,6 +22,7 @@ const _getTeams = state => state.teams
 const _getReportingUserOnCall = state => state.reportingOnCall
 
 // ---------------------------------------------------------------------------
+export { getReducedRouteKeys }
 
 export const getCompleteProfileStatus = createSelector(
   [_metaFlags],
