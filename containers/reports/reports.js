@@ -15,29 +15,15 @@ class Reports extends React.Component {
   }
 
   _getOnCallTile () {
-    const onCallFeatureFlagIsTrue = this.props.featureFlags.getIn(['featureFlags', 'feature:oncallreport'], false)
     const orgslug = this.props.params.org
-
-    switch (onCallFeatureFlagIsTrue) {
-      case true:
-        return (
-          <Link to={`/reports/${orgslug}/on-call`} className='on-call reports-nav-item'>
-            <div className='card-header'>
-              <h6 className='card-header__heading'>On-Call</h6>
-            </div>
-            <div className='preview' />
-          </Link>
-        )
-      default:
-        return (
-          <a href={`/dash/${orgslug}/#/reports/view/User`} className='User reports-nav-item'>
-            <div className='card-header'>
-              <h6 className='card-header__heading'>User Metrics</h6>
-            </div>
-            <div className='preview' />
-          </a>
-        )
-    }
+    return (
+      <Link to={`/reports/${orgslug}/on-call`} className='on-call reports-nav-item'>
+        <div className='card-header'>
+          <h6 className='card-header__heading'>On-Call</h6>
+        </div>
+        <div className='preview' />
+      </Link>
+    )
   }
 
   _getIncidentFrequencyTile () {
@@ -66,27 +52,32 @@ class Reports extends React.Component {
     }
   }
 
-  render () {
+  _getMMR () {
     const orgslug = this.props.params.org
     const featchingFeatureFlags = this.props.featureFlags.get('isFetching', true)
-
-    let LinkToMmrReport =
-      <Link href={this._createLink('#/reports/view/MTTA_MTTR')} className='basic-b reports-nav-item'>
-        <div className='card-header'>
-          <h6 className='card-header__heading'>Organization MTTA/MTTR</h6>
-        </div>
-        <div className='preview' />
-      </Link>
     if (!featchingFeatureFlags && this.props.featureFlags.getIn(['featureFlags', 'feature:mttv2'], false)) {
-      LinkToMmrReport =
+      return (
         <Link to={`/reports/${orgslug}/mtta-mttr`} className='basic-b reports-nav-item mtta-mttr reports-nav-item'>
           <div className='card-header'>
             <h6 className='card-header__heading'>Organization MTTA/MTTR</h6>
           </div>
           <div className='preview' />
         </Link>
+      )
+    } else {
+      return (
+        <Link href={this._createLink('#/reports/view/MTTA_MTTR')} className='basic-b reports-nav-item'>
+          <div className='card-header'>
+            <h6 className='card-header__heading'>Organization MTTA/MTTR</h6>
+          </div>
+          <div className='preview' />
+        </Link>
+      )
     }
+  }
 
+  render () {
+    const featchingFeatureFlags = this.props.featureFlags.get('isFetching', true)
     return (
       <div id='newadmin'>
         <div className='module-wrapper'>
@@ -106,7 +97,7 @@ class Reports extends React.Component {
                 </div>
                 <div className='preview' />
               </a>
-              { LinkToMmrReport }
+              { this._getMMR() }
 
               <Link href={this._createLink('#/reports/view/Trends')} data-report='Trends' className='basic-c reports-nav-item'>
                 <div className='card-header'>
