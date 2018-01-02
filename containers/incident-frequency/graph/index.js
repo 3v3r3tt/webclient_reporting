@@ -227,6 +227,22 @@ class IncidentFrequencyGraph extends Component {
     return _merge(_clone(defaultHighChartsOptions), _clone(config))
   }
 
+  _determineDatesFromLabels (startLabel, endLabel) {
+    let start = moment(startLabel, 'MMM D')
+    let end = moment(startLabel, 'MMM D').add(1, 'day')
+    if (moment(endLabel, 'MMM D')) {
+      end = moment(endLabel, 'MMM D').add(1, 'day')
+    }
+    const now = moment()
+    if (start.isAfter(now, 'month')) {
+      start.subtract(1, 'year')
+      end.subtract(1, 'year')
+    } else if (end.isAfter(now, 'month')) {
+      end.subtract(1, 'year')
+    }
+    return [start.valueOf(), end.valueOf()]
+  }
+
   _generateReducedGraph (name, series, pointIndex) {
     const reducedRows = series.map((segment, index) => {
       return ({
@@ -237,8 +253,8 @@ class IncidentFrequencyGraph extends Component {
     const plotLine = document.getElementsByClassName('highcharts-plot-lines-9999')[0]
     plotLine.style.display = 'unset'
     const [startLabel, endLabel] = name.split(' - ')
-    const reducedStart = moment(startLabel, 'MMM D').valueOf()
-    const reducedEnd = moment(endLabel, 'MMM D').valueOf() || moment(startLabel, 'MMM D').add(1, 'day').valueOf()
+    const [reducedStart, reducedEnd] = this._determineDatesFromLabels(startLabel, endLabel)
+
     this.props.updateReducedTable({
       reducedRows: fromJS(reducedRows),
       animation: false,
