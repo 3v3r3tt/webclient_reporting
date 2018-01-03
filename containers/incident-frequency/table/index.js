@@ -83,16 +83,20 @@ class IncidentFrequencyTable extends Component {
   }
 
   _determineDateRangeLabel (columnTitle) {
+    const today = moment()
     const clickDate = moment(columnTitle, 'MMM D').date()
     const clickMonth = moment(columnTitle, 'MMM D').month()
-    const clickYear = moment().month() > clickMonth ? moment().year() : moment().year() - 1
+    const clickYear = today.month() >= clickMonth ? today.year() : today.year() - 1
     const fromDate = moment(new Date(clickYear, clickMonth, clickDate))
     const dateResolution = this.props.resolutionType.get('type')
 
     if (dateResolution === 'day') {
       return `# of Incidents (${fromDate.format('MMM D')})`
     } else {
-      const toDate = fromDate.clone().add(1, dateResolution).subtract(1, 'day')
+      let toDate = fromDate.clone().add(1, dateResolution).subtract(1, 'day')
+      if (toDate.isAfter(today, 'day')) {
+        toDate = today.clone()
+      }
       return `# of Incidents (${fromDate.format('MMM D')} - ${toDate.format('MMM D')})`
     }
   }
