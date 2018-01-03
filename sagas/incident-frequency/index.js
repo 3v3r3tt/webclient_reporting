@@ -32,7 +32,7 @@ function _getIncidentFrequencyTable ({create}, logError) {
       const data = {
         team: reportingState.get('selectedTeam', ''),
         start: moment(reportingState.getIn(['reducedData', 'reducedStart']) || reportingState.get('beginDate', '')).utc().startOf('day').valueOf(),
-        end: moment(reportingState.getIn(['reducedData', 'reducedEnd']) || reportingState.get('endDate', '')).utc().startOf('day').valueOf() - 1,
+        end: moment(reportingState.getIn(['reducedData', 'reducedEnd']) || reportingState.get('endDate', '')).utc().endOf('day').valueOf(),
         segment_name: action.payload.segmentName,
         segment_type: reportingState.getIn(['segmentationType', 'key']),
         tz_offset: reportingState.get('timezoneOffset')

@@ -230,8 +230,8 @@ class IncidentFrequencyGraph extends Component {
   _determineDatesFromLabels (startLabel, endLabel) {
     let start = moment(startLabel, 'MMM D')
     let end = moment(startLabel, 'MMM D').add(1, 'day')
-    if (moment(endLabel, 'MMM D')) {
-      end = moment(endLabel, 'MMM D').add(1, 'day')
+    if (endLabel) {
+      end = moment(endLabel, 'MMM D')
     }
     const now = moment()
     if (start.isAfter(now, 'month')) {
