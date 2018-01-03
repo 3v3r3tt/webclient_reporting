@@ -9,7 +9,7 @@ import {
   clone as _clone
 } from 'vendor/lodash'
 
-// import moment from 'moment'
+import moment from 'moment'
 import {
   List
 } from 'immutable'
@@ -34,16 +34,6 @@ class MttaMttrGraph extends Component {
     super(props)
 
     this._generateMttaMttrHighchartConfig = this._generateMttaMttrHighchartConfig.bind(this)
-
-    this._scatterTimeFormats = {
-      millisecond: '%A, %b %e at %H:%M:%S',
-      second: '%A, %b %e at %H:%M:%S',
-      minute: '%A, %b %e at %H:%M:%S',
-      hour: '%A, %b %e at %H:%M:%S',
-      day: '%A, %b %e at %H:%M:%S',
-      week: '%A, %b %e at %H:%M:%S',
-      month: '%A, %b %e at %H:%M:%S'
-    }
   }
 
   componentDidMount () {
@@ -71,13 +61,36 @@ class MttaMttrGraph extends Component {
     return secondsData.map((x) => [x[0], x[1] / 60])
   }
 
+  _convertToHighchartFormat (values) {
+    const highchartFormattedData = values.map((x) => {
+      return {
+        x: x[0],
+        y: x[1] / 60,
+        name: x[2]
+      }
+    })
+    return highchartFormattedData
+  }
+
   _generateMttaMttrHighchartConfig (graphData) {
     if (!graphData) return
     const ttaAverageData = this._convertSecondsToMinutes(graphData.get('tta_average', List()).toJS())
-    const ttaData = this._convertSecondsToMinutes(graphData.get('tta_values', List()).toJS())
+    const ttaData = this._convertToHighchartFormat(graphData.get('tta_values', List()).toJS())
     const ttrAverageData = this._convertSecondsToMinutes(graphData.get('ttr_average', List()).toJS())
-    const ttrData = this._convertSecondsToMinutes(graphData.get('ttr_values', List()).toJS())
+    const ttrData = this._convertToHighchartFormat(graphData.get('ttr_values', List()).toJS())
     const incidentCountData = graphData.get('incident_count', List()).toJS()
+
+    const scatterTooltipFormatter = (type) => function () {
+      const formattedDate = moment(this.x).format('MMM Do YYYY [at] h:mm a')
+      const duration = moment.duration(this.y * 60 * 1000)
+      const hours = duration.hours() ? `${duration.hours()} hour${duration.hours() > 1 ? 's' : ''} ` : ''
+      const minutes = duration.minutes() ? `${duration.minutes()} minute${duration.minutes() > 1 ? 's' : ''} ` : ''
+      const seconds = duration.seconds() ? `${duration.seconds()} second${duration.seconds() > 1 ? 's' : ''} ` : ''
+      const formattedTime = `${hours}${minutes}${seconds}`
+      return (
+        `${formattedDate}<br/><b>${formattedTime}</b> to ${type}<br/>`
+      )
+    }
 
     const config = {
       legend: {
@@ -153,8 +166,7 @@ class MttaMttrGraph extends Component {
         type: 'scatter',
         zIndex: 2,
         tooltip: {
-          pointFormat: '<b>{point.y}</b> minutes to Acknowledge<br/>',
-          dateTimeLabelFormats: this._scatterTimeFormats
+          pointFormatter: scatterTooltipFormatter('acknowledge')
         },
         marker: {
           fillColor: 'rgba(226, 158, 57, 0.75)',
@@ -170,8 +182,7 @@ class MttaMttrGraph extends Component {
         type: 'scatter',
         zIndex: 2,
         tooltip: {
-          pointFormat: '<b>{point.y}</b> minutes to Resolve<br/>',
-          dateTimeLabelFormats: this._scatterTimeFormats
+          pointFormatter: scatterTooltipFormatter('resolve')
         },
         marker: {
           fillColor: 'rgba(0, 167, 203, 0.75)',
@@ -196,7 +207,6 @@ class MttaMttrGraph extends Component {
 
   render () {
     const mttaMttrHighchartData = this._generateMttaMttrHighchartConfig(this.props.graphData)
-    console.log('GRAPH: mttaMttrHighchartData: ', mttaMttrHighchartData)
 
     return (
       <div className='mtta-mttr--graph' id='mtta-mttr-graph'>
