@@ -60,37 +60,19 @@ class IncidentFrequencyFilter extends Component {
     this.chartTypes = [
       { label: 'Line',
         handleClick: () => {
-          this._setFilter('chartType', 'Line')
-          this.props.resetReducedTable()
-        }
-      },
-      { label: 'Spline',
-        handleClick: () => {
-          this._setFilter('chartType', 'Spline')
+          this._setFilter('chartType', Map({label: 'Line', key: 'Spline'}))
           this.props.resetReducedTable()
         }
       },
       { label: 'Area',
         handleClick: () => {
-          this._setFilter('chartType', 'Area')
-          this.props.resetReducedTable()
-        }
-      },
-      { label: 'Area Spline',
-        handleClick: () => {
-          this._setFilter('chartType', 'AreaSpline')
-          this.props.resetReducedTable()
-        }
-      },
-      { label: 'Bar',
-        handleClick: () => {
-          this._setFilter('chartType', 'Bar')
+          this._setFilter('chartType', Map({label: 'Area', key: 'AreaSpline'}))
           this.props.resetReducedTable()
         }
       },
       { label: 'Column',
         handleClick: () => {
-          this._setFilter('chartType', 'Column')
+          this._setFilter('chartType', Map({label: 'Column', key: 'Column'}))
           this.props.resetReducedTable()
         }
       }
@@ -273,9 +255,8 @@ class IncidentFrequencyFilter extends Component {
   }
 
   render () {
-    const chartType = this.props.chartType === 'AreaSpline' ? 'Area Spline' : this.props.chartType
     const ServiceDropdownLabel = <span>{this.props.segmentationType.get('name')}&nbsp;&nbsp;&nbsp;<i className='fa fa-angle-down' /></span>
-    const ChartTypeDropdownLabel = <span><i className='fa fa-chart-area' />&nbsp;&nbsp;{chartType} &nbsp;&nbsp;&nbsp;<i className='fa fa-angle-down' /></span>
+    const ChartTypeDropdownLabel = <span><i className='fa fa-chart-area' />&nbsp;&nbsp;{this.props.chartType.get('label')} &nbsp;&nbsp;&nbsp;<i className='fa fa-angle-down' /></span>
     const ResolutionTypeDropdownLabel = <span>{this.props.resolutionType.get('name')}&nbsp;&nbsp;&nbsp;&nbsp;<i className='fa fa-angle-down' /></span>
 
     return (

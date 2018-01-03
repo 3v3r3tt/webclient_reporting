@@ -46,17 +46,9 @@ export default {
   },
 
   plotOptions: {
-    line: {
-      enableMouseTracking: true,
-      marker: {
-        enabled: false
-      }
-    },
-
-    area: {
+    areaspline: {
       stacking: 'normal'
     },
-
     series: {
       marker: {
         symbol: 'circle'

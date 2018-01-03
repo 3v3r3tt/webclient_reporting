@@ -93,7 +93,7 @@ class IncidentFrequencyGraph extends Component {
   }
 
   _determineGraphMinMax (dateBuckets) {
-    if (dateBuckets.length <= 2 || this.props.chartType === 'Column' || this.props.chartType === 'Bar') {
+    if (dateBuckets.length <= 2 || this.props.chartType.get('key') === 'Column') {
       return [null, null]
     } else {
       return [0.4, dateBuckets.length - 1.4]
@@ -121,11 +121,11 @@ class IncidentFrequencyGraph extends Component {
 
       bucket.segments_and_values.forEach((segment, index) => {
         const bucketTotal = segment.bucket_total
-        const chartTypeNeedsJitter = this.props.chartType === 'Line' || this.props.chartType === 'Spline'
+        const chartTypeNeedsJitter = this.props.chartType.get('key') === 'Spline'
         const dupesNeedHandled = lineDupeTracker[outerIndex][bucketTotal] && chartTypeNeedsJitter
         if (dupesNeedHandled) {
           lineDupeTracker[outerIndex][bucketTotal] = lineDupeTracker[outerIndex][bucketTotal] + 1
-        } else if (this.props.chartType === 'Line' || this.props.chartType === 'Spline') {
+        } else if (this.props.chartType.get('key') === 'Spline') {
           lineDupeTracker[outerIndex][bucketTotal] = 1
         }
 
@@ -142,7 +142,7 @@ class IncidentFrequencyGraph extends Component {
           segmentSeriesData[index].data.push(bucketTotal + jitterAmount)
         }
 
-        if (this.props.chartType === 'Area') {
+        if (this.props.chartType.get('key') === 'AreaSpline') {
           currentGraphYMax += bucketTotal
           graphYMax = graphYMax < currentGraphYMax ? currentGraphYMax : graphYMax
         } else {
@@ -159,7 +159,7 @@ class IncidentFrequencyGraph extends Component {
     const config = {
       colors: this.props.colorList,
       chart: {
-        type: this.props.chartType.toLowerCase(),
+        type: this.props.chartType.get('key').toLowerCase(),
         events: {
           click: function (e) {
             let chart = this.xAxis[0]

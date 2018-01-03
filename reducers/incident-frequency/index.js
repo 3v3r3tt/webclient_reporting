@@ -26,7 +26,10 @@ export const initialState = _fromJS({
   endDate: moment().valueOf(),
   timezoneOffset: moment().utcOffset() / 60,
   selectedTeam: '',
-  chartType: 'AreaSpline',
+  chartType: {
+    label: 'Area',
+    key: 'AreaSpline'
+  },
   segmentationType: {
     name: 'Segment by integration',
     label: 'Integration',
