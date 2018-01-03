@@ -34,6 +34,16 @@ class MttaMttrGraph extends Component {
     super(props)
 
     this._generateMttaMttrHighchartConfig = this._generateMttaMttrHighchartConfig.bind(this)
+
+    this._scatterTimeFormats = {
+      millisecond: '%A, %b %e at %H:%M:%S',
+      second: '%A, %b %e at %H:%M:%S',
+      minute: '%A, %b %e at %H:%M:%S',
+      hour: '%A, %b %e at %H:%M:%S',
+      day: '%A, %b %e at %H:%M:%S',
+      week: '%A, %b %e at %H:%M:%S',
+      month: '%A, %b %e at %H:%M:%S'
+    }
   }
 
   componentDidMount () {
@@ -143,7 +153,8 @@ class MttaMttrGraph extends Component {
         type: 'scatter',
         zIndex: 2,
         tooltip: {
-          pointFormat: '<b>{point.y}</b> minutes to Acknowledge<br/>'
+          pointFormat: '<b>{point.y}</b> minutes to Acknowledge<br/>',
+          dateTimeLabelFormats: this._scatterTimeFormats
         },
         marker: {
           fillColor: 'rgba(226, 158, 57, 0.75)',
@@ -159,7 +170,8 @@ class MttaMttrGraph extends Component {
         type: 'scatter',
         zIndex: 2,
         tooltip: {
-          pointFormat: '<b>{point.y}</b> minutes to Resolve<br/>'
+          pointFormat: '<b>{point.y}</b> minutes to Resolve<br/>',
+          dateTimeLabelFormats: this._scatterTimeFormats
         },
         marker: {
           fillColor: 'rgba(0, 167, 203, 0.75)',
