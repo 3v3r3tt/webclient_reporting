@@ -121,14 +121,17 @@ class IncidentFrequencyTable extends Component {
 
   _openIncidentDetailModal (rowId) {
     const integration = this.props.innerTableIncidentIncidents.find((x) => x.get('incident') === rowId).get('monitoring_tool')
+    const incidentId = Number(rowId.match(/^\[(\d*)\]/)[1])
+    const modalTitle = `Incident #${incidentId}`
     const modalConfig = {
       modalType: 'confirm',
       modalProps: {
-        title: rowId,
-        component: <InnerIncidentModal incidentName={rowId} integration={integration} />,
+        title: modalTitle,
+        component: <InnerIncidentModal incidentId={incidentId} integration={integration} />,
         onCancel: () => this.props.hideModal(),
         cancelButtonText: 'OK',
-        cancelButtonType: 'info'
+        cancelButtonType: 'info',
+        modalClass: 'incident-frequency--incident-detail--modal'
       }
     }
     this.props.showModal(modalConfig)
