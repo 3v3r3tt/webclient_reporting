@@ -23,7 +23,7 @@ const config = window.VO_CONFIG
 const COLOR_LIST = [
   '#FFD163', '#F1582F', '#5175CA', '#ABCB79', '#6C6C6C',
   '#FF8D22', '#B664E4', '#69E7C7', '#E762A7', '#0037AB',
-  '#72EA31', '#51A8CA', '#DCA326', '#5A3EBA', '#B7B7B7'
+  '#72EA31', '#51A8CA', '#DCA326', '#5A3EBA', '#52F39A', '#B7B7B7'
 ]
 
 function mapStateToProps (state) {
