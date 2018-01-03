@@ -24,7 +24,8 @@ import {
 } from './incident-frequency'
 
 import {
- watchGetMttaMttrGraph
+ watchGetMttaMttrGraph,
+ watchGetMttaMttrTable
 } from './mtta-mttr'
 
 // lib
@@ -46,5 +47,6 @@ export default function makeRootSaga (api) {
     yield fork(watchGetIncidentFrequencyIncidentDetails, api, error)
 
     yield fork(watchGetMttaMttrGraph, api, error)
+    yield fork(watchGetMttaMttrTable, api, error)
   }
 }

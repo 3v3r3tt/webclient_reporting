@@ -5,6 +5,7 @@ import Victory from '@victorops/victory'
 
 import Filter from './filter'
 import Graph from './graph'
+import MmrTable from './table'
 
 const {
   BreadCrumbs
@@ -41,6 +42,8 @@ class MttaMttr extends Component {
         <Filter />
 
         <Graph graphIsEmpty={!this.props.loadingData} graphData={this.props.graphData} />
+
+        <MmrTable />
       </div>
     )
   }

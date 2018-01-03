@@ -6,6 +6,9 @@ import {
   MTTA_MTTR_GRAPH_GET,
   MTTA_MTTR_GRAPH_UPDATE,
   MTTA_MTTR_GRAPH_ERROR,
+  MTTA_MTTR_TABLE_GET,
+  MTTA_MTTR_TABLE_UPDATE,
+  MTTA_MTTR_TABLE_ERROR,
   MTTA_MTTR_FILTER_UPDATE,
   MTTA_MTTR_ROUTE_KEY_UPDATE
 } from 'reporting/actions/mtta-mttr'
@@ -21,9 +24,14 @@ export const initialState = _fromJS({
     type: 'week'
   },
   graphData: {},
+  table: {
+    loading: true,
+    data: []
+  },
   selectedRouteKeys: [],
   error: {
-    graph: false
+    graph: false,
+    table: false
   }
 })
 
@@ -37,6 +45,12 @@ export default function mttaMttrReport (state = initialState, action) {
       return _updateGraph(state, action.payload)
     case MTTA_MTTR_GRAPH_ERROR:
       return _setmttaMttrGraphError(state, action.payload)
+    case MTTA_MTTR_TABLE_GET:
+      return _loadingTableData(state)
+    case MTTA_MTTR_TABLE_UPDATE:
+      return _updateTable(state, action.payload)
+    case MTTA_MTTR_TABLE_ERROR:
+      return _setmttaMttrTableError(state, action.payload)
     case MTTA_MTTR_ROUTE_KEY_UPDATE:
       return _updateSelectedRouteKeys(state, action.payload)
 
@@ -45,6 +59,7 @@ export default function mttaMttrReport (state = initialState, action) {
 }
 
 const _loadingGraphData = (state) => state.update('loadingGraphData', () => true)
+const _loadingTableData = (state) => state.updateIn(['table', 'loading'], () => true)
 
 function _filterUpdate (state, payload) {
   const filterKey = Object.keys(payload)[0]
@@ -60,6 +75,16 @@ function _updateGraph (state, payload) {
   return state.set('graphData', _fromJS(payload))
               .update('loadingGraphData', () => false)
               .setIn(['error', 'graph'], false)
+}
+
+function _setmttaMttrTableError (state, payload) {
+  return state.setIn(['error', 'table'], _fromJS(payload.error))
+}
+
+function _updateTable (state, payload) {
+  return state.setIn(['table', 'data'], _fromJS(payload))
+              .updateIn(['table', 'loading'], () => false)
+              .setIn(['error', 'table'], false)
 }
 
 function _updateSelectedRouteKeys (state, payload) {

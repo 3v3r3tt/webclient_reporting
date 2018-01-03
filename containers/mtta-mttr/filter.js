@@ -21,6 +21,7 @@ import {
 import {
   mttaMttrFilterUpdate,
   mttaMttrGraphGet,
+  mttaMttrTableGet,
   mttaMttrRouteKeyUpdate
 } from 'reporting/actions/mtta-mttr'
 
@@ -47,6 +48,7 @@ function mapDispatchToProps (dispatch) {
     getRouteKeys: (payload) => dispatch(getRouteKeys(payload)),
     setFilterMttaMttr: (payload) => dispatch(mttaMttrFilterUpdate(payload)),
     getMttaMttrGraph: (payload) => dispatch(mttaMttrGraphGet(payload)),
+    getMttaMttrTable: (payload) => dispatch(mttaMttrTableGet(payload)),
     setRouteKeysMttaMttr: (payload) => dispatch(mttaMttrRouteKeyUpdate(payload))
   }
 }
@@ -92,16 +94,22 @@ class mttaMttrFilter extends Component {
     this.props.getTeams()
     this.props.getRouteKeys()
     this._getNewGraphData()
+    this._getNewTableData()
   }
 
   _getNewGraphData () {
     this.props.getMttaMttrGraph()
   }
 
+  _getNewTableData () {
+    this.props.getMttaMttrTable()
+  }
+
   _setFilter (type, value) {
     const payload = {[type]: value}
     this.props.setFilterMttaMttr(payload)
     this._getNewGraphData()
+    this._getNewTableData()
   }
 
   _endDateChange (momentDate) {
@@ -132,12 +140,14 @@ class mttaMttrFilter extends Component {
       this.resolutionTypes = clone(this.allResolutionTypes)
     }
     this._getNewGraphData()
+    this._getNewTableData()
   }
 
   _teamChange (team = '') {
     return () => {
       this.props.setFilterMttaMttr({selectedTeam: team})
       this._getNewGraphData()
+      this._getNewTableData()
     }
   }
 
