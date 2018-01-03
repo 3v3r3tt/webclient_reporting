@@ -143,7 +143,7 @@ class IncidentFrequencyTable extends Component {
     const cardHeaderClass = hideCaret ? '' : 'incident-frequency--inner-incident-table--card-header'
 
     const CollapsedContent =
-      <div className='row top-row' onClick={this._setExpanded} >
+      <div className='row top-row'>
         <div className='col-8'>
           <span className={cardHeaderClass}>
             <i className='fa fa-sm fa-circle margin-right-10' style={{color: `${this.props.colorList[this.props.outerTableIndex]}`}} />
@@ -217,6 +217,7 @@ class IncidentFrequencyTable extends Component {
         headerComponent={CollapsedContent}
         contentComponent={ExpandedContent}
         handleClick={this._setExpanded}
+        handleClickHeader={this._setExpanded}
         isExpanded={this.state.isExpanded}
         hideCaret={hideCaret}
       />
