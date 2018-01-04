@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import Victory from '@victorops/victory'
 
 import Filter from './filter'
+import Goals from './goals'
 import Graph from './graph'
 import MmrTable from './table'
 
@@ -40,6 +41,8 @@ class MttaMttr extends Component {
         <h1 className='heading-3'>Performance (MTTA/MTTR) report</h1>
 
         <Filter />
+
+        <Goals />
 
         <Graph graphIsEmpty={!this.props.loadingData} graphData={this.props.graphData} />
 

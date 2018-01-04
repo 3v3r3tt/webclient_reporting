@@ -16,12 +16,14 @@ import {
 
 function mapStateToProps (state) {
   return {
-    selectedTeam: state.incidentFrequency.get('selectedTeam'),
-    beginDate: state.incidentFrequency.get('beginDate'),
-    endDate: state.incidentFrequency.get('endDate'),
-    graphError: state.incidentFrequency.getIn(['error', 'graph']),
-    loadingData: state.incidentFrequency.get('loadingGraphData'),
-    resolutionType: state.incidentFrequency.get('resolutionType')
+    selectedTeam: state.mttaMttr.get('selectedTeam'),
+    beginDate: state.mttaMttr.get('beginDate'),
+    endDate: state.mttaMttr.get('endDate'),
+    graphError: state.mttaMttr.getIn(['error', 'graph']),
+    loadingData: state.mttaMttr.get('loadingGraphData'),
+    resolutionType: state.mttaMttr.get('resolutionType'),
+    mttaGoal: state.mttaMttr.getIn(['goals', 'mtta'], null),
+    mttrGoal: state.mttaMttr.getIn(['goals', 'mttr'], null)
   }
 }
 
@@ -80,6 +82,24 @@ class MttaMttrGraph extends Component {
     const ttrData = this._convertToHighchartFormat(graphData.get('ttr_values', List()).toJS())
     const incidentCountData = graphData.get('incident_count', List()).toJS()
 
+    const mttaGoalPlotline = {
+      id: 'mttaGoalPlotline',
+      color: '#fdcf8c',
+      dashStyle: 'ShortDash',
+      value: this.props.mttaGoal,
+      width: 2,
+      zIndex: 4
+    }
+
+    const mttrGoalPlotline = {
+      id: 'mttrGoalPlotline',
+      color: '#66d6ee',
+      dashStyle: 'ShortDash',
+      value: this.props.mttrGoal,
+      width: 2,
+      zIndex: 4
+    }
+
     const scatterTooltipFormatter = (type) => function () {
       const formattedDate = moment(this.x).format('MMM Do YYYY [at] h:mm a')
       const duration = moment.duration(this.y * 60 * 1000)
@@ -87,6 +107,7 @@ class MttaMttrGraph extends Component {
       const minutes = duration.minutes() ? `${duration.minutes()} minute${duration.minutes() > 1 ? 's' : ''} ` : ''
       const seconds = duration.seconds() ? `${duration.seconds()} second${duration.seconds() > 1 ? 's' : ''} ` : ''
       const formattedTime = `${hours}${minutes}${seconds}`
+
       return (
         `${formattedDate}<br/><b>${formattedTime}</b> to ${type}<br/>`
       )
@@ -117,7 +138,8 @@ class MttaMttrGraph extends Component {
       yAxis: [{
         title: {
           text: 'Time (minutes)'
-        }
+        },
+        plotLines: [ mttaGoalPlotline, mttrGoalPlotline ]
       }, {
         title: {
           text: 'Incident Occurances'
@@ -199,6 +221,44 @@ class MttaMttrGraph extends Component {
         pointPadding: 0,
         yAxis: 1,
         data: incidentCountData
+      }, {
+        // Series that mimics the plot line
+        color: '#fdcf8c',
+        name: 'MTTA Goal',
+        showInLegend: this.props.mttaGoal !== null,
+        dashStyle: 'shortdash',
+        marker: {
+          enabled: false
+        },
+        events: {
+          // Event for showing/hiding plot line
+          legendItemClick: function (e) {
+            if (this.visible) {
+              this.chart.yAxis[0].removePlotLine('mttaGoalPlotline')
+            } else {
+              this.chart.yAxis[0].addPlotLine(mttaGoalPlotline)
+            }
+          }
+        }
+      }, {
+        // Series that mimics the plot line
+        color: '#66d6ee',
+        name: 'MTTR Goal',
+        showInLegend: this.props.mttrGoal !== null,
+        dashStyle: 'shortdash',
+        marker: {
+          enabled: false
+        },
+        events: {
+          // Event for showing/hiding plot line
+          legendItemClick: function (e) {
+            if (this.visible) {
+              this.chart.yAxis[0].removePlotLine('mttrGoalPlotline')
+            } else {
+              this.chart.yAxis[0].addPlotLine(mttrGoalPlotline)
+            }
+          }
+        }
       }]
     }
 

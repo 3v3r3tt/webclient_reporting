@@ -9,6 +9,8 @@ export const getReducedRouteKeys = createSelector(
     return state.map((routeKey) => {
       if (routeKey.get('isDefault')) return {id: routeKey.get('id'), label: 'Default Route Key'}
       else return {id: routeKey.get('id'), label: routeKey.get('routeKey')}
+    }).sort((a, b) => {
+      return a.label.localeCompare(b.label)
     })
   }
 )

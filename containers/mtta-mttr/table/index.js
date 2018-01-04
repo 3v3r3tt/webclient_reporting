@@ -50,11 +50,13 @@ class MttaMttrTable extends Component {
   }
 
   _transformTime (time) {
-    let hours = Math.floor(moment.duration(time).asHours()).toString()
-    let minutes = moment.duration(time).minutes().toString()
+    const duration = moment.duration(time, 's')
+    let hours = Math.floor(duration.asHours()).toString()
+    let minutes = duration.minutes().toString()
+    let seconds = duration.seconds().toString()
     hours = this._formatTimeSpacing(hours)
     minutes = this._formatTimeSpacing(minutes)
-    return hours + ':' + minutes
+    return hours + ':' + minutes + ':' + seconds
   }
 
   _transformRows (data) {
