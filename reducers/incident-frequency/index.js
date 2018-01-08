@@ -28,7 +28,7 @@ export const initialState = _fromJS({
   selectedTeam: '',
   chartType: {
     label: 'Area',
-    key: 'AreaSpline'
+    key: 'Area'
   },
   segmentationType: {
     name: 'Segment by integration',

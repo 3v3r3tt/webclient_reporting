@@ -60,13 +60,13 @@ class IncidentFrequencyFilter extends Component {
     this.chartTypes = [
       { label: 'Line',
         handleClick: () => {
-          this._setFilter('chartType', Map({label: 'Line', key: 'Spline'}))
+          this._setFilter('chartType', Map({label: 'Line', key: 'Line'}))
           this.props.resetReducedTable()
         }
       },
       { label: 'Area',
         handleClick: () => {
-          this._setFilter('chartType', Map({label: 'Area', key: 'AreaSpline'}))
+          this._setFilter('chartType', Map({label: 'Area', key: 'Area'}))
           this.props.resetReducedTable()
         }
       },

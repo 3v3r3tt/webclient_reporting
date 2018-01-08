@@ -89,6 +89,10 @@ class IncidentFrequencyGraph extends Component {
         bucketLabel = `${currentStartDate.utc().format('MMM D')} - ${currentEndDate.utc().format('MMM D')}`
       }
     }
+    const [startOfBucket, endOfBucket] = bucketLabel.split(' - ')
+    if (endOfBucket && endOfBucket === startOfBucket) {
+      bucketLabel = startOfBucket
+    }
     return bucketLabel
   }
 
@@ -121,11 +125,11 @@ class IncidentFrequencyGraph extends Component {
 
       bucket.segments_and_values.forEach((segment, index) => {
         const bucketTotal = segment.bucket_total
-        const chartTypeNeedsJitter = this.props.chartType.get('key') === 'Spline'
+        const chartTypeNeedsJitter = this.props.chartType.get('key') === 'Line'
         const dupesNeedHandled = lineDupeTracker[outerIndex][bucketTotal] && chartTypeNeedsJitter
         if (dupesNeedHandled) {
           lineDupeTracker[outerIndex][bucketTotal] = lineDupeTracker[outerIndex][bucketTotal] + 1
-        } else if (this.props.chartType.get('key') === 'Spline') {
+        } else if (this.props.chartType.get('key') === 'Line') {
           lineDupeTracker[outerIndex][bucketTotal] = 1
         }
 
@@ -142,7 +146,7 @@ class IncidentFrequencyGraph extends Component {
           segmentSeriesData[index].data.push(bucketTotal + jitterAmount)
         }
 
-        if (this.props.chartType.get('key') === 'AreaSpline') {
+        if (this.props.chartType.get('key') === 'Area') {
           currentGraphYMax += bucketTotal
           graphYMax = graphYMax < currentGraphYMax ? currentGraphYMax : graphYMax
         } else {
@@ -185,7 +189,8 @@ class IncidentFrequencyGraph extends Component {
         labels: {
           formatter: function (selectedBucket) {
             return `<span style="fill: black; font-size: 14px;">${this.value}</span>`
-          }
+          },
+          rotation: -55
         },
         min: graphXMin,
         max: graphXMax,

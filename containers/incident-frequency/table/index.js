@@ -2,8 +2,6 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
-import moment from 'moment'
-
 import InnerTable from './inner-incident-table'
 
 import {
@@ -84,25 +82,6 @@ class IncidentFrequencyTable extends Component {
     return generatedRows.sort(this._tableDataSorter)
   }
 
-  _determineDateRangeLabel (columnTitle) {
-    const today = moment()
-    const clickDate = moment(columnTitle, 'MMM D').date()
-    const clickMonth = moment(columnTitle, 'MMM D').month()
-    const clickYear = today.month() >= clickMonth ? today.year() : today.year() - 1
-    const fromDate = moment(new Date(clickYear, clickMonth, clickDate))
-    const dateResolution = this.props.resolutionType.get('type')
-
-    if (dateResolution === 'day') {
-      return `# of Incidents (${fromDate.format('MMM D')})`
-    } else {
-      let toDate = fromDate.clone().add(1, dateResolution).subtract(1, 'day')
-      if (toDate.isAfter(today, 'day')) {
-        toDate = today.clone()
-      }
-      return `# of Incidents (${fromDate.format('MMM D')} - ${toDate.format('MMM D')})`
-    }
-  }
-
   render () {
     const graphIsEmpty = this.props.graphDataSegments != null && this.props.graphDataSegments.size === 0
     if (this.props.graphError || graphIsEmpty || this.props.graphIsEmpty) return null
@@ -118,7 +97,7 @@ class IncidentFrequencyTable extends Component {
     const columnTitle = this.props.reducedData.get('columnTitle')
     let incidentColumnLabel = '# of Incidents'
     if (columnTitle) {
-      incidentColumnLabel = this._determineDateRangeLabel(columnTitle)
+      incidentColumnLabel = `# of Incidents (${columnTitle})`
     }
 
     let generatedRows = []

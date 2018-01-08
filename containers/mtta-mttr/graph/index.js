@@ -139,10 +139,31 @@ class MttaMttrGraph extends Component {
         title: {
           text: 'Time (minutes)'
         },
-        plotLines: [ mttaGoalPlotline, mttrGoalPlotline ]
+        plotLines: [ mttaGoalPlotline, mttrGoalPlotline ],
+        labels: {
+          formatter: function () {
+            const reconfiguredMoment = _clone(moment)
+            reconfiguredMoment.updateLocale('en', {
+              relativeTime: {
+                s: '',
+                m: '%d minute',
+                h: '%d hour',
+                d: '%d day'
+              }
+            })
+            reconfiguredMoment.relativeTimeThreshold('s', 59)
+            reconfiguredMoment.relativeTimeThreshold('m', 59)
+            reconfiguredMoment.relativeTimeThreshold('h', 23)
+            reconfiguredMoment.relativeTimeRounding((value) => {
+              return Math.round(100 * value) / 100
+            })
+            const timeLabel = reconfiguredMoment.duration(this.value, 'minutes').humanize()
+            return timeLabel
+          }
+        }
       }, {
         title: {
-          text: 'Incident Occurances'
+          text: 'Number of Incidents'
         },
         opposite: true,
         allowDecimals: false
@@ -191,7 +212,7 @@ class MttaMttrGraph extends Component {
           pointFormatter: scatterTooltipFormatter('acknowledge')
         },
         marker: {
-          fillColor: 'rgba(226, 158, 57, 0.75)',
+          fillColor: 'rgba(226, 158, 57, 0.5)',
           radius: 3,
           symbol: 'circle'
         },
@@ -207,31 +228,38 @@ class MttaMttrGraph extends Component {
           pointFormatter: scatterTooltipFormatter('resolve')
         },
         marker: {
-          fillColor: 'rgba(0, 167, 203, 0.75)',
+          fillColor: 'rgba(0, 167, 203, 0.5)',
           radius: 3,
           symbol: 'circle'
         },
         data: ttrData
       }, {
-        name: 'Incident Occurances',
-        id: 'incidentOccurances',
+        name: 'Number of Incidents',
+        id: 'numberOfIncidents',
         type: 'column',
         zIndex: 1,
         color: 'rgba(204, 211, 218, 0.5)',
         pointPadding: 0,
         yAxis: 1,
-        data: incidentCountData
+        data: incidentCountData,
+        events: {
+          legendItemClick: function () {
+            if (this.visible) {
+              this.yAxis.setTitle({text: ''})
+            } else {
+              this.yAxis.setTitle({text: 'Number of Incidents'})
+            }
+          }
+        }
       }, {
-        // Series that mimics the plot line
-        color: '#fdcf8c',
         name: 'MTTA Goal',
+        color: '#fdcf8c',
         showInLegend: this.props.mttaGoal !== null,
         dashStyle: 'shortdash',
         marker: {
           enabled: false
         },
         events: {
-          // Event for showing/hiding plot line
           legendItemClick: function (e) {
             if (this.visible) {
               this.chart.yAxis[0].removePlotLine('mttaGoalPlotline')
@@ -241,16 +269,14 @@ class MttaMttrGraph extends Component {
           }
         }
       }, {
-        // Series that mimics the plot line
-        color: '#66d6ee',
         name: 'MTTR Goal',
+        color: '#66d6ee',
         showInLegend: this.props.mttrGoal !== null,
         dashStyle: 'shortdash',
         marker: {
           enabled: false
         },
         events: {
-          // Event for showing/hiding plot line
           legendItemClick: function (e) {
             if (this.visible) {
               this.chart.yAxis[0].removePlotLine('mttrGoalPlotline')
