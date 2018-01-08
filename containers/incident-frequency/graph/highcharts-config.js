@@ -46,7 +46,7 @@ export default {
   },
 
   plotOptions: {
-    areaspline: {
+    area: {
       stacking: 'normal'
     },
     series: {
