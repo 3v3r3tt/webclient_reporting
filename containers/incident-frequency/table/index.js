@@ -46,6 +46,8 @@ function mapDispatchToProps (dispatch) {
 
 class IncidentFrequencyTable extends Component {
   _tableDataSorter (a, b) {
+    if (a.id === 'other') return 1 // other bucket always sort to bottom
+    if (b.id === 'other') return -1
     if (a.columns[0].value > b.columns[0].value) return -1
     if (a.columns[0].value < b.columns[0].value) return 1
     return 0
