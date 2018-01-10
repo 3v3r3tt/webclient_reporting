@@ -131,7 +131,8 @@ class IncidentFrequencyTable extends Component {
         onCancel: () => this.props.hideModal(),
         cancelButtonText: 'OK',
         cancelButtonType: 'info',
-        modalClass: 'incident-frequency--incident-detail--modal'
+        modalClass: 'incident-frequency--incident-detail--modal',
+        actionBar: false
       }
     }
     this.props.showModal(modalConfig)

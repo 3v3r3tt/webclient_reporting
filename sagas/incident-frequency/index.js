@@ -74,16 +74,9 @@ function _getIncidentFrequencyGraph ({create}, logError) {
 function _getIncidentFrequencyIncidentDetails ({fetch}, logError) {
   return function * (action) {
     try {
-      const {
-        incidentNumber,
-        teamSlug,
-        start,
-        end
-      } = action.payload
-      const IncidentFrequencyIncidentDetailEndpoint = `/api/v1/org/${config.auth.org.slug}/reports/incidentfrequencymodal?incidentNumber=${incidentNumber}&teamSlug=${teamSlug}&start=${start}&end=${end}`
-
+      const incidentNumber = action.payload.incidentNumber
+      const IncidentFrequencyIncidentDetailEndpoint = `/api/v1/org/${config.auth.org.slug}/reports/incidentfrequencymodal?incidentNumber=${incidentNumber}`
       const incidentFrequencyIncidentData = yield call(fetch, IncidentFrequencyIncidentDetailEndpoint)
-
       yield put(incidentFrequencyIncidentDetailUpdate(incidentFrequencyIncidentData))
     } catch (err) {
       yield call(logError, err)

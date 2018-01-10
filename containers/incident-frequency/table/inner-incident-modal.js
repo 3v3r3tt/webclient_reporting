@@ -31,12 +31,7 @@ class InnerIncidentModal extends Component {
   }
 
   componentDidMount () {
-    const payload = {
-      incidentNumber: this.props.incidentId,
-      teamSlug: this.props.selectedTeam,
-      start: this.props.beginDate,
-      end: this.props.endDate
-    }
+    const payload = { incidentNumber: this.props.incidentId }
     this.props.getIncidentDetails(payload)
   }
 
@@ -58,109 +53,108 @@ class InnerIncidentModal extends Component {
       const incidentDuration = Math.round(endTime.diff(startTime, 'minutes', true))
       const entityDisplayName = this._getIncidentName()
 
+      let CriticalityText = <span className='critical-color'>CRITICAL</span>
+      if (incident.get('') === 'WARNING') {
+        CriticalityText = <span className='warning-color'>WARNING</span>
+      }
       return (
         <div className='container incident-frequency--incident-detail--modal'>
-          <div>
-            <h2 className='heading-4'>Incident from {entityDisplayName}</h2>
-            <h4 className='heading-6'>{startTime.format('MMM. DD, YYYY - h:mm A (Z UTC)')}</h4>
+          <h4 className='modal-subtitle'>{startTime.format('MMM. DD, YYYY - h:mm A (Z UTC)')}</h4>
+          <div className='modal-contents'>
+            <div>
+              <h2 className='heading-4'>{CriticalityText} incident from {entityDisplayName}</h2>
 
-            <h3 className='heading-5'>Integration</h3>
-            <p>{this.props.integration}</p>
+              <h3 className='heading-5'>Integration</h3>
+              <p>{this.props.integration}</p>
 
-            <h3 className='heading-5'>Host</h3>
-            <p>{incident.get('host') || 'No host provided'}</p>
+              <h3 className='heading-5'>Host</h3>
+              <p>{incident.get('host') || 'No host provided'}</p>
 
-            <h3 className='heading-5'>Service</h3>
-            <p>{incident.get('service')}</p>
-
-            <h3 className='heading-5'>Alert details (from first alert)</h3>
-            <div className='alert-details-table'>
-              <div className='row'>
-                <div className='col-4'>
-                  First alert
+              <h3 className='heading-5'>Service</h3>
+              <p>{incident.get('service')}</p>
+              <h3 className='heading-5'>Alert details (from first alert)</h3>
+            </div>
+            <div className='align-bottom-right'>
+              <div className='alert-details-table'>
+                <div className='row'>
+                  <div className='col-4'>
+                    First alert
+                  </div>
+                  <div className='col-8'>
+                    {startTime.format('MMM. DD, YYYY - h:mm A (Z UTC)')}
+                  </div>
                 </div>
-                <div className='col-8'>
-                  {startTime.format('MMM. DD, YYYY - h:mm A (Z UTC)')}
+                <div className='row'>
+                  <div className='col-4'>
+                    Last alert
+                  </div>
+                  <div className='col-8'>
+                    {endTime.format('MMM. DD, YYYY - h:mm A (Z UTC)')}
+                  </div>
                 </div>
-              </div>
-              <div className='row'>
-                <div className='col-4'>
-                  Last alert
+                <div className='row'>
+                  <div className='col-4'>
+                    Duration
+                  </div>
+                  <div className='col-8'>
+                    {incidentDuration} minute{incidentDuration !== 1 ? 's' : ''}
+                  </div>
                 </div>
-                <div className='col-8'>
-                  {endTime.format('MMM. DD, YYYY - h:mm A (Z UTC)')}
+                <div className='row'>
+                  <div className='col-4'>
+                    Alert count
+                  </div>
+                  <div className='col-8'>
+                    {incident.get('alertCount')}
+                  </div>
                 </div>
-              </div>
-              <div className='row'>
-                <div className='col-4'>
-                  Duration
+                <div className='row'>
+                  <div className='col-4'>
+                    Routing key
+                  </div>
+                  <div className='col-8'>
+                    {incident.get('routingKey')}
+                  </div>
                 </div>
-                <div className='col-8'>
-                  {incidentDuration} minute{incidentDuration !== 1 ? 's' : ''}
+                <div className='row'>
+                  <div className='col-4'>
+                    Paged teams
+                  </div>
+                  <div className='col-8'>
+                    {incident.get('pagedTeams').join(', ')}
+                  </div>
                 </div>
-              </div>
-              <div className='row'>
-                <div className='col-4'>
-                  Alert count
+                <div className='row'>
+                  <div className='col-4'>
+                    Paged users
+                  </div>
+                  <div className='col-8'>
+                    {incident.get('pagedUsers').join(', ')}
+                  </div>
                 </div>
-                <div className='col-8'>
-                  {incident.get('alertCount')}
+                <div className='row'>
+                  <div className='col-4'>
+                    Entity display name
+                  </div>
+                  <div className='col-8'>
+                    {incident.get('entityDisplayName')}
+                  </div>
                 </div>
-              </div>
-              <div className='row'>
-                <div className='col-4'>
-                  Routing key
+                <div className='row'>
+                  <div className='col-4'>
+                    Entity id
+                  </div>
+                  <div className='col-8'>
+                    {incident.get('entityId')}
+                  </div>
                 </div>
-                <div className='col-8'>
-                  {incident.get('routingKey')}
-                </div>
-              </div>
-              <div className='row'>
-                <div className='col-4'>
-                  Paged teams
-                </div>
-                <div className='col-8'>
-                  {incident.get('pagedTeams').join(', ')}
-                </div>
-              </div>
-              <div className='row'>
-                <div className='col-4'>
-                  Paged users
-                </div>
-                <div className='col-8'>
-                  {incident.get('pagedUsers').join(', ')}
-                </div>
-              </div>
-              <div className='row'>
-                <div className='col-4'>
-                  Entity name
-                </div>
-                <div className='col-8'>
-                  {incident.get('entityDisplayName')}
-                </div>
-              </div>
-              <div className='row'>
-                <div className='col-4'>
-                  Entity id
-                </div>
-                <div className='col-8'>
-                  {incident.get('entityId')}
-                </div>
-              </div>
-              <div className='row'>
-                <div className='col-4'>
-                  Entity type
-                </div>
-                <div className='col-8'>
-                  {incident.get('entityType')}
-                </div>
-              </div>
-              <div className='row'>
-                <div className='col-4'>
-                  Transitions
-                </div>
-                <div className='col-8'>
-                  {incident.get('transitions').join(', ')}
+                <div className='row'>
+                  <div className='col-4'>
+                    Entity type
+                  </div>
+                  <div className='col-8'>
+                    {incident.get('entityType')}
+                  </div>
                 </div>
               </div>
             </div>
