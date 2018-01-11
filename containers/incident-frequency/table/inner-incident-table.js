@@ -120,7 +120,9 @@ class IncidentFrequencyTable extends Component {
   }
 
   _openIncidentDetailModal (rowId) {
-    const integration = this.props.innerTableIncidentIncidents.find((x) => x.get('incident') === rowId).get('monitoring_tool')
+    const incident = this.props.innerTableIncidentIncidents.find((x) => x.get('incident') === rowId)
+    if (!incident) return
+    const integration = incident.get('monitoring_tool', '')
     const incidentId = Number(rowId.match(/^\[(\d*)\]/)[1])
     const modalTitle = `Incident #${incidentId}`
     const modalConfig = {
