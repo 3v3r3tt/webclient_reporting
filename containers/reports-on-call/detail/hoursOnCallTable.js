@@ -38,7 +38,6 @@ class HoursOnCallTable extends React.Component {
           selectedUser: this.props.selectedUser
         },
         type: 'component',
-        value: 'ALWAYS_ON_BOTTOM',
         colspan: 5
       }]
     }

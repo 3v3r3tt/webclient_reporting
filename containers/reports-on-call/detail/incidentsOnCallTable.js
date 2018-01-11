@@ -105,8 +105,7 @@ class IncidentsOnCallTable extends React.Component {
       columns: [{
         content: '',
         id: 'placeholder1',
-        type: 'cell',
-        value: 'ALWAYS_ON_BOTTOM'
+        type: 'cell'
       },
       {
         component: OnCallDownloadCSVRow,
