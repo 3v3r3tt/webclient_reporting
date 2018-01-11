@@ -9,7 +9,7 @@ export const onCallReportTeamState = Map({
 export const onCallReportTeamPayload = Map({
   team: 'alpha-team',
   begin: 1503088744000,
-  end: 1505767144000
+  end: 1505800799999
 })
 
 export const onCallReportTeamData = {
@@ -40,7 +40,7 @@ export const onCallReportUserPayload = Map({
   user: 'tsalamanca',
   team: 'alpha-team',
   begin: 1503088744000,
-  end: 1505767144000
+  end: 1505800799999
 })
 
 export const onCallReportUserData = {

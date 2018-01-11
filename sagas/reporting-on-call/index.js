@@ -15,6 +15,8 @@ import {
   reportingOnCallUserError
 } from 'reporting/actions/reporting'
 
+import moment from 'moment'
+
 import config from 'components/__utils/config'
 
 export const _getReportingOnCallState = (state) => state.reportingOnCall
@@ -26,8 +28,8 @@ function _getOnCallTeamReport ({create}, logError) {
       let reportingState = yield select(_getReportingOnCallState)
       const data = {
         team: reportingState.get('selectedTeam', ''),
-        begin: reportingState.get('beginDate', ''),
-        end: reportingState.get('endDate', '')
+        begin: reportingState.get('beginDate'),
+        end: _determineRequestEndDate(reportingState.get('endDate'))
       }
 
       const onCallReportData = yield call(create, onCallReportEndpoint, data)
@@ -48,12 +50,10 @@ function _getOnCallUserReport ({create}, logError) {
       const data = {
         user: reportingState.get('selectedUser', ''),
         team: reportingState.get('selectedTeam', ''),
-        begin: reportingState.get('beginDate', ''),
-        end: reportingState.get('endDate', '')
+        begin: reportingState.get('beginDate'),
+        end: _determineRequestEndDate(reportingState.get('endDate'))
       }
-
       const userOnCallReportData = yield call(create, onCallReportUserEndpoint, data)
-
       yield put(reportingOnCallUserUpdate(userOnCallReportData))
     } catch (err) {
       if (err.status === 504) {
@@ -65,6 +65,16 @@ function _getOnCallUserReport ({create}, logError) {
       yield call(logError, err)
       yield put(reportingOnCallUserError({error: {detail: true}}))
     }
+  }
+}
+
+function _determineRequestEndDate (endDate) {
+  const today = moment()
+  const endMoment = moment(endDate)
+  if (!endMoment.isSame(today, 'day')) {
+    return endMoment.endOf('day').valueOf()
+  } else {
+    return endDate
   }
 }
 
