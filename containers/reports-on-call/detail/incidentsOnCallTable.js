@@ -1,16 +1,29 @@
 import React from 'react'
+import { connect } from 'react-redux'
 
 import moment from 'moment'
 
 import OnCallDownloadCSVRow from './onCallDownloadCSVRow'
 import _truncate from 'util/truncate'
 
-import Victory from '@victorops/victory'
+import {
+  hideModal,
+  showModal
+} from 'reporting/actions/modal'
+import InnerIncidentModal from 'reporting/components/modal/incident-detail-modal'
 
+import Victory from '@victorops/victory'
 const { Table } = Victory
 
 const INCIDENT_LIMIT = 100
 const INCIDENT_ACTION_LIMIT = 20
+
+function mapDispatchToProps (dispatch) {
+  return {
+    hideModal: (payload) => dispatch(hideModal(payload)),
+    showModal: (payload) => dispatch(showModal(payload))
+  }
+}
 
 class OnCallTimelineRows extends React.Component {
   render () {
@@ -80,6 +93,12 @@ class OnCallActionRows extends React.Component {
 }
 
 class IncidentsOnCallTable extends React.Component {
+  constructor (props) {
+    super(props)
+
+    this._rowClickFnGenerator = this._rowClickFnGenerator.bind(this)
+  }
+
   _renderDownloadCSVRow () {
     return {
       id: 'incidentsSeeMore',
@@ -152,6 +171,30 @@ class IncidentsOnCallTable extends React.Component {
     }
   }
 
+  _rowClickFnGenerator (rowId) {
+    return () => {
+      this._openIncidentDetailModal(rowId)
+    }
+  }
+
+  _openIncidentDetailModal (rowId) {
+    const incident = this.props.incidents.get(rowId)
+    if (!incident) return
+    const incidentId = Number(incident.get('incident_name').match(/^\[(\d*)\]/)[1])
+    const modalTitle = `Incident #${incidentId}`
+    const modalConfig = {
+      modalType: 'confirm',
+      modalProps: {
+        title: modalTitle,
+        component: <InnerIncidentModal incidentId={incidentId} />,
+        onCancel: () => this.props.hideModal(),
+        modalClass: 'incident-frequency--incident-detail--modal',
+        actionBar: false
+      }
+    }
+    this.props.showModal(modalConfig)
+  }
+
   render () {
     const generatedRows = this._generateUserIncidentRows()
     const userIncidentTableConfig = {
@@ -170,7 +213,8 @@ class IncidentsOnCallTable extends React.Component {
       loaderRowHeight: 42,
       loaderRows: 2,
       rowItems: generatedRows,
-      customClasses: generatedRows.length > INCIDENT_LIMIT ? ['on-call--user-incidents--table'] : []
+      customClasses: generatedRows.length > INCIDENT_LIMIT ? ['on-call--user-incidents--table'] : [],
+      generateRowClickFn: this._rowClickFnGenerator
     }
 
     return (
@@ -185,4 +229,4 @@ class IncidentsOnCallTable extends React.Component {
   }
 }
 
-export default IncidentsOnCallTable
+export default connect(null, mapDispatchToProps)(IncidentsOnCallTable)

@@ -23,7 +23,7 @@ function mapDispatchToProps (dispatch) {
   }
 }
 
-class InnerIncidentModal extends Component {
+class IncidentDetailModal extends Component {
   constructor (props) {
     super(props)
 
@@ -65,7 +65,7 @@ class InnerIncidentModal extends Component {
               <h2 className='heading-4'>{CriticalityText} incident from {entityDisplayName}</h2>
 
               <h3 className='heading-5'>Integration</h3>
-              <p>{this.props.integration}</p>
+              <p>{this.props.integration || incident.get('integration', '')}</p>
 
               <h3 className='heading-5'>Host</h3>
               <p>{incident.get('host') || 'No host provided'}</p>
@@ -179,4 +179,4 @@ class InnerIncidentModal extends Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(InnerIncidentModal)
+export default connect(mapStateToProps, mapDispatchToProps)(IncidentDetailModal)

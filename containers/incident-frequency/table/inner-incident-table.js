@@ -3,7 +3,7 @@ import Victory from '@victorops/victory'
 
 import moment from 'moment'
 
-import InnerIncidentModal from './inner-incident-modal'
+import InnerIncidentModal from 'reporting/components/modal/incident-detail-modal'
 import DownloadCSVRow from './download-csv-row'
 
 const {
@@ -131,8 +131,6 @@ class IncidentFrequencyTable extends Component {
         title: modalTitle,
         component: <InnerIncidentModal incidentId={incidentId} integration={integration} />,
         onCancel: () => this.props.hideModal(),
-        cancelButtonText: 'OK',
-        cancelButtonType: 'info',
         modalClass: 'incident-frequency--incident-detail--modal',
         actionBar: false
       }
