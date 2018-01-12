@@ -47,12 +47,20 @@ class IncidentFrequency extends Component {
     super(props)
 
     this._resetTableData = this._resetTableData.bind(this)
+    this._determineTotalIncidents = this._determineTotalIncidents.bind(this)
   }
 
   _resetTableData () {
     const plotLine = document.getElementsByClassName('highcharts-plot-lines-9999')[0]
     plotLine.style.display = 'none'
     this.props.resetReducedTable()
+  }
+
+  _determineTotalIncidents () {
+    let total = 0
+    if (this.props.data && this.props.data.segments) {
+      total = this.props.data.segments.reduce((acc, i) => acc + i.total_incidents, 0)
+    } return total
   }
 
   render () {
@@ -66,6 +74,8 @@ class IncidentFrequency extends Component {
         clickHandler={this._resetTableData}
       />
 
+    let totalIncidents = this._determineTotalIncidents()
+
     return (
       <div className='container module-wrapper'>
         <BreadCrumbs breadcrumbs={[
@@ -75,7 +85,7 @@ class IncidentFrequency extends Component {
 
         <h1 className='heading-3'>Incident Frequency Report</h1>
 
-        <Filter />
+        <Filter totalIncidents={totalIncidents} />
 
         <div className='incident-frequency-graph--wrapper'>
           { this.props.reducedData ? ClearBucketSelectionButton : null }
