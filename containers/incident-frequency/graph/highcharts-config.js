@@ -42,7 +42,12 @@ export default {
     valueDecimals: 0,
     borderRadius: 10,
     borderWidth: 2,
-    headerFormat: '<span style="font-size: 14px; text-decoration: underline; font-weight: bold;">{point.key}</span><br/>'
+    headerFormat: '<span style="font-size: 14px; text-decoration: underline; font-weight: bold;">{point.key}</span><br/>',
+    pointFormatter: function () {
+      return (
+        `<span style="color:${this.color}">\u25CF</span> ${this.series.name}: <b> ${this.y.toLocaleString()}</b><br/>`
+      )
+    }
   },
 
   plotOptions: {
