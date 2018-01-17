@@ -29,10 +29,19 @@ function _getIncidentFrequencyTable ({create}, logError) {
     try {
       const IncidentFrequencyReportEndpoint = `/api/v1/org/${config.auth.org.slug}/reports/incidentfrequencysegmentincidents`
       const reportingState = yield select(_getincidentFrequencyState)
+
+      const segments = reportingState.getIn(['graphData', 'segments'])
+      const containsOtherBucket = segments.size > 15
+      let top15Segments = []
+      if (containsOtherBucket) {
+        top15Segments = segments.toJS().map((s) => s.segment_name).slice(0, 15)
+      }
+
       const data = {
         team: reportingState.get('selectedTeam', ''),
         start: moment(reportingState.getIn(['reducedData', 'reducedStart']) || reportingState.get('beginDate', '')).utc().startOf('day').valueOf(),
         end: moment(reportingState.getIn(['reducedData', 'reducedEnd']) || reportingState.get('endDate', '')).utc().endOf('day').valueOf(),
+        top_15_segments: top15Segments,
         segment_name: action.payload.segmentName,
         segment_type: reportingState.getIn(['segmentationType', 'key']),
         tz_offset: reportingState.get('timezoneOffset')
