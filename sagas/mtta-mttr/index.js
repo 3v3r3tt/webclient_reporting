@@ -29,7 +29,7 @@ export const _getMttaMttrState = (state) => state.mttaMttr
 function _getMttaMttrGraph ({create}, logError) {
   return function * () {
     try {
-      const mttaMttrReportEndpoint = `/api/v1/org/${config.auth.org.slug}/reports/performancereportgraph`
+      const mttaMttrReportEndpoint = `/api/v1/org/${config.auth.org.slug}/reports/performancegraph`
       const mttaMttrState = yield select(_getMttaMttrState)
       const startDate = moment(mttaMttrState.get('beginDate', '')).utc().startOf('day').valueOf()
       const endDate = moment(mttaMttrState.get('endDate', '')).utc().endOf('day').valueOf()
@@ -56,7 +56,7 @@ function _getMttaMttrGraph ({create}, logError) {
 function _getMttaMttrTable ({create}, logError) {
   return function * () {
     try {
-      const mttaMttrReportEndpoint = `/api/v1/org/${config.auth.org.slug}/reports/performancereporttable`
+      const mttaMttrReportEndpoint = `/api/v1/org/${config.auth.org.slug}/reports/performancetable`
       const mttaMttrState = yield select(_getMttaMttrState)
       const startDate = moment(mttaMttrState.get('beginDate', '')).utc().startOf('day').valueOf()
       const endDate = moment(mttaMttrState.get('endDate', '')).utc().endOf('day').valueOf()
