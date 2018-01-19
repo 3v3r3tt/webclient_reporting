@@ -103,10 +103,11 @@ class MttaMttrGraph extends Component {
     const scatterTooltipFormatter = (type) => function () {
       const formattedDate = moment(this.x).format('MMM Do YYYY [at] h:mm a')
       const duration = moment.duration(this.y * 60 * 1000)
+      const days = duration.days() ? `${duration.days()} day${duration.days() > 1 ? 's' : ''} ` : ''
       const hours = duration.hours() ? `${duration.hours()} hour${duration.hours() > 1 ? 's' : ''} ` : ''
       const minutes = duration.minutes() ? `${duration.minutes()} minute${duration.minutes() > 1 ? 's' : ''} ` : ''
       const seconds = duration.seconds() ? `${duration.seconds()} second${duration.seconds() > 1 ? 's' : ''} ` : ''
-      const formattedTime = `${hours}${minutes}${seconds}`
+      const formattedTime = `${days}${hours}${minutes}${seconds}`
 
       return (
         `${formattedDate}<br/><b>${formattedTime}</b> to ${type}<br/>`
@@ -137,7 +138,7 @@ class MttaMttrGraph extends Component {
       },
       yAxis: [{
         title: {
-          text: 'Time (minutes)'
+          text: 'Time'
         },
         plotLines: [ mttaGoalPlotline, mttrGoalPlotline ],
         labels: {
