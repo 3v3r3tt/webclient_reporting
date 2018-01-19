@@ -114,6 +114,13 @@ class MttaMttrGraph extends Component {
       )
     }
 
+    const lineTooltipFormatter = () => function () {
+      const duration = moment.duration(this.y, 'minutes')
+      return (
+        `<span style="color:${this.color}">\u25CF</span> Average ${this.series.name}: <b>${duration.humanize()}</b><br/>`
+      )
+    }
+
     const config = {
       legend: {
         align: 'right',
@@ -130,11 +137,7 @@ class MttaMttrGraph extends Component {
         title: {
           text: 'Date'
         },
-        tickPositioner: function (min, max) {
-          let ticks = this.series[0].processedXData.slice()
-          ticks.info = this.tickPositions.info
-          return ticks
-        }
+        tickInterval: this.props.resolutionType.type === 'day' ? 24 * 3600 * 1000 : null
       },
       yAxis: [{
         title: {
@@ -180,7 +183,7 @@ class MttaMttrGraph extends Component {
         color: '#E29E39',
         zIndex: 3,
         tooltip: {
-          pointFormat: '<span style="color:{point.color}">\u25CF</span> Average {series.name}: <b>{point.y}</b> minutes<br/>'
+          pointFormatter: lineTooltipFormatter()
         },
         marker: {
           fillColor: '#E29E39',
@@ -195,7 +198,7 @@ class MttaMttrGraph extends Component {
         color: '#00A7CB',
         zIndex: 3,
         tooltip: {
-          pointFormat: '<span style="color:{point.color}">\u25CF</span> Average {series.name}: <b>{point.y}</b> minutes<br/>'
+          pointFormatter: lineTooltipFormatter()
         },
         marker: {
           fillColor: '#00A7CB',
