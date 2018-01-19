@@ -17,7 +17,6 @@ import {
   mttaMttrTableError
 } from 'reporting/actions/mtta-mttr'
 
-import mttaMttrGraphData from './sampleData/mttaMttrGraphData'
 import mttaMttrTableData from './sampleData/mttaMttrTableData'
 
 import config from 'components/__utils/config'
@@ -42,9 +41,7 @@ function _getMttaMttrGraph ({create}, logError) {
         tz_offset: mttaMttrState.get('timezoneOffset', 0)
       }
 
-      // TODO: uncomment below when API is ready to go
-      // const mttaMttrReportData = yield call(create, mttaMttrReportEndpoint, data)
-      const mttaMttrReportData = mttaMttrGraphData
+      const mttaMttrReportData = yield call(create, mttaMttrReportEndpoint, data)
       yield put(mttaMttrGraphUpdate(mttaMttrReportData))
     } catch (err) {
       yield call(logError, err)

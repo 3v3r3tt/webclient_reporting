@@ -3,7 +3,7 @@ const mttaMttrGraphData = {
   ttr_period_avg: 2132,
   total_incidents: 37,
 
-  incident_count: [
+  incidentCount: [
     [1523491200000, 5],
     [1524096000000, 4],
     [1524700800000, 4],
@@ -17,7 +17,7 @@ const mttaMttrGraphData = {
     [1529539200000, 1]
   ],
 
-  tta_average: [
+  tta_avg: [
     [1523491200000, 240],
     [1524096000000, 360],
     [1524700800000, 420],
@@ -81,7 +81,7 @@ const mttaMttrGraphData = {
     [1529479202530, 185, '[1234] Incident name']
   ],
 
-  ttr_average: [
+  ttr_avg: [
     [1523491200000, 1800],
     [1524096000000, 1200],
     [1524700800000, 2400],

@@ -76,11 +76,11 @@ class MttaMttrGraph extends Component {
 
   _generateMttaMttrHighchartConfig (graphData) {
     if (!graphData) return
-    const ttaAverageData = this._convertSecondsToMinutes(graphData.get('tta_average', List()).toJS())
+    const ttaAverageData = this._convertSecondsToMinutes(graphData.get('tta_avg', List()).toJS())
     const ttaData = this._convertToHighchartFormat(graphData.get('tta_values', List()).toJS())
-    const ttrAverageData = this._convertSecondsToMinutes(graphData.get('ttr_average', List()).toJS())
+    const ttrAverageData = this._convertSecondsToMinutes(graphData.get('ttr_avg', List()).toJS())
     const ttrData = this._convertToHighchartFormat(graphData.get('ttr_values', List()).toJS())
-    const incidentCountData = graphData.get('incident_count', List()).toJS()
+    const incidentCountData = graphData.get('incidentCount', List()).toJS()
 
     const mttaGoalPlotline = {
       id: 'mttaGoalPlotline',
