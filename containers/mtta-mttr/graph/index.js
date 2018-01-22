@@ -75,7 +75,7 @@ class MttaMttrGraph extends Component {
   _scatterTooltipFormatter (type) {
     return function () {
       const formattedDate = moment(this.x).format('MMM Do YYYY [at] h:mm a')
-      const duration = moment.duration(this.y * 1000)
+      const duration = moment.duration(this.y, 'seconds')
       const days = duration.days() ? `${duration.days()} day${duration.days() > 1 ? 's' : ''} ` : ''
       const hours = duration.hours() ? `${duration.hours()} hour${duration.hours() > 1 ? 's' : ''} ` : ''
       const minutes = duration.minutes() ? `${duration.minutes()} minute${duration.minutes() > 1 ? 's' : ''} ` : ''
@@ -90,7 +90,7 @@ class MttaMttrGraph extends Component {
 
   _lineTooltipFormatter () {
     return function () {
-      const duration = moment.duration(this.y, 'minutes')
+      const duration = moment.duration(this.y, 'seconds')
       return (
         `<span style="color:${this.color}">\u25CF</span> Average ${this.series.name}: <b>${duration.humanize()}</b><br/>`
       )
