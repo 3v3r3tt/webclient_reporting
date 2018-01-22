@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import ReactHighcharts from 'react-highcharts'
+import ReactHighchartsNoData from 'highcharts-no-data-to-display'
 
 import defaultHighChartsOptions from './highcharts-config'
 
@@ -22,6 +23,7 @@ function mapStateToProps (state) {
     graphError: state.mttaMttr.getIn(['error', 'graph']),
     loadingData: state.mttaMttr.get('loadingGraphData'),
     resolutionType: state.mttaMttr.get('resolutionType'),
+    yAxisType: state.mttaMttr.get('yAxisType'),
     mttaGoal: state.mttaMttr.getIn(['goals', 'mtta'], null),
     mttrGoal: state.mttaMttr.getIn(['goals', 'mttr'], null)
   }
@@ -59,50 +61,21 @@ class MttaMttrGraph extends Component {
     }
   }
 
-  _convertSecondsToMinutes (secondsData) {
-    return secondsData.map((x) => [x[0], x[1] / 60])
-  }
-
   _convertToHighchartFormat (values) {
     const highchartFormattedData = values.map((x) => {
       return {
         x: x[0],
-        y: x[1] / 60,
+        y: x[1],
         name: x[2]
       }
     })
     return highchartFormattedData
   }
 
-  _generateMttaMttrHighchartConfig (graphData) {
-    if (!graphData) return
-    const ttaAverageData = this._convertSecondsToMinutes(graphData.get('tta_avg', List()).toJS())
-    const ttaData = this._convertToHighchartFormat(graphData.get('tta_values', List()).toJS())
-    const ttrAverageData = this._convertSecondsToMinutes(graphData.get('ttr_avg', List()).toJS())
-    const ttrData = this._convertToHighchartFormat(graphData.get('ttr_values', List()).toJS())
-    const incidentCountData = graphData.get('incidentCount', List()).toJS()
-
-    const mttaGoalPlotline = {
-      id: 'mttaGoalPlotline',
-      color: '#fdcf8c',
-      dashStyle: 'ShortDash',
-      value: this.props.mttaGoal,
-      width: 2,
-      zIndex: 4
-    }
-
-    const mttrGoalPlotline = {
-      id: 'mttrGoalPlotline',
-      color: '#66d6ee',
-      dashStyle: 'ShortDash',
-      value: this.props.mttrGoal,
-      width: 2,
-      zIndex: 4
-    }
-
-    const scatterTooltipFormatter = (type) => function () {
+  _scatterTooltipFormatter (type) {
+    return function () {
       const formattedDate = moment(this.x).format('MMM Do YYYY [at] h:mm a')
-      const duration = moment.duration(this.y * 60 * 1000)
+      const duration = moment.duration(this.y * 1000)
       const days = duration.days() ? `${duration.days()} day${duration.days() > 1 ? 's' : ''} ` : ''
       const hours = duration.hours() ? `${duration.hours()} hour${duration.hours() > 1 ? 's' : ''} ` : ''
       const minutes = duration.minutes() ? `${duration.minutes()} minute${duration.minutes() > 1 ? 's' : ''} ` : ''
@@ -113,43 +86,60 @@ class MttaMttrGraph extends Component {
         `${formattedDate}<br/><b>${formattedTime}</b> to ${type}<br/>`
       )
     }
+  }
 
-    const lineTooltipFormatter = () => function () {
+  _lineTooltipFormatter () {
+    return function () {
       const duration = moment.duration(this.y, 'minutes')
       return (
         `<span style="color:${this.color}">\u25CF</span> Average ${this.series.name}: <b>${duration.humanize()}</b><br/>`
       )
     }
+  }
 
+  _generateMttaMttrHighchartConfig (graphData) {
+    if (!graphData) return
+    const ttaAverageData = graphData.get('tta_avg', List()).toJS()
+    const ttaData = this._convertToHighchartFormat(graphData.get('tta_values', List()).toJS())
+    const ttrAverageData = graphData.get('ttr_avg', List()).toJS()
+    const ttrData = this._convertToHighchartFormat(graphData.get('ttr_values', List()).toJS())
+    const incidentCountData = graphData.get('incidentCount', List()).toJS()
+
+    const mttaGoalPlotline = {
+      id: 'mttaGoalPlotline',
+      color: '#fdcf8c',
+      dashStyle: 'ShortDash',
+      value: this.props.mttaGoal ? this.props.mttaGoal * 60 : null,
+      width: 2,
+      zIndex: 4
+    }
+
+    const mttrGoalPlotline = {
+      id: 'mttrGoalPlotline',
+      color: '#66d6ee',
+      dashStyle: 'ShortDash',
+      value: this.props.mttrGoal ? this.props.mttrGoal * 60 : null,
+      width: 2,
+      zIndex: 4
+    }
+
+    const isLinear = this.props.yAxisType.get('type') === 'linear'
     const config = {
-      legend: {
-        align: 'right',
-        verticalAlign: 'top'
-      },
       xAxis: {
-        type: 'datetime',
-        dateTimeLabelFormats: {
-          hour: '<br />',
-          day: '%b %e',
-          week: '%b %e, %Y',
-          month: '%b %Y'
-        },
-        title: {
-          text: 'Date'
-        },
         tickInterval: this.props.resolutionType.type === 'day' ? 24 * 3600 * 1000 : null
       },
       yAxis: [{
         title: {
           text: 'Time'
         },
+        type: this.props.yAxisType.get('type'),
         plotLines: [ mttaGoalPlotline, mttrGoalPlotline ],
         labels: {
           formatter: function () {
             const reconfiguredMoment = _clone(moment)
             reconfiguredMoment.updateLocale('en', {
               relativeTime: {
-                s: '',
+                s: '%d seconds',
                 m: '%d minute',
                 h: '%d hour',
                 d: '%d day'
@@ -159,23 +149,21 @@ class MttaMttrGraph extends Component {
             reconfiguredMoment.relativeTimeThreshold('m', 59)
             reconfiguredMoment.relativeTimeThreshold('h', 23)
             reconfiguredMoment.relativeTimeRounding((value) => {
-              return Math.round(100 * value) / 100
+              const roundedValue = Math.round(10 * value) / 10
+              return roundedValue.toFixed(1)
             })
-            const timeLabel = reconfiguredMoment.duration(this.value, 'minutes').humanize()
+            const timeLabel = reconfiguredMoment.duration(this.value, 'seconds').humanize()
+            if (timeLabel === '0.0 seconds') return ''
             return timeLabel
           }
         }
       }, {
         title: {
-          text: 'Number of Incidents'
+          text: isLinear ? 'Number of Incidents' : ''
         },
         opposite: true,
         allowDecimals: false
       }],
-      tooltip: {
-        shared: true,
-        headerFormat: '<span style="font-size: 14px; text-decoration: underline; font-weight: bold;">{point.key}</span><br/>'
-      },
       series: [{
         name: 'Time to Acknowledge',
         id: 'averageAckTime',
@@ -183,7 +171,7 @@ class MttaMttrGraph extends Component {
         color: '#E29E39',
         zIndex: 3,
         tooltip: {
-          pointFormatter: lineTooltipFormatter()
+          pointFormatter: this._lineTooltipFormatter()
         },
         marker: {
           fillColor: '#E29E39',
@@ -198,7 +186,7 @@ class MttaMttrGraph extends Component {
         color: '#00A7CB',
         zIndex: 3,
         tooltip: {
-          pointFormatter: lineTooltipFormatter()
+          pointFormatter: this._lineTooltipFormatter()
         },
         marker: {
           fillColor: '#00A7CB',
@@ -213,7 +201,7 @@ class MttaMttrGraph extends Component {
         type: 'scatter',
         zIndex: 2,
         tooltip: {
-          pointFormatter: scatterTooltipFormatter('acknowledge')
+          pointFormatter: this._scatterTooltipFormatter('acknowledge')
         },
         marker: {
           fillColor: 'rgba(226, 158, 57, 0.5)',
@@ -229,7 +217,7 @@ class MttaMttrGraph extends Component {
         type: 'scatter',
         zIndex: 2,
         tooltip: {
-          pointFormatter: scatterTooltipFormatter('resolve')
+          pointFormatter: this._scatterTooltipFormatter('resolve')
         },
         marker: {
           fillColor: 'rgba(0, 167, 203, 0.5)',
@@ -241,6 +229,7 @@ class MttaMttrGraph extends Component {
         name: 'Number of Incidents',
         id: 'numberOfIncidents',
         type: 'column',
+        visible: isLinear,
         zIndex: 1,
         color: 'rgba(204, 211, 218, 0.5)',
         pointPadding: 0,
@@ -296,6 +285,8 @@ class MttaMttrGraph extends Component {
   }
 
   render () {
+    ReactHighchartsNoData(ReactHighcharts.Highcharts)
+    ReactHighcharts.Highcharts.setOptions({lang: {noData: 'There is no data to display'}})
     const mttaMttrHighchartData = this._generateMttaMttrHighchartConfig(this.props.graphData)
 
     return (

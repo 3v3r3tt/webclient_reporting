@@ -38,7 +38,8 @@ function mapStateToProps (state) {
     selectedTeam: state.mttaMttr.get('selectedTeam'),
     beginDate: state.mttaMttr.get('beginDate'),
     endDate: state.mttaMttr.get('endDate'),
-    resolutionType: state.mttaMttr.get('resolutionType')
+    resolutionType: state.mttaMttr.get('resolutionType'),
+    yAxisType: state.mttaMttr.get('yAxisType')
   }
 }
 
@@ -81,6 +82,20 @@ class mttaMttrFilter extends Component {
       }
     ]
     this.resolutionTypes = clone(this.allResolutionTypes)
+    this.yAxisTypes = [
+      {
+        label: 'Linear',
+        handleClick: () => {
+          this._setFilter('yAxisType', Map({name: 'Linear', type: 'linear'}))
+        }
+      },
+      {
+        label: 'Logarithmic',
+        handleClick: () => {
+          this._setFilter('yAxisType', Map({name: 'Logarithmic', type: 'logarithmic'}))
+        }
+      }
+    ]
 
     this._beginDateChange = this._beginDateChange.bind(this)
     this._endDateChange = this._endDateChange.bind(this)
@@ -201,6 +216,7 @@ class mttaMttrFilter extends Component {
 
   render () {
     const ResolutionTypeDropdownLabel = <span>{this.props.resolutionType.get('name')}&nbsp;&nbsp;&nbsp;&nbsp;<i className='fa fa-angle-down' /></span>
+    const YAxisTypeDropdownLabel = <span>{this.props.yAxisType.get('name')}&nbsp;&nbsp;&nbsp;&nbsp;<i className='fa fa-angle-down' /></span>
 
     return (
       <div className='reports--filter clearfix'>
@@ -248,6 +264,15 @@ class mttaMttrFilter extends Component {
                 />
               </div>
             </div>
+          </div>
+        </div>
+        <div className='reports--yaxistype reports--filteritem'>
+          <div className='dropdown filter--dropdown-div'>
+            <Dropdown
+              dropdownItems={this.yAxisTypes}
+              labelComponent={YAxisTypeDropdownLabel}
+              triggerClasses={['btn', 'btn-secondary', 'dropdown-btn']}
+            />
           </div>
         </div>
       </div>

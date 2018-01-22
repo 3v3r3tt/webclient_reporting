@@ -25,6 +25,10 @@ export const initialState = _fromJS({
     name: 'Display weekly',
     type: 'week'
   },
+  yAxisType: {
+    name: 'Linear',
+    type: 'linear'
+  },
   graphData: {},
   table: {
     loading: true,
