@@ -79,6 +79,21 @@ class mttaMttrGoals extends Component {
     return <span> ({modalText})</span>
   }
 
+  _deleteButton (type) {
+    let value = null
+    let deleteFunc = null
+    if (type === 'mtta') {
+      value = this.props.mttaGoal
+      deleteFunc = () => { this.props.setMttaGoal({mtta: null}) }
+    } else if (type === 'mttr') {
+      value = this.props.mttrGoal
+      deleteFunc = () => { this.props.setMttrGoal({mttr: null}) }
+    }
+
+    const deleteButton = <span onClick={deleteFunc} className='mtta-mttr--goals--goal--delete'> <i className='far fa-times' /></span>
+    return value ? deleteButton : null
+  }
+
   render () {
     const mtta = this._transformTime(this.props.mtta)
     const mttr = this._transformTime(this.props.mttr)
@@ -102,11 +117,13 @@ class mttaMttrGoals extends Component {
         <span className='mtta-mttr--goals--goal'>
           <strong>MTTA: </strong>
           {mtta}
+          {this._deleteButton('mtta')}
           {addMttaGoal}
         </span>
         <span className='mtta-mttr--goals--goal'>
           <strong>MTTR: </strong>
           {mttr}
+          {this._deleteButton('mttr')}
           {addMttrGoal}
         </span>
         <span className='mtta-mttr--goals--goal'>
