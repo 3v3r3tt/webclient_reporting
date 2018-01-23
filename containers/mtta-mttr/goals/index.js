@@ -3,6 +3,11 @@ import { connect } from 'react-redux'
 import moment from 'moment'
 
 import {
+  mttaMttrGoalSetMtta,
+  mttaMttrGoalSetMttr
+} from 'reporting/actions/mtta-mttr'
+
+import {
   hideModal,
   showModal
 } from 'reporting/actions/modal'
@@ -21,6 +26,8 @@ function mapStateToProps (state) {
 
 function mapDispatchToProps (dispatch) {
   return {
+    setMttaGoal: (payload) => dispatch(mttaMttrGoalSetMtta(payload)),
+    setMttrGoal: (payload) => dispatch(mttaMttrGoalSetMttr(payload)),
     hideModal: (payload) => dispatch(hideModal(payload)),
     showModal: (payload) => dispatch(showModal(payload))
   }
