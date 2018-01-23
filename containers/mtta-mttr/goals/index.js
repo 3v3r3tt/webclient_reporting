@@ -1,10 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-
-import {
-  mttaMttrGoalSetMtta,
-  mttaMttrGoalSetMttr
-} from 'reporting/actions/mtta-mttr'
+import moment from 'moment'
 
 import {
   hideModal,
@@ -25,8 +21,6 @@ function mapStateToProps (state) {
 
 function mapDispatchToProps (dispatch) {
   return {
-    setMttaGoal: (payload) => dispatch(mttaMttrGoalSetMtta(payload)),
-    setMttrGoal: (payload) => dispatch(mttaMttrGoalSetMttr(payload)),
     hideModal: (payload) => dispatch(hideModal(payload)),
     showModal: (payload) => dispatch(showModal(payload))
   }
@@ -39,23 +33,14 @@ class mttaMttrGoals extends Component {
     else return minutes.toString() + ' mins'
   }
 
-  _modalOnConfirm (type) {
-    let value = document.getElementById('mtta-mttr--goal-modal--form--input').value
-    if (!value) value = null
-
-    if (type === 'mtta') this.props.setMttaGoal({mtta: value})
-    else if (type === 'mttr') this.props.setMttrGoal({mttr: value})
-    this.props.hideModal()
-  }
-
   _openGoalModal (type, value, title, text) {
     const modalConfig = {
       modalType: 'confirm',
       modalProps: {
+        actionBar: false,
         title: title,
-        component: <GoalsModal value={value} text={text} />,
+        component: <GoalsModal value={value} text={text} type={type} />,
         onCancel: () => this.props.hideModal(),
-        onConfirm: () => this._modalOnConfirm(type),
         cancelButtonText: 'Cancel',
         cancelButtonType: 'secondary',
         confirmButtonText: 'Add Goal',
@@ -68,7 +53,8 @@ class mttaMttrGoals extends Component {
   }
 
   _goal (type, value, title, text) {
-    const addGoalText = value ? 'Goal: ' + value.toString() + ' mins' : 'add goal'
+    const duration = moment.duration(value)
+    const addGoalText = value ? 'Goal: ' + Math.floor(duration.asDays()) + 'd ' + duration.hours() + 'h ' + duration.minutes() + 'm ' : 'add goal'
 
     const modalText =
       <a

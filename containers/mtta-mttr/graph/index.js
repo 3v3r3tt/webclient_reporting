@@ -109,7 +109,7 @@ class MttaMttrGraph extends Component {
       id: 'mttaGoalPlotline',
       color: '#fdcf8c',
       dashStyle: 'ShortDash',
-      value: this.props.mttaGoal ? this.props.mttaGoal * 60 : null,
+      value: this.props.mttaGoal ? moment.duration(this.props.mttaGoal).asSeconds() : null,
       width: 2,
       zIndex: 4
     }
@@ -118,7 +118,7 @@ class MttaMttrGraph extends Component {
       id: 'mttrGoalPlotline',
       color: '#66d6ee',
       dashStyle: 'ShortDash',
-      value: this.props.mttrGoal ? this.props.mttrGoal * 60 : null,
+      value: this.props.mttrGoal ? moment.duration(this.props.mttrGoal).asSeconds() : null,
       width: 2,
       zIndex: 4
     }
