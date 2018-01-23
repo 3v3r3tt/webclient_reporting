@@ -42,6 +42,31 @@ class Reports extends React.Component {
     }
   }
 
+  _getPIRTile () {
+    const orgslug = this.props.params.org
+    const reacttimelinepirFF = this.props.featureFlags.getIn(['featureFlags', 'feature:reacttimelinepir'], false)
+
+    if (reacttimelinepirFF) {
+      return (
+        <Link className='reports-nav-item post-mortems' to={`/reports/${orgslug}/post-mortems`}>
+          <div className='card-header'>
+            <h6 className='card-header__heading'>Post-Incident Reviews</h6>
+          </div>
+          <div className='preview' />
+        </Link>
+      )
+    } else {
+      return (
+        <a className='reports-nav-item post-mortems ' disabled href={this._createLink('#/reports/post-mortems')}>
+          <div className='card-header'>
+            <h6 className='card-header__heading'>Post-Incident Reviews</h6>
+          </div>
+          <div className='preview' />
+        </a>
+      )
+    }
+  }
+
   _getIncidentFrequencyTile () {
     const incidentFrequencyFlagIsTrue = this.props.featureFlags.getIn(['featureFlags', 'feature:incidentfrequencyreport'], false)
     const advancedReporting = this.props.featureFlags.getIn(['featureFlags', 'feature:advancedrep'], false)
@@ -89,12 +114,8 @@ class Reports extends React.Component {
     if (!featchingFeatureFlags && this.props.featureFlags.getIn(['featureFlags', 'feature:mttv2'], false)) {
       return (
         <ul className='reports-nav'>
-          <a className='reports-nav-item post-mortems ' disabled href={this._createLink('#/reports/post-mortems')}>
-            <div className='card-header'>
-              <h6 className='card-header__heading'>Post-Incident Reviews</h6>
-            </div>
-            <div className='preview' />
-          </a>
+          { this._getPIRTile() }
+
           <Link to={`/reports/${orgslug}/mtta-mttr`} className='basic-b reports-nav-item mtta-mttr reports-nav-item'>
             <div className='card-header'>
               <h6 className='card-header__heading'>Organization MTTA/MTTR</h6>
@@ -106,13 +127,7 @@ class Reports extends React.Component {
     } else {
       return (
         <ul className='reports-nav'>
-          <a className='reports-nav-item post-mortems ' disabled href={this._createLink('#/reports/post-mortems')}>
-            <div className='card-header'>
-              <h6 className='card-header__heading'>Post-Incident Reviews</h6>
-            </div>
-            <div className='preview' />
-          </a>
-
+          { this._getPIRTile() }
           <a href={this._createLink('#/reports/view/Incident_Metrics')} className='basic-a reports-nav-item'>
             <div className='card-header'>
               <h6 className='card-header__heading'>Incident Metrics</h6>
@@ -139,6 +154,7 @@ class Reports extends React.Component {
   }
 
   render () {
+    const featchingFeatureFlags = this.props.featureFlags.get('isFetching', true)
     return (
       <div id='newadmin'>
         <div className='module-wrapper'>
@@ -147,13 +163,16 @@ class Reports extends React.Component {
             <h4>Reporting</h4>
             { this._getMMR() }
           </div>
-          <div className='js-advancedrep'>
-            <h4>Advanced Reporting</h4>
-            <ul className='reports-nav'>
-              { this._getIncidentFrequencyTile() }
-              { this._getOnCallTile() }
-            </ul>
-          </div>
+          { (featchingFeatureFlags)
+            ? null
+            : <div className='js-advancedrep'>
+              <h4>Advanced Reporting</h4>
+              <ul className='reports-nav'>
+                { this._getIncidentFrequencyTile() }
+                { this._getOnCallTile() }
+              </ul>
+            </div>
+          }
         </div>
       </div>
     )

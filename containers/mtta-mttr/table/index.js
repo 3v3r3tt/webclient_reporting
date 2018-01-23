@@ -114,7 +114,7 @@ class MttaMttrTable extends Component {
     }
 
     return (
-      <div className='mtta-mttr--table has-loading-gradient'>
+      <div className='mtta-mttr--table has-loading-gradient fade-in'>
         <ReactCSSTransitionGroup
           transitionName='mtta-mttr--transition'
           transitionAppear

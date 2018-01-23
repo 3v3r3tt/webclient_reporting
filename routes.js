@@ -3,6 +3,8 @@ import { Route, IndexRoute, Redirect } from 'react-router'
 import app from './containers/app'
 import Reports from './containers/reports'
 import IncidentFrequency from './containers/incident-frequency'
+import { PostMortemEdit, PostMortemView } from './containers/post-mortem'
+import PostMortems from './containers/post-mortems'
 import mttaMttr from './containers/mtta-mttr'
 
 import {
@@ -18,7 +20,11 @@ export function getRoutes () {
       <Route path='on-call/:slug' component={ReportsOnCallDetail} />
       <Route path='mtta-mttr' component={mttaMttr} />
       <Route path='incident-frequency' component={IncidentFrequency} />
-      <Redirect push path='*' to='/dash/:org#reports' />
+      <Route path='post-mortems' component={PostMortems} />
+      <Route path='post-mortem/new' component={PostMortemEdit} />
+      <Route path='post-mortem/:slug/edit' component={PostMortemEdit} />
+      <Route path='post-mortem/:slug' component={PostMortemView} />
+      <Redirect push path='*' to='/reports/:org' />
     </Route>
   )
 }
