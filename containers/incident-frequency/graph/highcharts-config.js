@@ -44,8 +44,12 @@ export default {
     borderWidth: 2,
     headerFormat: '<span style="font-size: 14px; text-decoration: underline; font-weight: bold;">{point.key}</span><br/>',
     pointFormatter: function () {
+      let tooltipValue = this.y
+      if (tooltipValue % 1 !== 0) {
+        tooltipValue = Math.floor(tooltipValue)
+      }
       return (
-        `<span style="color:${this.color}">\u25CF</span> ${this.series.name}: <b> ${this.y.toLocaleString()}</b><br/>`
+        `<span style="color:${this.color}">\u25CF</span> ${this.series.name}: <b> ${tooltipValue.toLocaleString()}</b><br/>`
       )
     }
   },
