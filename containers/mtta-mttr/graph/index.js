@@ -65,8 +65,9 @@ class MttaMttrGraph extends Component {
     const highchartFormattedData = values.map((x) => {
       return {
         x: x[0],
-        y: x[1],
-        name: x[2]
+        incidentStart: x[1],
+        y: x[2],
+        name: x[3]
       }
     })
     return highchartFormattedData
@@ -74,7 +75,9 @@ class MttaMttrGraph extends Component {
 
   _scatterTooltipFormatter (type) {
     return function () {
-      const formattedDate = moment(this.x).format('MMM Do YYYY [at] h:mm a')
+      const capitalizedType = type.charAt(0).toUpperCase() + type.slice(1)
+      const formattedIncidentDate = moment(this.x).format('MMM Do YYYY [at] h:mm a')
+      const formattedIncidentStartDate = moment(this.incidentStart).format('MMM Do YYYY [at] h:mm a')
       const duration = moment.duration(this.y, 'seconds')
       const days = duration.days() ? `${duration.days()} day${duration.days() > 1 ? 's' : ''} ` : ''
       const hours = duration.hours() ? `${duration.hours()} hour${duration.hours() > 1 ? 's' : ''} ` : ''
@@ -83,7 +86,7 @@ class MttaMttrGraph extends Component {
       const formattedTime = `${days}${hours}${minutes}${seconds}`
 
       return (
-        `${formattedDate}<br/><b>${formattedTime}</b> to ${type}<br/>`
+        `Start date: ${formattedIncidentStartDate}<br/>${capitalizedType} date: ${formattedIncidentDate}<br/><b>${formattedTime}</b> to ${type}<br/>`
       )
     }
   }
@@ -103,7 +106,7 @@ class MttaMttrGraph extends Component {
     const ttaData = this._convertToHighchartFormat(graphData.get('tta_values', List()).toJS())
     const ttrAverageData = graphData.get('ttr_avg', List()).toJS()
     const ttrData = this._convertToHighchartFormat(graphData.get('ttr_values', List()).toJS())
-    const incidentCountData = graphData.get('incidentCount', List()).toJS()
+    const incidentCountData = graphData.get('incident_count', List()).toJS()
 
     const mttaGoalPlotline = {
       id: 'mttaGoalPlotline',
