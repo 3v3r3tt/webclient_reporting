@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Form from './form'
 import Sidebar from './sidebar'
+import Timeline from './timeline'
 
 import {
   getPostMortem
@@ -48,7 +49,7 @@ class PostMortem extends Component {
                   <div id='post-mortem--main' className='post-mortem--main'>
                     <div className='js-region-container'>
                       <div className='js-post-mortem-report'>
-                        <span>Timeline to go here</span>
+                        <Timeline />
                       </div>
                       <div className='js-post-mortem-footer' />
                     </div>

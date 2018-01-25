@@ -17,6 +17,7 @@ import {
   POST_MORTEM_DATE_UPDATE,
   POST_MORTEM_GET,
   POST_MORTEM_SAVE_FORM,
+  POST_MORTEM_TIMELINE_GET,
   POST_MORTEM_TIMELINE_NOTES_GET,
   getPostMortemActionItems,
   updatePostMortem,
@@ -47,6 +48,22 @@ function _savePostMortem ({create}, logError) {
         const postmortemEndpoint = `/api/v1/org/${config.auth.org.slug}/reports/postmortems`
         const savedPostMortem = yield call(create, postmortemEndpoint, headerData)
         yield put(updatePostMortem(savedPostMortem))
+      }
+    } catch (err) {
+      yield call(logError, err)
+    }
+  }
+}
+
+function _getTimeline ({fetch}, logError) {
+  return function * (action) {
+    try {
+      const reportFormData = yield select(_getPostMortemState)
+
+      if (reportFormData.begin && reportFormData.end) {
+        const actionItemsEndpoint = `/api/v1/org/${config.auth.org.slug}/reporting/timeline/p.begin=${reportFormData.begin}&p.end=${reportFormData.end}&p.limit=1000`
+        const actionItems = yield call(fetch, actionItemsEndpoint)
+        yield put(updatePostMortem(actionItems))
       }
     } catch (err) {
       yield call(logError, err)
@@ -166,6 +183,7 @@ function _getPostMortemTimelineNotes ({fetch}, logError) {
     }
   }
 }
+
 export const Test = {
   _getPostMortemActionItems,
   _createPostMortemActionItem,
@@ -199,4 +217,8 @@ export function * watchGetPostMortemTimelineNotes (api, logError) {
 
 export function * watchGetPostMortemBySlug (api, logError) {
   yield * takeEvery(POST_MORTEM_GET, _getPostMortemBySlug(api, logError))
+}
+
+export function * watchGetTimeline (api, logError) {
+  yield * takeEvery(POST_MORTEM_TIMELINE_GET, _getTimeline(api, logError))
 }
