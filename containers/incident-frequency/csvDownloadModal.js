@@ -15,7 +15,7 @@ class IncidentFrequencyCSVDownloadModal extends Component {
             href={this.props.csvHref}
             target='_blank'
             title='Export CSV'className='btn btn-outline-info modal-button'>
-            Download 1000-row CSV
+            Download {this.props.limit}-row CSV
           </a>
           <a
             onClick={this.props.cancel}

@@ -16,7 +16,7 @@ function mapDispatchToProps (dispatch) {
   }
 }
 
-const CSV_SIZE_WARNING_LIMIT = 1000
+const CSV_SIZE_WARNING_LIMIT = 10000
 
 class IncidentFrequencyCSVDownloadButton extends Component {
   constructor (props) {
