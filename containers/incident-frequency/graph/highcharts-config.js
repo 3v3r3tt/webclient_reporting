@@ -31,7 +31,10 @@ export default {
     type: 'linear',
     gridLineWidth: 0,
     minRange: 1,
-    allowDecimals: false
+    allowDecimals: false,
+    title: {
+      text: 'Number of Incidents'
+    }
   },
 
   tooltip: {

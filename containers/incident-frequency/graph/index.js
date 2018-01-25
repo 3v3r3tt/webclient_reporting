@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import ReactHighcharts from 'react-highcharts'
+import HighchartsNoData from 'highcharts-no-data-to-display'
 
 import defaultHighChartsOptions from './highcharts-config'
 import Placeholder from './placeholder'
@@ -166,6 +167,7 @@ class IncidentFrequencyGraph extends Component {
         type: this.props.chartType.get('key').toLowerCase(),
         events: {
           click: function (e) {
+            if (!hoverCol) return
             let chart = this.xAxis[0]
             chart.removePlotLine('selected-bucket')
             chart.addPlotLine({
@@ -197,9 +199,6 @@ class IncidentFrequencyGraph extends Component {
         tickmarkPlacement: startDateBuckets.length === 1 ? 'on' : 'between'
       },
       yAxis: {
-        title: {
-          text: 'Number of Incidents'
-        },
         max: graphYMax + 1
       },
       plotOptions: {
@@ -207,6 +206,7 @@ class IncidentFrequencyGraph extends Component {
           point: {
             events: {
               click: function (e) {
+                if (!hoverCol) return
                 let chart = this.series.chart.xAxis[0]
                 chart.removePlotLine('selected-bucket')
                 chart.addPlotLine({
@@ -278,20 +278,20 @@ class IncidentFrequencyGraph extends Component {
         </h1>
       )
     }
-
-    if (this.props.graphIsEmpty) {
+    if (this.props.data && this.props.data.has_data_flag) {
+      HighchartsNoData(ReactHighcharts.Highcharts)
+      ReactHighcharts.Highcharts.setOptions({lang: {noData: 'There is no data to display'}})
+      const highchartData = this._transformGraphData(this._generateReducedGraph)
+      return (
+        <div className='incident-frequency--graph' id='incident-frequency-graph'>
+          <ReactHighcharts config={highchartData} ref='chart' />
+        </div>
+      )
+    } else {
       return (
         <Placeholder />
       )
     }
-
-    const highchartData = this._transformGraphData(this._generateReducedGraph)
-
-    return (
-      <div className='incident-frequency--graph' id='incident-frequency-graph'>
-        <ReactHighcharts config={highchartData} ref='chart' />
-      </div>
-    )
   }
 }
 

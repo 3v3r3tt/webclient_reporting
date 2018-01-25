@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import ReactHighcharts from 'react-highcharts'
-import ReactHighchartsNoData from 'highcharts-no-data-to-display'
+import HighchartsNoData from 'highcharts-no-data-to-display'
 
 import defaultHighChartsOptions from './highcharts-config'
 
@@ -311,7 +311,7 @@ class MttaMttrGraph extends Component {
   }
 
   render () {
-    ReactHighchartsNoData(ReactHighcharts.Highcharts)
+    HighchartsNoData(ReactHighcharts.Highcharts)
     ReactHighcharts.Highcharts.setOptions({lang: {noData: 'There is no data to display'}})
     const mttaMttrHighchartData = this._generateMttaMttrHighchartConfig(this.props.graphData)
 

@@ -107,7 +107,7 @@ export const getIncidentFrequencyFilledBuckets = createSelector(
     _getIncidentFrequencyGraphData
   ],
   (requestStartDate, requestEndDate, resolutionType, graphData) => {
-    if (!graphData || graphData.get('display_buckets').isEmpty()) return
+    if (!graphData || graphData.get('display_buckets').isEmpty()) return graphData.toJS()
 
     let filledGraphData = graphData.toJS()
     const segmentValues = filledGraphData.display_buckets[0].segments_and_values

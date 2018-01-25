@@ -90,7 +90,7 @@ class IncidentFrequency extends Component {
         <div className='incident-frequency-graph--wrapper'>
           { this.props.reducedData ? ClearBucketSelectionButton : null }
 
-          <IncidentFrequencyGraph graphIsEmpty={graphIsEmpty && !this.props.loadingData} data={this.props.data} colorList={COLOR_LIST} />
+          <IncidentFrequencyGraph data={this.props.data} colorList={COLOR_LIST} />
         </div>
         <IncidentFrequencyTable graphIsEmpty={graphIsEmpty && !this.props.loadingData} colorList={COLOR_LIST} />
       </div>
