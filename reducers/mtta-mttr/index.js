@@ -11,8 +11,8 @@ import {
   MTTA_MTTR_TABLE_ERROR,
   MTTA_MTTR_FILTER_UPDATE,
   MTTA_MTTR_ROUTE_KEY_UPDATE,
-  MTTA_MTTR_GOAL_MTTA_SET,
-  MTTA_MTTR_GOAL_MTTR_SET
+  MTTA_MTTR_GOAL_MTTA_UPDATE,
+  MTTA_MTTR_GOAL_MTTR_UPDATE
 } from 'reporting/actions/mtta-mttr'
 
 export const initialState = _fromJS({
@@ -63,10 +63,10 @@ export default function mttaMttrReport (state = initialState, action) {
       return _setmttaMttrTableError(state, action.payload)
     case MTTA_MTTR_ROUTE_KEY_UPDATE:
       return _updateSelectedRouteKeys(state, action.payload)
-    case MTTA_MTTR_GOAL_MTTA_SET:
-      return _setMttaGoal(state, action.payload)
-    case MTTA_MTTR_GOAL_MTTR_SET:
-      return _setMttrGoal(state, action.payload)
+    case MTTA_MTTR_GOAL_MTTA_UPDATE:
+      return _updateMttaGoal(state, action.payload)
+    case MTTA_MTTR_GOAL_MTTR_UPDATE:
+      return _updateMttrGoal(state, action.payload)
 
     default : return state
   }
@@ -105,10 +105,10 @@ function _updateSelectedRouteKeys (state, payload) {
   return state.set('selectedRouteKeys', _fromJS(payload))
 }
 
-function _setMttaGoal (state, payload) {
+function _updateMttaGoal (state, payload) {
   return state.setIn(['goals', 'mtta'], _fromJS(payload.mtta))
 }
 
-function _setMttrGoal (state, payload) {
+function _updateMttrGoal (state, payload) {
   return state.setIn(['goals', 'mttr'], _fromJS(payload.mttr))
 }

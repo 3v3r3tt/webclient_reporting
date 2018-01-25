@@ -9,6 +9,8 @@ export const MTTA_MTTR_FILTER_UPDATE = 'MTTA_MTTR_FILTER_UPDATE'
 export const MTTA_MTTR_ROUTE_KEY_UPDATE = 'MTTA_MTTR_ROUTE_KEY_UPDATE'
 export const MTTA_MTTR_GOAL_MTTA_SET = 'MTTA_MTTR_GOAL_MTTA_SET'
 export const MTTA_MTTR_GOAL_MTTR_SET = 'MTTA_MTTR_GOAL_MTTR_SET'
+export const MTTA_MTTR_GOAL_MTTA_UPDATE = 'MTTA_MTTR_GOAL_MTTA_UPDATE'
+export const MTTA_MTTR_GOAL_MTTR_UPDATE = 'MTTA_MTTR_GOAL_MTTR_UPDATE'
 
 export function mttaMttrGraphGet (payload = {}) {
   return {
@@ -73,9 +75,23 @@ export function mttaMttrGoalSetMtta (payload = {}) {
   }
 }
 
+export function mttaMttrGoalUpdateMtta (payload = {}) {
+  return {
+    type: MTTA_MTTR_GOAL_MTTA_UPDATE,
+    payload
+  }
+}
+
 export function mttaMttrGoalSetMttr (payload = {}) {
   return {
     type: MTTA_MTTR_GOAL_MTTR_SET,
+    payload
+  }
+}
+
+export function mttaMttrGoalUpdateMttr (payload = {}) {
+  return {
+    type: MTTA_MTTR_GOAL_MTTR_UPDATE,
     payload
   }
 }

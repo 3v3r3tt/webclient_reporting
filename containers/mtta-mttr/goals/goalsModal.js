@@ -62,19 +62,19 @@ class GoalsModal extends Component {
         <div className='mtta-mttr--goal-modal--form'>
           <input
             type='number'
-            placeholder='DD'
+            placeholder='Days'
             min={0}
             className='mtta-mttr--goal-modal--form--input'
             ref={(input) => { this._daysInput = input }} />
           <input
             type='number'
-            placeholder='HH'
+            placeholder='Hours'
             min={0}
             className='mtta-mttr--goal-modal--form--input'
             ref={(input) => { this._hoursInput = input }} />
           <input
             type='number'
-            placeholder='MM'
+            placeholder='Minutes'
             min={0}
             className='mtta-mttr--goal-modal--form--input'
             ref={(input) => { this._minsInput = input }} />

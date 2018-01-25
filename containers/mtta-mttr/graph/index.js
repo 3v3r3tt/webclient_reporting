@@ -15,6 +15,14 @@ import {
   List
 } from 'immutable'
 
+import {
+  mttaMttrGoalUpdateMtta,
+  mttaMttrGoalUpdateMttr
+} from 'reporting/actions/mtta-mttr'
+
+import meta from 'util/meta'
+import when from 'when'
+
 function mapStateToProps (state) {
   return {
     selectedTeam: state.mttaMttr.get('selectedTeam'),
@@ -30,7 +38,10 @@ function mapStateToProps (state) {
 }
 
 function mapDispatchToProps (dispatch) {
-  return {}
+  return {
+    updateMttaGoal: (payload) => dispatch(mttaMttrGoalUpdateMtta(payload)),
+    updateMttrGoal: (payload) => dispatch(mttaMttrGoalUpdateMttr(payload))
+  }
 }
 
 class MttaMttrGraph extends Component {
@@ -38,16 +49,26 @@ class MttaMttrGraph extends Component {
     super(props)
 
     this._generateMttaMttrHighchartConfig = this._generateMttaMttrHighchartConfig.bind(this)
+    this._manageGoals = this._manageGoals.bind(this)
   }
 
   componentDidMount () {
     this._manageLoadingState(this.props.loadingData)
+    this._manageGoals()
   }
 
   componentDidUpdate (nextProps) {
     if (nextProps.loadingData !== this.props.loadingData) {
       this._manageLoadingState(this.props.loadingData)
     }
+  }
+
+  _manageGoals () {
+    when(meta.getUserMeta())
+      .then((userMeta) => {
+        if (userMeta['mmr:goal:mtta']) this.props.updateMttaGoal({mtta: userMeta['mmr:goal:mtta']})
+        if (userMeta['mmr:goal:mttr']) this.props.updateMttrGoal({mttr: userMeta['mmr:goal:mttr']})
+      })
   }
 
   _manageLoadingState (loadingData) {
@@ -204,7 +225,8 @@ class MttaMttrGraph extends Component {
         type: 'scatter',
         zIndex: 2,
         tooltip: {
-          pointFormatter: this._scatterTooltipFormatter('acknowledge')
+          pointFormatter: this._scatterTooltipFormatter('acknowledge'),
+          headerFormat: '<span style="font-size: 14px; text-decoration: underline; font-weight: bold;">Incident {point.key}</span><br/>'
         },
         marker: {
           fillColor: 'rgba(226, 158, 57, 0.5)',
@@ -220,7 +242,8 @@ class MttaMttrGraph extends Component {
         type: 'scatter',
         zIndex: 2,
         tooltip: {
-          pointFormatter: this._scatterTooltipFormatter('resolve')
+          pointFormatter: this._scatterTooltipFormatter('resolve'),
+          headerFormat: '<span style="font-size: 14px; text-decoration: underline; font-weight: bold;">Incident {point.key}</span><br/>'
         },
         marker: {
           fillColor: 'rgba(0, 167, 203, 0.5)',

@@ -1,6 +1,7 @@
 import { takeEvery } from 'redux-saga'
 
 import moment from 'moment'
+import meta from 'util/meta'
 
 import {
   put,
@@ -11,10 +12,14 @@ import {
 import {
   MTTA_MTTR_GRAPH_GET,
   MTTA_MTTR_TABLE_GET,
+  MTTA_MTTR_GOAL_MTTA_SET,
+  MTTA_MTTR_GOAL_MTTR_SET,
   mttaMttrGraphUpdate,
   mttaMttrGraphError,
   mttaMttrTableUpdate,
-  mttaMttrTableError
+  mttaMttrTableError,
+  mttaMttrGoalUpdateMtta,
+  mttaMttrGoalUpdateMttr
 } from 'reporting/actions/mtta-mttr'
 
 import mttaMttrTableData from './sampleData/mttaMttrTableData'
@@ -23,8 +28,6 @@ import config from 'components/__utils/config'
 
 export const _getMttaMttrState = (state) => state.mttaMttr
 
-// TODO: Remove lint disable when API works
-/* eslint-disable */
 function _getMttaMttrGraph ({create}, logError) {
   return function * () {
     try {
@@ -50,6 +53,8 @@ function _getMttaMttrGraph ({create}, logError) {
   }
 }
 
+// TODO: Remove lint disable when API works
+/* eslint-disable */
 function _getMttaMttrTable ({create}, logError) {
   return function * () {
     try {
@@ -78,6 +83,28 @@ function _getMttaMttrTable ({create}, logError) {
 }
 /* eslint-enable */
 
+function _setMttaMttrGoalMtta (api, logError) {
+  return function * (action) {
+    try {
+      yield put(mttaMttrGoalUpdateMtta(action.payload))
+      yield call(meta.putUserMeta, {'mmr:goal:mtta': action.payload.mtta})
+    } catch (err) {
+      yield call(logError, err)
+    }
+  }
+}
+
+function _setMttaMttrGoalMttr (api, logError) {
+  return function * (action) {
+    try {
+      yield put(mttaMttrGoalUpdateMttr(action.payload))
+      yield call(meta.putUserMeta, {'mmr:goal:mttr': action.payload.mttr})
+    } catch (err) {
+      yield call(logError, err)
+    }
+  }
+}
+
 export const Test = {
   _getMttaMttrGraph,
   _getMttaMttrTable,
@@ -90,4 +117,12 @@ export function * watchGetMttaMttrGraph (api, logError) {
 
 export function * watchGetMttaMttrTable (api, logError) {
   yield * takeEvery(MTTA_MTTR_TABLE_GET, _getMttaMttrTable(api, logError))
+}
+
+export function * watchSetMttaMttrGoalMtta (api, logError) {
+  yield * takeEvery(MTTA_MTTR_GOAL_MTTA_SET, _setMttaMttrGoalMtta(api, logError))
+}
+
+export function * watchSetMttaMttrGoalMttr (api, logError) {
+  yield * takeEvery(MTTA_MTTR_GOAL_MTTR_SET, _setMttaMttrGoalMttr(api, logError))
 }

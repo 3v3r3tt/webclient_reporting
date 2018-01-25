@@ -31,7 +31,9 @@ import {
 
 import {
  watchGetMttaMttrGraph,
- watchGetMttaMttrTable
+ watchGetMttaMttrTable,
+ watchSetMttaMttrGoalMtta,
+ watchSetMttaMttrGoalMttr
 } from './mtta-mttr'
 
 import {
@@ -67,6 +69,8 @@ export default function makeRootSaga (api) {
 
     yield fork(watchGetMttaMttrGraph, api, error)
     yield fork(watchGetMttaMttrTable, api, error)
+    yield fork(watchSetMttaMttrGoalMtta, api, error)
+    yield fork(watchSetMttaMttrGoalMttr, api, error)
 
     yield fork(watchCreatePostMortemActionItem, api, error)
     yield fork(watchGetPostMortemActionItems, api, error)

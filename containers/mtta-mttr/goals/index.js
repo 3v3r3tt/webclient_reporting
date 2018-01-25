@@ -34,10 +34,12 @@ function mapDispatchToProps (dispatch) {
 }
 
 class mttaMttrGoals extends Component {
-  _transformTime (time) {
-    const minutes = Math.round(time / 60)
-    if (minutes === 1) return minutes.toString() + ' min'
-    else return minutes.toString() + ' mins'
+  _transformTime (duration) {
+    const dayText = duration.days() > 0 ? `${duration.days()}d ` : ''
+    const hourText = duration.hours() > 0 ? `${duration.hours()}h ` : ''
+    const minuteText = duration.minutes() > 0 ? `${duration.minutes()}m` : ''
+    const goalText = `${dayText}${hourText}${minuteText}`
+    return goalText.length ? goalText : 'N/A'
   }
 
   _openGoalModal (type, value, title, text) {
@@ -61,18 +63,19 @@ class mttaMttrGoals extends Component {
 
   _goal (type, value, title, text) {
     const duration = moment.duration(value)
-    const addGoalText = value ? 'Goal: ' + Math.floor(duration.asDays()) + 'd ' + duration.hours() + 'h ' + duration.minutes() + 'm ' : 'add goal'
-
+    let GoalText = <a>add goal</a>
+    if (value) {
+      GoalText = <span>goal: {this._transformTime(duration)}</span>
+    }
     const modalText =
-      <a
+      <span
         onClick={() => this._openGoalModal(type, value, title, text)}>
-        {addGoalText}
-      </a>
-
-    return <span> ({modalText})</span>
+        {GoalText}
+      </span>
+    return <span> ({modalText}{this._addOrDeleteButton(type)})</span>
   }
 
-  _deleteButton (type) {
+  _addOrDeleteButton (type) {
     let value = null
     let deleteFunc = null
     if (type === 'mtta') {
@@ -83,45 +86,44 @@ class mttaMttrGoals extends Component {
       deleteFunc = () => { this.props.setMttrGoal({mttr: null}) }
     }
 
-    const deleteButton = <span onClick={deleteFunc} className='mtta-mttr--goals--goal--delete'> <i className='far fa-times' /></span>
+    const deleteButton = <a onClick={deleteFunc} className='mtta-mttr--goals--goal--delete'> - remove</a>
     return value ? deleteButton : null
   }
 
   render () {
-    const mtta = this._transformTime(this.props.mtta)
-    const mttr = this._transformTime(this.props.mttr)
+    const mtta = this._transformTime(moment.duration(this.props.mtta, 'seconds'))
+    const mttr = this._transformTime(moment.duration(this.props.mttr, 'seconds'))
 
     const addMttaGoal = this._goal(
       'mtta',
       this.props.mttaGoal,
-      'Add Time-To-ACK Goal',
-      'This will show the number of ACKs within your stated goal.'
+      'Add time to acknowledge goal',
+      'This will show the number of acknowledgements within your stated goal.'
     )
 
     const addMttrGoal = this._goal(
       'mttr',
       this.props.mttrGoal,
-      'Add Time-To-RES Goal',
-      'This will show the number of RESs within your stated goal.'
+      'Add time to resolve goal',
+      'This will show the number of resolutions within your stated goal.'
     )
 
+    const noMttaMttrData = !this.props.mtta && !this.props.mttr
     return (
       <div className='mtta-mttr--goals'>
         <span className='mtta-mttr--goals--goal'>
           <strong>MTTA: </strong>
           {mtta}
-          {this._deleteButton('mtta')}
-          {addMttaGoal}
+          {noMttaMttrData ? null : addMttaGoal}
         </span>
         <span className='mtta-mttr--goals--goal'>
           <strong>MTTR: </strong>
           {mttr}
-          {this._deleteButton('mttr')}
-          {addMttrGoal}
+          {noMttaMttrData ? null : addMttrGoal}
         </span>
         <span className='mtta-mttr--goals--goal'>
           <strong>Incidents: </strong>
-          {this.props.incidents}
+          {noMttaMttrData ? 'N/A' : this.props.incidents}
         </span>
       </div>
     )

@@ -2,7 +2,8 @@ export default {
   legend: {
     enabled: true,
     align: 'right',
-    verticalAlign: 'top'
+    verticalAlign: 'top',
+    symbolRadius: 0
   },
 
   title: {
