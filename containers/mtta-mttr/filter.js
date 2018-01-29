@@ -214,6 +214,12 @@ class mttaMttrFilter extends Component {
     )
   }
 
+  _routeKeyChange (items) {
+    this.props.setRouteKeysMttaMttr(items)
+    this._getNewGraphData()
+    this._getNewTableData()
+  }
+
   render () {
     const ResolutionTypeDropdownLabel = <span>{this.props.resolutionType.get('name')}&nbsp;&nbsp;&nbsp;&nbsp;<i className='fas fa-angle-down' /></span>
     const YAxisTypeDropdownLabel = <span>{this.props.yAxisType.get('name')}&nbsp;&nbsp;&nbsp;&nbsp;<i className='fas fa-angle-down' /></span>
@@ -232,7 +238,7 @@ class mttaMttrFilter extends Component {
               placeholder={'route key'}
               filterName={'key'}
               options={this.props.routeKeys.toJS()}
-              onChange={(items) => { this.props.setRouteKeysMttaMttr(items) }} />
+              onChange={(items) => { this._routeKeyChange(items) }} />
           </div>
         </div>
 

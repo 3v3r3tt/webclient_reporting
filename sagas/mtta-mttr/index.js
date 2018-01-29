@@ -37,7 +37,7 @@ function _getMttaMttrGraph ({create}, logError) {
       const endDate = moment(mttaMttrState.get('endDate', '')).utc().endOf('day').valueOf()
       const data = {
         team: mttaMttrState.get('selectedTeam', ''),
-        route_key: mttaMttrState.get('routeKey', []),
+        route_key: mttaMttrState.get('selectedRouteKeys', []),
         time_period: mttaMttrState.getIn(['resolutionType', 'type']),
         start: startDate,
         end: endDate,
@@ -64,7 +64,7 @@ function _getMttaMttrTable ({create}, logError) {
       const endDate = moment(mttaMttrState.get('endDate', '')).utc().endOf('day').valueOf()
       const data = {
         team: mttaMttrState.get('selectedTeam', ''),
-        route_key: mttaMttrState.get('routeKey', []),
+        route_key: mttaMttrState.get('selectedRouteKeys', []),
         time_period: mttaMttrState.getIn(['resolutionType', 'type']),
         start: startDate,
         end: endDate,
