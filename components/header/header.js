@@ -102,11 +102,14 @@ class Header extends Component {
   _getBuyNowAdmin () {
     if (this._isTrialAdmin()) {
       const trialEnd = buyNow(this.props.auth.config.getIn(['billing', 'trial_end'], null))
+      const config = this.props.auth.config
+      const orgslug = config.get('orgslug', '')
+
       return (
         <li className='primary-nav-billing'>
           <span>
             VictorOps Enterprise trial expires { trialEnd }
-            &nbsp;<a href='#/buy-now' className='buy-now'>Buy now!</a>
+            &nbsp;<a href={`/dash/${orgslug}/#/buy-now`} className='buy-now'>Buy now!</a>
             &nbsp;or&nbsp;
             <a href='https://victorops.com/pricing/' className='buy-now' target='_blank'>
                 learn more
