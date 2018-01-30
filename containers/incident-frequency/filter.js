@@ -11,7 +11,10 @@ import _truncate from 'util/truncate'
 
 import IncidentFrequencyCSVButton from './csvDownloadButton'
 
-import Victory from '@victorops/victory'
+import {
+  Dropdown,
+  DateRangePicker
+} from '@victorops/victory'
 
 import { getTeams } from 'reporting/actions/teams'
 
@@ -24,10 +27,12 @@ import {
   incidentFrequencyTableReset
 } from 'reporting/actions/incident-frequency'
 
-const {
-  Dropdown,
-  DateRangePicker
-} = Victory
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import {
+  faAngleDown,
+  faChartArea
+} from '@fortawesome/fontawesome-pro-solid'
+import { faUsers } from '@fortawesome/fontawesome-pro-light'
 
 function mapStateToProps (state) {
   return {
@@ -239,9 +244,9 @@ class IncidentFrequencyFilter extends Component {
     })
     const LabelComponent =
       <span className='filter--team-label'>
-        <i className='fal fa-users' />
+        <FontAwesomeIcon icon={faUsers} />
         <span className='filter--team-label-text'>{_truncate(selectedTeamName, 16)}</span>
-        <i className='fas fa-angle-down' />
+        <FontAwesomeIcon icon={faAngleDown} />
       </span>
 
     return (
@@ -255,9 +260,9 @@ class IncidentFrequencyFilter extends Component {
   }
 
   render () {
-    const ServiceDropdownLabel = <span>{this.props.segmentationType.get('name')}&nbsp;&nbsp;&nbsp;<i className='fa fa-angle-down' /></span>
-    const ChartTypeDropdownLabel = <span><i className='fa fa-chart-area' />&nbsp;&nbsp;{this.props.chartType.get('label')} &nbsp;&nbsp;&nbsp;<i className='fa fa-angle-down' /></span>
-    const ResolutionTypeDropdownLabel = <span>{this.props.resolutionType.get('name')}&nbsp;&nbsp;&nbsp;&nbsp;<i className='fa fa-angle-down' /></span>
+    const ServiceDropdownLabel = <span>{this.props.segmentationType.get('name')}&nbsp;&nbsp;&nbsp;<FontAwesomeIcon icon={faAngleDown} /></span>
+    const ChartTypeDropdownLabel = <span><FontAwesomeIcon icon={faChartArea} />&nbsp;&nbsp;{this.props.chartType.get('label')} &nbsp;&nbsp;&nbsp;<FontAwesomeIcon icon={faAngleDown} /></span>
+    const ResolutionTypeDropdownLabel = <span>{this.props.resolutionType.get('name')}&nbsp;&nbsp;&nbsp;&nbsp;<FontAwesomeIcon icon={faAngleDown} /></span>
 
     return (
       <div className='reports--filter clearfix'>

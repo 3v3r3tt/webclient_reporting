@@ -7,7 +7,11 @@ import {
   hideModal,
   showModal
 } from 'reporting/actions/modal'
+
 import IncidentFrequencyCsvModal from './csvDownloadModal'
+
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import { faFileAlt } from '@fortawesome/fontawesome-pro-light'
 
 function mapDispatchToProps (dispatch) {
   return {
@@ -65,7 +69,7 @@ class IncidentFrequencyCSVDownloadButton extends Component {
           title='Export CSV'
           download={`incident-frequency-${beginDate}-${endDate}`}
         >
-          <i className='fal fa-file-alt' /> CSV
+          <FontAwesomeIcon icon={faFileAlt} /> CSV
         </a>
       )
     } else {
@@ -75,7 +79,7 @@ class IncidentFrequencyCSVDownloadButton extends Component {
           title='Export CSV'
           onClick={this._openCsvWarningModal(incidentFrequencyCSVHref)}
         >
-          <i className='fal fa-file-alt' /> CSV
+          <FontAwesomeIcon icon={faFileAlt} /> CSV
         </a>
       )
     }

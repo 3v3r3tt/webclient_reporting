@@ -1,12 +1,16 @@
 import React from 'react'
 import config from 'components/__utils/config'
-import Victory from '@victorops/victory'
+import { ModalConfirm } from '@victorops/victory'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
 
 import { deletePostMortem } from 'reporting/actions/post-mortems'
 
-const { ModalConfirm } = Victory
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import {
+  faTimes,
+  faPencilAlt
+} from '@fortawesome/fontawesome-pro-solid'
 
 function mapDispatchToProps (dispatch) {
   return {
@@ -58,7 +62,7 @@ class ReportsActionButtons extends React.Component {
   _deleteButton () {
     if (this._showDelCtl()) {
       return (
-        <a onClick={() => this.setState({showModal: true})} className='js-remove js-tooltip row-control' title='Delete this report' ><i className='fas fa-times' /></a>
+        <a onClick={() => this.setState({showModal: true})} className='js-remove js-tooltip row-control' title='Delete this report' ><FontAwesomeIcon icon={faTimes} /></a>
       )
     } else {
       return null
@@ -68,7 +72,7 @@ class ReportsActionButtons extends React.Component {
   _editButton () {
     if (this._showEditCtl()) {
       return (
-        <Link to={`/reports/${this.props.orgslug}/post-mortem/${this.props.token}/edit`} className='js-tooltip row-control' title='Edit this report' ><i className='fas fa-pencil-alt' /></Link>
+        <Link to={`/reports/${this.props.orgslug}/post-mortem/${this.props.token}/edit`} className='js-tooltip row-control' title='Edit this report' ><FontAwesomeIcon icon={faPencilAlt} /></Link>
       )
     } else {
       return null

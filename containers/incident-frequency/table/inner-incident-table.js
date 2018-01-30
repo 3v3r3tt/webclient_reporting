@@ -1,15 +1,16 @@
 import React, { Component } from 'react'
-import Victory from '@victorops/victory'
+import {
+  ExpandingCard,
+  Table
+} from '@victorops/victory'
 
 import moment from 'moment'
 
 import InnerIncidentModal from 'reporting/components/modal/incident-detail-modal'
 import DownloadCSVRow from './download-csv-row'
 
-const {
-  ExpandingCard,
-  Table
-} = Victory
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import { faCircle } from '@fortawesome/fontawesome-pro-solid'
 
 const INCIDENT_FREQUENCY_LIMIT = 100
 
@@ -147,7 +148,9 @@ class IncidentFrequencyTable extends Component {
       <div className='row top-row'>
         <div className='col-8'>
           <span className={cardHeaderClass}>
-            <i className='fa fa-sm fa-circle margin-right-10' style={{color: `${this.props.colorList[this.props.outerTableIndex]}`}} />
+            <span style={{color: `${this.props.colorList[this.props.outerTableIndex]}`}}>
+              <FontAwesomeIcon icon={faCircle} size='sm' className='margin-right-10' />
+            </span>
             {this.props.name}
           </span>
         </div>
@@ -195,7 +198,9 @@ class IncidentFrequencyTable extends Component {
         <div className='row hoverable top-row' onClick={this._setExpanded}>
           <div className='col-8 margin-bottom-20'>
             <span className={cardHeaderClass}>
-              <i className='fa fa-sm fa-circle margin-right-10' style={{color: `${this.props.colorList[this.props.outerTableIndex]}`}} />
+              <span style={{color: `${this.props.colorList[this.props.outerTableIndex]}`}}>
+                <FontAwesomeIcon icon={faCircle} size='sm' className='margin-right-10' />
+              </span>
               {this.props.name}
             </span>
           </div>

@@ -1,13 +1,12 @@
 import React from 'react'
-import Victory from '@victorops/victory'
+import { Table } from '@victorops/victory'
 import ListCTAs from './action-buttons'
 import moment from 'vendor/moment'
 import { Link, browserHistory } from 'react-router'
 import { unescape } from 'components/__utils/format'
 
-const {
-  Table
-} = Victory
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import { faPlus } from '@fortawesome/fontawesome-pro-solid'
 
 class PostMortems extends React.Component {
   constructor () {
@@ -110,7 +109,7 @@ class PostMortems extends React.Component {
           </div>
         : <div>
           <div className='page-intro'>
-            <Link to={`/reports/${this.props.orgslug}/post-mortem/new`} className='padded-flow button-add pull-right'><span className='padded-right'><i className='fas fa-plus' /></span> New Report</Link>
+            <Link to={`/reports/${this.props.orgslug}/post-mortem/new`} className='padded-flow button-add pull-right'><span className='padded-right'><FontAwesomeIcon icon={faPlus} /></span> New Report</Link>
             <p>
                 Create a post-incident review to analyze timeline activity for a specific period and review how your team responded. <a href='https://help.victorops.com/knowledge-base/post-incident-review/' target='_blank'>Learn more.</a>
             </p>

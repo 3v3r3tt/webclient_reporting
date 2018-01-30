@@ -12,8 +12,7 @@ import {
 } from 'reporting/actions/modal'
 import InnerIncidentModal from 'reporting/components/modal/incident-detail-modal'
 
-import Victory from '@victorops/victory'
-const { Table } = Victory
+import { Table } from '@victorops/victory'
 
 const INCIDENT_LIMIT = 100
 const INCIDENT_ACTION_LIMIT = 20

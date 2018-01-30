@@ -2,6 +2,9 @@ import React from 'react'
 
 import { Link } from 'react-router'
 
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import { faLockAlt } from '@fortawesome/fontawesome-pro-solid'
+
 class Reports extends React.Component {
   constructor () {
     super()
@@ -30,7 +33,7 @@ class Reports extends React.Component {
     } else {
       return (
         <div className='tile--is-locked'>
-          <span className='reporting--lock fas fa-lock-alt' />
+          <FontAwesomeIcon icon={faLockAlt} className='reporting--lock' />
           <Link to={`/reports/${orgslug}/on-call`} className='on-call reports-nav-item'>
             <div className='card-header'>
               <h6 className='card-header__heading'>On-Call</h6>
@@ -96,7 +99,7 @@ class Reports extends React.Component {
     } else {
       return (
         <div className='tile--is-locked'>
-          <span className='reporting--lock fas fa-lock-alt' />
+          <FontAwesomeIcon icon={faLockAlt} className='reporting--lock' />
           <Link to={`/reports/${orgslug}/incident-frequency`} className='Strategic reports-nav-item incident-frequency'>
             <div className='card-header'>
               <h6 className='card-header__heading'>Incident Frequency</h6>

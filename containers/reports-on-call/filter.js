@@ -4,15 +4,17 @@ import { connect } from 'react-redux'
 import moment from 'moment'
 import CSVDownloadButton from './csvDownloadButton'
 
-import Victory from '@victorops/victory'
+import {
+  Dropdown,
+  DateRangePicker
+} from '@victorops/victory'
 
 import { getTeams } from 'reporting/actions/teams'
 import { reportingOnCallFilterUpdate } from 'reporting/actions/reporting'
 
-const {
-  Dropdown,
-  DateRangePicker
-} = Victory
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import { faAngleDown } from '@fortawesome/fontawesome-pro-solid'
+import { faUsers } from '@fortawesome/fontawesome-pro-light'
 
 function mapStateToProps (state) {
   return {
@@ -98,9 +100,9 @@ class OnCallFilter extends Component {
     })
     const LabelComponent =
       <span className='filter--team-label'>
-        <i className='fal fa-users' />
+        <FontAwesomeIcon icon={faUsers} />
         <span className='filter--team-label-text'>{selectedTeamName}</span>
-        <i className='fas fa-angle-down' />
+        <FontAwesomeIcon icon={faAngleDown} />
       </span>
 
     return (

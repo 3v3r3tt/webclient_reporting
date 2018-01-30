@@ -9,7 +9,11 @@ import {
 } from 'lodash'
 import _truncate from 'util/truncate'
 
-import Victory from '@victorops/victory'
+import {
+  Dropdown,
+  DateRangePicker,
+  MultiSelectDropdown
+} from '@victorops/victory'
 
 import { getTeams } from 'reporting/actions/teams'
 import { getRouteKeys } from 'reporting/actions/route-keys'
@@ -25,11 +29,12 @@ import {
   mttaMttrRouteKeyUpdate
 } from 'reporting/actions/mtta-mttr'
 
-const {
-  Dropdown,
-  DateRangePicker,
-  MultiSelectDropdown
-} = Victory
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import { faAngleDown } from '@fortawesome/fontawesome-pro-solid'
+import {
+  faUsers,
+  faKey
+} from '@fortawesome/fontawesome-pro-light'
 
 function mapStateToProps (state) {
   return {
@@ -199,9 +204,9 @@ class mttaMttrFilter extends Component {
     })
     const LabelComponent =
       <span className='filter--team-label'>
-        <i className='fal fa-users' />
+        <FontAwesomeIcon icon={faUsers} />
         <span className='filter--team-label-text'>{_truncate(selectedTeamName, 16)}</span>
-        <i className='fas fa-angle-down' />
+        <FontAwesomeIcon icon={faAngleDown} />
       </span>
 
     return (
@@ -221,8 +226,8 @@ class mttaMttrFilter extends Component {
   }
 
   render () {
-    const ResolutionTypeDropdownLabel = <span>{this.props.resolutionType.get('name')}&nbsp;&nbsp;&nbsp;&nbsp;<i className='fas fa-angle-down' /></span>
-    const YAxisTypeDropdownLabel = <span>{this.props.yAxisType.get('name')}&nbsp;&nbsp;&nbsp;&nbsp;<i className='fas fa-angle-down' /></span>
+    const ResolutionTypeDropdownLabel = <span>{this.props.resolutionType.get('name')}&nbsp;&nbsp;&nbsp;&nbsp;<FontAwesomeIcon icon={faAngleDown} /></span>
+    const YAxisTypeDropdownLabel = <span>{this.props.yAxisType.get('name')}&nbsp;&nbsp;&nbsp;&nbsp;<FontAwesomeIcon icon={faAngleDown} /></span>
 
     return (
       <div className='reports--filter clearfix'>
@@ -234,7 +239,7 @@ class mttaMttrFilter extends Component {
           <div className='dropdown filter--dropdown-div'>
             <MultiSelectDropdown
               customInputClasses={['reports--filter--multi-select-dropdown']}
-              iconClasses={['fal', 'fa-key']}
+              icon={<FontAwesomeIcon icon={faKey} />}
               placeholder={'route key'}
               filterName={'key'}
               options={this.props.routeKeys.toJS()}

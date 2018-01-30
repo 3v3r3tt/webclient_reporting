@@ -2,9 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
 import { hideModal } from 'reporting/actions/modal'
-import Victory from '@victorops/victory'
-
-const { ModalConfirm } = Victory
+import { ModalConfirm } from '@victorops/victory'
 
 function mapStateToProps (state) {
   return {

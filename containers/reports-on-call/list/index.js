@@ -2,18 +2,16 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
 
-import Victory from '@victorops/victory'
+import {
+  BreadCrumbs,
+  Table
+} from '@victorops/victory'
 
 import OnCallFilter from '../filter'
 
 import {
   reportingOnCallTeamGet
 } from 'reporting/actions/reporting'
-
-const {
-  BreadCrumbs,
-  Table
-} = Victory
 
 const config = window.VO_CONFIG
 

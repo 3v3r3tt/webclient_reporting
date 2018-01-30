@@ -15,11 +15,7 @@ import {
   getCompleteProfileStatus
 } from 'reporting/selectors'
 
-import Victory from '@victorops/victory'
-
-const {
-  Dropdown
-} = Victory
+import { Dropdown } from '@victorops/victory'
 
 const buyNow = function (value) {
   var left = moment(value).diff(moment(), 'days')

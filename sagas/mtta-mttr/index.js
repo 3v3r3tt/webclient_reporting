@@ -51,6 +51,8 @@ function _getMttaMttrGraph ({create}, logError) {
   }
 }
 
+// TODO: Remove lint disable when API works
+/* eslint-disable */
 function _getMttaMttrTable ({create}, logError) {
   return function * () {
     try {
@@ -72,6 +74,28 @@ function _getMttaMttrTable ({create}, logError) {
     } catch (err) {
       yield call(logError, err)
       yield put(mttaMttrTableError({error: {table: true}}))
+    }
+  }
+}
+
+function _setMttaMttrGoalMtta (api, logError) {
+  return function * (action) {
+    try {
+      yield put(mttaMttrGoalUpdateMtta(action.payload))
+      yield call(meta.putUserMeta, {'mmr:goal:mtta': action.payload.mtta})
+    } catch (err) {
+      yield call(logError, err)
+    }
+  }
+}
+
+function _setMttaMttrGoalMttr (api, logError) {
+  return function * (action) {
+    try {
+      yield put(mttaMttrGoalUpdateMttr(action.payload))
+      yield call(meta.putUserMeta, {'mmr:goal:mttr': action.payload.mttr})
+    } catch (err) {
+      yield call(logError, err)
     }
   }
 }

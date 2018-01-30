@@ -1,7 +1,10 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
-import Victory from '@victorops/victory'
+import {
+  BreadCrumbs,
+  Button
+} from '@victorops/victory'
 
 import Filter from './filter'
 import IncidentFrequencyGraph from './graph'
@@ -12,11 +15,6 @@ import { incidentFrequencyTableReset } from 'reporting/actions/incident-frequenc
 import {
   getIncidentFrequencyFilledBuckets
 } from 'reporting/selectors'
-
-const {
-  BreadCrumbs,
-  Button
-} = Victory
 
 const config = window.VO_CONFIG
 

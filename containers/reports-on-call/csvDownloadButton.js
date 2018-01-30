@@ -1,8 +1,11 @@
 import React, { Component } from 'react'
 import config from 'components/__utils/config'
 
-import Victory from '@victorops/victory'
-const { Dropdown } = Victory
+import { Dropdown } from '@victorops/victory'
+
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import { faFileAlt } from '@fortawesome/fontawesome-pro-light'
+import { faAngleDown } from '@fortawesome/fontawesome-pro-solid'
 
 class OnCallCSVDownloadButton extends Component {
   render () {
@@ -46,9 +49,9 @@ class OnCallCSVDownloadButton extends Component {
       ]
       const DropdownLabel =
         <span className='filter--csv-dropdown'>
-          <i className='fal fa-file-alt' />
+          <FontAwesomeIcon icon={faFileAlt} />
           <span className='filter--csv-label-text'>Export CSV</span>
-          <i className='fas fa-angle-down' />
+          <FontAwesomeIcon icon={faAngleDown} />
         </span>
       return (
         <Dropdown
@@ -69,7 +72,7 @@ class OnCallCSVDownloadButton extends Component {
           target='_blank'
           download
         >
-          <i className='fal fa-file-alt' /> Export CSV
+          <FontAwesomeIcon icon={faFileAlt} /> Export CSV
         </a>
       )
     }

@@ -4,9 +4,7 @@ import moment from 'moment'
 
 import OnCallDownloadCSVRow from './onCallDownloadCSVRow'
 
-import Victory from '@victorops/victory'
-
-const { Table } = Victory
+import { Table } from '@victorops/victory'
 
 const ON_CALL_LIMIT = 100
 

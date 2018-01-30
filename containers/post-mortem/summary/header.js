@@ -6,8 +6,7 @@ import { browserHistory } from 'react-router'
 
 import { unescape } from 'components/__utils/format'
 
-import Victory from '@victorops/victory'
-const { Button } = Victory
+import { Button } from '@victorops/victory'
 
 let config = window.VO_CONFIG
 

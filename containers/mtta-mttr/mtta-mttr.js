@@ -1,16 +1,12 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
-import Victory from '@victorops/victory'
+import { BreadCrumbs } from '@victorops/victory'
 
 import Filter from './filter'
 import Goals from './goals'
 import Graph from './graph'
 import MmrTable from './table'
-
-const {
-  BreadCrumbs
-} = Victory
 
 const config = window.VO_CONFIG
 

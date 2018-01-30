@@ -1,15 +1,11 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
-import Victory from '@victorops/victory'
+import { BreadCrumbs } from '@victorops/victory'
 
 import List from './list'
 import { getPostMortems } from 'reporting/actions/post-mortems'
 import { getUsers } from 'reporting/actions/users'
-
-const {
-  BreadCrumbs
-} = Victory
 
 function mapStateToProps (state) {
   return {

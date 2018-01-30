@@ -6,7 +6,10 @@ import {
 } from 'react-router'
 
 import { connect } from 'react-redux'
-import Victory from '@victorops/victory'
+import {
+  BreadCrumbs,
+  DateRangePicker
+} from '@victorops/victory'
 import moment from 'moment'
 
 import {
@@ -14,11 +17,6 @@ import {
   updateReportField,
   savePostMortem
 } from 'reporting/actions/post-mortem'
-
-const {
-  BreadCrumbs,
-  DateRangePicker
-} = Victory
 
 function mapStateToProps (state, ownProps) {
   return {

@@ -4,8 +4,10 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 import moment from 'moment'
 
-import Victory from '@victorops/victory'
-const { Table } = Victory
+import { Table } from '@victorops/victory'
+
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import { faStrikethrough } from '@fortawesome/fontawesome-pro-regular'
 
 function mapStateToProps (state) {
   return {
@@ -21,7 +23,7 @@ function mapDispatchToProps (dispatch) {
 
 class MttaMttrTable extends Component {
   _transformIncidentName (name, transmog) {
-    const transmogIconComponent = <i className='far fa-strikethrough' />
+    const transmogIconComponent = <FontAwesomeIcon icon={faStrikethrough} />
     const transmogIcon = transmog ? transmogIconComponent : null
     return () =>
       <div className='mtta-mttr--table--incident-name'>

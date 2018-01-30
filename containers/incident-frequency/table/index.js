@@ -14,8 +14,7 @@ import {
   showModal
 } from 'reporting/actions/modal'
 
-import Victory from '@victorops/victory'
-const { Table } = Victory
+import { Table } from '@victorops/victory'
 
 function mapStateToProps (state) {
   return {

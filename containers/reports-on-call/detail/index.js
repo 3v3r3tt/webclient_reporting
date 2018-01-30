@@ -12,9 +12,8 @@ import OnCallFilter from '../filter'
 import HoursOnCallTable from './hoursOnCallTable'
 import IncidentsOnCallTable from './incidentsOnCallTable'
 
-import Victory from '@victorops/victory'
+import { BreadCrumbs } from '@victorops/victory'
 
-const { BreadCrumbs } = Victory
 const config = window.VO_CONFIG
 
 function mapStateToProps (state) {

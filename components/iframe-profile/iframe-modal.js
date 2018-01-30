@@ -1,4 +1,6 @@
 import React from 'react'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import { faTimes } from '@fortawesome/fontawesome-pro-solid'
 
 function iframeModal (props) {
   const config = props.auth.config
@@ -12,7 +14,9 @@ function iframeModal (props) {
         <div>
           <div className='js-profile-header profile-header'>
             <div className='shadow-cover'>
-              <span data-dismiss='modal' onClick={() => props.modalActions.hideIframeModal()} aria-hidden='true' title='Click or [esc] to close' ><i className='fas fa-times' /></span>
+              <span data-dismiss='modal' onClick={() => props.modalActions.hideIframeModal()} aria-hidden='true' title='Click or [esc] to close' >
+                <FontAwesomeIcon icon={faTimes} />
+              </span>
               <h4><span className='subtitle'>Profile:</span> @{username}</h4>
             </div>
           </div>

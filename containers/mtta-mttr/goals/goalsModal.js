@@ -11,8 +11,7 @@ import {
   hideModal
 } from 'reporting/actions/modal'
 
-import Victory from '@victorops/victory'
-const { Button } = Victory
+import { Button } from '@victorops/victory'
 
 function mapStateToProps (state) {
   return {}

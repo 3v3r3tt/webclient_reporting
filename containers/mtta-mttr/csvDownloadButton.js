@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import config from 'components/__utils/config'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import { faFileAlt } from '@fortawesome/fontawesome-pro-light'
 
 class IncidentFrequencyCSVDownloadButton extends Component {
   render () {
@@ -22,7 +24,7 @@ class IncidentFrequencyCSVDownloadButton extends Component {
         title='Export CSV'
         download
       >
-        <i className='fal fa-file-alt' /> CSV
+        <FontAwesomeIcon icon={faFileAlt} /> CSV
       </a>
     )
   }
