@@ -62,8 +62,8 @@ class IncidentFrequencyCSVDownloadButton extends Component {
         <a
           className='btn btn-secondary incident-frequency--filter_csv'
           href={incidentFrequencyCSVHref}
-          target='_blank'
           title='Export CSV'
+          download={`incident-frequency-${beginDate}-${endDate}`}
         >
           <i className='fal fa-file-alt' /> CSV
         </a>
