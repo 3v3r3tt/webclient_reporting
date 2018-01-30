@@ -45,7 +45,6 @@ class MttaMttrTable extends Component {
     while (time.length < 2) {
       time = '0' + time
     }
-
     return time
   }
 
@@ -63,6 +62,7 @@ class MttaMttrTable extends Component {
     let reducedData = null
     if (data) {
       reducedData = data.map((item, index) => {
+        // TODO: these are all the keys I need to check match the API response
         const incident = item.get('incident')
         const date = item.get('date')
         const timeToAck = item.get('time_to_ack', 0)

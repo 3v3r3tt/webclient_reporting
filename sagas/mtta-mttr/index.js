@@ -22,8 +22,6 @@ import {
   mttaMttrGoalUpdateMttr
 } from 'reporting/actions/mtta-mttr'
 
-import mttaMttrTableData from './sampleData/mttaMttrTableData'
-
 import config from 'components/__utils/config'
 
 export const _getMttaMttrState = (state) => state.mttaMttr
@@ -53,8 +51,6 @@ function _getMttaMttrGraph ({create}, logError) {
   }
 }
 
-// TODO: Remove lint disable when API works
-/* eslint-disable */
 function _getMttaMttrTable ({create}, logError) {
   return function * () {
     try {
@@ -71,9 +67,7 @@ function _getMttaMttrTable ({create}, logError) {
         tz_offset: mttaMttrState.get('timezoneOffset', 0)
       }
 
-      // TODO: uncomment below when API is ready to go
-      // const mttaMttrReportData = yield call(create, mttaMttrReportEndpoint, data)
-      const mttaMttrReportData = mttaMttrTableData
+      const mttaMttrReportData = yield call(create, mttaMttrReportEndpoint, data)
       yield put(mttaMttrTableUpdate(mttaMttrReportData))
     } catch (err) {
       yield call(logError, err)
@@ -81,7 +75,6 @@ function _getMttaMttrTable ({create}, logError) {
     }
   }
 }
-/* eslint-enable */
 
 function _setMttaMttrGoalMtta (api, logError) {
   return function * (action) {
@@ -108,6 +101,8 @@ function _setMttaMttrGoalMttr (api, logError) {
 export const Test = {
   _getMttaMttrGraph,
   _getMttaMttrTable,
+  _setMttaMttrGoalMtta,
+  _setMttaMttrGoalMttr,
   _getMttaMttrState
 }
 
