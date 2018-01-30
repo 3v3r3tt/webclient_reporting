@@ -1,5 +1,10 @@
 import React from 'react'
-import { Link } from 'react-router'
+
+import {
+  browserHistory,
+  Link
+} from 'react-router'
+
 import { connect } from 'react-redux'
 import Victory from '@victorops/victory'
 import moment from 'moment'
@@ -17,6 +22,7 @@ const {
 
 function mapStateToProps (state, ownProps) {
   return {
+    is_owner: state.auth.config.getIn(['auth', 'user', 'username'], '') === state.postMortem.getIn(['report', 'owner'], null)
   }
 }
 
@@ -34,36 +40,31 @@ class PostMortemForm extends React.Component {
 
     this._beginDateChange = this._beginDateChange.bind(this)
     this._endDateChange = this._endDateChange.bind(this)
-    this._isValidEndDate = this._isValidEndDate.bind(this)
-    this._isValidBeginDate = this._isValidBeginDate.bind(this)
     this._saveForm = this._saveForm.bind(this)
     this._onReportTitleChange = this._onReportTitleChange.bind(this)
     this._updateCheckBox = this._updateCheckBox.bind(this)
 
     this.state = {
+      test: 'start',
       formIsValid: false,
       requiredFields: {
         title: {
           isDirty: false,
-          isValid: false,
-          validation: 'required'
+          isValid: true
         },
         end: {
           isDirty: false,
-          isValid: false,
-          validation: 'required'
+          isValid: true
         },
         begin: {
           isDirty: false,
-          isValid: false,
-          validation: 'required'
+          isValid: true
         }
       }
     }
   }
 
   _onReportTitleChange (e) {
-    this._testRequiredFields('title', e.currentTarget.value.length > 0)
     this._updateReportField({title: e.currentTarget.value})
   }
 
@@ -87,25 +88,31 @@ class PostMortemForm extends React.Component {
     }
   }
 
-  _testRequiredFields (key, value) {
-    const field = this.state.requiredFields[key]
+  _testRequiredFields () {
+    const fields = this.state.requiredFields
 
-    this.setState({
-      ...this.state,
-      requiredFields: {
-        ...this.state.requiredFields,
-        [key]: {
-          ...field,
-          isDirty: value,
-          isValid: this._validateKey(key)
-        }
+    const keys = Object.keys(fields)
+    let requiredFields = {}
+
+    for (let key in keys) {
+      const fieldName = keys[key]
+      requiredFields[fieldName] = {
+        ...fields[fieldName],
+        isValid: this._validateKey(fieldName)
       }
-    })
+    }
+
+    const newState = {
+      ...this.state,
+      requiredFields: requiredFields
+    }
+
+    this.setState(newState)
   }
 
   _updateCheckBox (e) {
     const name = e.currentTarget.name
-    this._updateReportField({name: !this.props.postmortem.getIn(['report', name])})
+    this._updateReportField({[name]: !this.props.postmortem.getIn(['report', name])})
   }
 
   _checkForURLQueries () {
@@ -131,6 +138,9 @@ class PostMortemForm extends React.Component {
   _validateForm () {
     const fields = this.state.requiredFields
     let formIsValid = true
+    this._testRequiredFields('end')
+    this._testRequiredFields('begin')
+    this._testRequiredFields('title')
 
     for (var field in fields) {
       if (!this._validateKey(field)) {
@@ -149,12 +159,10 @@ class PostMortemForm extends React.Component {
   }
 
   _endDateChange (momentDate) {
-    this._testRequiredFields('end', true)
     this._updateReportDateRange({end: momentDate.valueOf()})
   }
 
   _beginDateChange (momentDate) {
-    this._testRequiredFields('begin', true)
     this._updateReportDateRange({begin: momentDate.valueOf()})
   }
 
@@ -179,22 +187,38 @@ class PostMortemForm extends React.Component {
       'end': this.props.postmortem.getIn(['report', 'end']),
       'can_edit': this.refs.can_edit.checked,
       'can_delete': this.refs.can_delete.checked,
-      'is_customer_impacted': this.refs.is_customer_impacted.checked
+      'is_customer_impacted': this.refs.is_customer_impacted.checked,
+      'source': this.refs.summary.value
     }
 
     this._savePostMortem(payload)
+    const orgslug = this.props.auth.config.get('orgslug', '')
+
+    browserHistory.push('reports/' + orgslug + '/post-mortems')
   }
 
   _savePostMortem (formData = {}) {
     this.props.savePostMortem(formData)
   }
 
-  _isValidBeginDate (current) {
-    return true
-  }
+  _getPrivilege () {
+    const pm = this.props.postmortem
 
-  _isValidEndDate (current) {
-    return true
+    if (this.props.is_owner) {
+      return (
+        <div className='hidden-fade padded-double-bottom'>
+          <h2 className='post-mortem--report-summary--section-header'>Allow others to:</h2>
+          <ul>
+            <li>
+              <label><input type='checkbox' onChange={this._updateCheckBox} name='can_edit' ref='can_edit' checked={pm.getIn(['report', 'can_edit'])} />Edit this report</label>
+            </li>
+            <li>
+              <label><input type='checkbox' onChange={this._updateCheckBox} name='can_delete' ref='can_delete' checked={pm.getIn(['report', 'can_delete'])} />Delete this report</label>
+            </li>
+          </ul>
+        </div>
+      )
+    } else { return null }
   }
 
   _getBreadCrumbs () {
@@ -206,7 +230,7 @@ class PostMortemForm extends React.Component {
       <BreadCrumbs breadcrumbs={[
         {label: ReportHomeLink, active: true},
         {label: PIRS, uri: '#reports/post-mortems', active: true},
-        {label: this.props.postmortem.getIn(['data', 'title'], ''), active: true}
+        {label: this.props.postmortem.getIn(['report', 'title'], ''), active: true}
       ]} light />
     )
   }
@@ -219,20 +243,21 @@ class PostMortemForm extends React.Component {
     return (
       <DateRangePicker
         beginDate={{
-          isValidDate: this._isValidBeginDate,
           onChange: this._beginDateChange,
           value: beginDate
         }}
         endDate={{
-          isValidDate: this._isValidEndDate,
           onChange: this._endDateChange,
           value: endDate
         }}
       />
     )
   }
+
   render () {
     const pm = this.props.postmortem
+
+    console.log(this.props)
     return (
       <div>
         <div className='js-post-mortem-header post-mortem-header-wrapper'><div>
@@ -245,11 +270,22 @@ class PostMortemForm extends React.Component {
                     <div className='col-12 col-xs-12'>
                       <h1 className='post-mortem--header_text pull-left'>
                         <label htmlFor='report-title' className='post-mortem--header--title-label'>Report title</label>
-                        <input onChange={this._onReportTitleChange} id='report-title' ref='title' className='post-mortem--header--title-input' placeholder='Post-Incident Review title...' name='title' type='text' maxLength='120' value={pm.getIn(['report', 'title'])} />
+                        <input
+                          onChange={this._onReportTitleChange}
+                          id='report-title'
+                          ref='title'
+                          className='post-mortem--header--title-input'
+                          placeholder='Post-Incident Review title...'
+                          name='title'
+                          type='text'
+                          maxLength='120'
+                          value={pm.getIn(['report', 'title'], '')}
+                        />
                       </h1>
                       <button onClick={this._saveForm} className='post-mortem--header--save-button pull-right btn btn-outline-info'>
                         Done
                       </button>
+                      { (!this.state.requiredFields.title.isValid) ? <p className='text--danger error col-10 pull-left padded-top'>Please enter a title</p> : null }
                     </div>
                   </div>
                 </div>
@@ -259,21 +295,11 @@ class PostMortemForm extends React.Component {
                 <div className='padded-double-bottom'>
                   <h2 className='post-mortem--report-summary--section-header'>Timeline start and end dates</h2>
                   { this._getDateRangeSelector() }
-                  <div className='js-error-wrapper' />
-                </div>
-                <div rv-show='model:token' className='hidden-fade padded-double-bottom'>
-                  <div rv-show='options.isOwner'>
-                    <h2 className='post-mortem--report-summary--section-header'>Allow others to:</h2>
-                    <ul>
-                      <li>
-                        <label><input type='checkbox' onChange={this._updateCheckBox} name='can_edit' ref='can_edit' checked={pm.getIn(['report', 'can_edit'])} />Edit this report</label>
-                      </li>
-                      <li>
-                        <label><input type='checkbox' onChange={this._updateCheckBox} name='can_delete' ref='can_delete' checked={pm.getIn(['report', 'can_delete'])} />Delete this report</label>
-                      </li>
-                    </ul>
+                  <div className='js-error-wrapper' >
+                    { (!this.state.requiredFields.begin.isValid && !this.state.requiredFields.end.isValid) ? <p className='text--danger error'>Please select a date range</p> : null }
                   </div>
                 </div>
+                { this._getPrivilege() }
                 <div className='hidden-fade padded-double-bottom'>
                   <h2 className='post-mortem--report-summary--section-header'>
                       Customer was impacted:
@@ -282,7 +308,7 @@ class PostMortemForm extends React.Component {
                     <div className='post-mortem--on-off col-xs-9'>
                       <div className='victory--switch'>
                         <div className='victory--switch_wrapper' >
-                          <input type='checkbox' id='victory--switch' ref='is_customer_impacted' className='victory--switch_checkbox' onChange={this._updateCheckBox} name='is_customer_impacted' checked={pm.getIn(['report', 'customer_is_impacted'], false)} data-error-target='.js-error-wrapper' />
+                          <input type='checkbox' id='victory--switch' ref='is_customer_impacted' className='victory--switch_checkbox' onChange={this._updateCheckBox} name='is_customer_impacted' checked={pm.getIn(['report', 'is_customer_impacted'], false)} data-error-target='.js-error-wrapper' />
                           <label htmlFor='victory--switch' className='victory--switch_toggle'>
                             <span className='victory--switch_togglehandler' />
                           </label>
@@ -296,7 +322,7 @@ class PostMortemForm extends React.Component {
                       Event summary (optional):
                   </h2>
                   <div className=''>
-                    <textarea cols='40' rows='10' placeholder='We recommend writing this after you add notes and action items.' value={pm.getIn(['report', 'summary'], '')} ref='summary' className='post-mortem--report-summary--text-area col-xs-12' />
+                    <textarea cols='40' rows='10' placeholder='We recommend writing this after you add notes and action items.' ref='summary' className='post-mortem--report-summary--text-area col-xs-12'>{pm.getIn(['report', 'summary'], '')}</textarea>
                   </div>
                 </div>
               </div>

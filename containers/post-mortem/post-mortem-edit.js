@@ -5,7 +5,8 @@ import Sidebar from './sidebar'
 import Timeline from './timeline'
 
 import {
-  getPostMortem
+  getPostMortem,
+  resetPostMortem
 } from 'reporting/actions/post-mortem'
 
 function mapStateToProps (state) {
@@ -17,7 +18,8 @@ function mapStateToProps (state) {
 
 function mapDispatchToProps (dispatch) {
   return {
-    getPostMortem: (payload) => dispatch(getPostMortem(payload))
+    getPostMortem: (payload) => dispatch(getPostMortem(payload)),
+    resetPostMortem: () => dispatch(resetPostMortem())
   }
 }
 
@@ -28,6 +30,8 @@ class PostMortem extends Component {
     if (slug) {
       const payload = { reportId: slug }
       this.props.getPostMortem(payload)
+    } else {
+      this.props.resetPostMortem()
     }
   }
 
@@ -46,14 +50,11 @@ class PostMortem extends Component {
                    />
                 </div>
                 <div id='post-mortem--wrapper' className='hidden-fade post-mortem--wrapper clearfix'>
-                  <div id='post-mortem--main' className='post-mortem--main'>
-                    <div className='js-region-container'>
-                      <div className='js-post-mortem-report'>
-                        <Timeline />
-                      </div>
-                      <div className='js-post-mortem-footer' />
+                  <div className='post-mortem--main '>
+                    <div className='post-mortem--timeline_container col-8 pull-left'>
+                      <Timeline roomId={'*'} />
                     </div>
-                    <div className='post-mortem--sidebar_container' id='post-mortem--sidebar_container' >
+                    <div className='post-mortem--sidebar_container col-4'>
                       <Sidebar />
                     </div>
                   </div>

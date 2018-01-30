@@ -1,3 +1,3 @@
-import Timeline from './timeline'
+import View from './timeline'
 
-export default Timeline
+export default View

@@ -9,6 +9,14 @@ import {
   call
 } from 'redux-saga/effects'
 
+import {
+  receiveTimelineMessageSequence
+} from 'components/__entry/__entry-helpers'
+
+import {
+  batchedHistoryProtocolStatic
+} from '@victorops/message-protocol'
+
 // lib
 import {
   POST_MORTEM_ACTION_ITEMS_CREATE,
@@ -16,8 +24,8 @@ import {
   POST_MORTEM_ACTION_ITEMS_REMOVE,
   POST_MORTEM_DATE_UPDATE,
   POST_MORTEM_GET,
+  POST_MORTEM_UPDATE,
   POST_MORTEM_SAVE_FORM,
-  POST_MORTEM_TIMELINE_GET,
   POST_MORTEM_TIMELINE_NOTES_GET,
   getPostMortemActionItems,
   updatePostMortem,
@@ -33,11 +41,13 @@ function _savePostMortem ({create}, logError) {
   return function * (action) {
     try {
       const reportFormData = yield select(_getPostMortemState)
+
       if (reportFormData.end && reportFormData.end && reportFormData.title) {
         const headerData = {
           exclude: reportFormData.exclude,
           begin: reportFormData.begin,
           end: reportFormData.end,
+          source: reportFormData.source,
           title: reportFormData.title,
           annotations: reportFormData.annotations,
           can_edit: reportFormData.can_edit,
@@ -59,11 +69,16 @@ function _getTimeline ({fetch}, logError) {
   return function * (action) {
     try {
       const reportFormData = yield select(_getPostMortemState)
-
       if (reportFormData.begin && reportFormData.end) {
-        const actionItemsEndpoint = `/api/v1/org/${config.auth.org.slug}/reporting/timeline/p.begin=${reportFormData.begin}&p.end=${reportFormData.end}&p.limit=1000`
-        const actionItems = yield call(fetch, actionItemsEndpoint)
-        yield put(updatePostMortem(actionItems))
+        const actionItemsEndpoint = `/api/v1/org/${config.auth.org.slug}/reporting/timeline?p.begin=${reportFormData.begin}&p.end=${reportFormData.end}&p.limit=1000`
+        const timelineItems = yield call(fetch, actionItemsEndpoint)
+
+        const batch = batchedHistoryProtocolStatic(timelineItems.timeline)
+
+        let timelineAction
+        receiveTimelineMessageSequence('*', batch, arg => { timelineAction = arg })
+
+        yield put(timelineAction)
       }
     } catch (err) {
       yield call(logError, err)
@@ -90,13 +105,8 @@ function _getPostMortemBySlug ({fetch}, logError) {
   }
 }
 
-function _getPostMortemActionItems ({fetch}, logError) {
+function _getPostMortemActionItems ({fetch}, logError, reportId) {
   return function * (action) {
-    const {
-      payload: {
-        reportId
-      }
-    } = action
     try {
       if (reportId) {
         const actionItemsEndpoint = `/api/v1/org/${config.auth.org.slug}/reports/postmortems/${reportId}/actionitems`
@@ -109,7 +119,7 @@ function _getPostMortemActionItems ({fetch}, logError) {
   }
 }
 
-function _createPostMortemActionItem ({create}, logError) {
+function _createPostMortemActionItem ({create}, logError, token) {
   return function * (action) {
     const {
       payload: {
@@ -119,7 +129,7 @@ function _createPostMortemActionItem ({create}, logError) {
       }
     } = action
     try {
-      yield call(create, `/api/v1/org/${config.auth.org.slug}/reports/postmortems/${reportId}/actionitems`, actionItemToAdd)
+      yield call(create, `/api/v1/org/${config.auth.org.slug}/reports/postmortems/${token}/actionitems`, actionItemToAdd)
       yield put(getPostMortemActionItems({reportId: reportId}))
       yield call(success)
     } catch (err) {
@@ -150,7 +160,6 @@ function _removePostMortemActionItem ({destroy}, logError) {
 
 function _getPostMortemTimelineNotes ({fetch}, logError) {
   return function * (action) {
-    console.log('this')
     const {
       payload: {
         reportId
@@ -200,11 +209,13 @@ export function * watchPostMortemFormSave (api, logError) {
 }
 
 export function * watchGetPostMortemActionItems (api, logError) {
-  yield * takeEvery(POST_MORTEM_ACTION_ITEMS_GET, _getPostMortemActionItems(api, logError))
+  const reportId = yield select(_getPostMortemState).token
+  yield * takeEvery(POST_MORTEM_ACTION_ITEMS_GET, _getPostMortemActionItems(api, logError, reportId))
 }
 
 export function * watchCreatePostMortemActionItem (api, logError) {
-  yield * takeEvery(POST_MORTEM_ACTION_ITEMS_CREATE, _createPostMortemActionItem(api, logError))
+  const reportFormData = yield select(_getPostMortemState)
+  yield * takeEvery(POST_MORTEM_ACTION_ITEMS_CREATE, _createPostMortemActionItem(api, logError, reportFormData.token))
 }
 
 export function * watchRemovePostMortemActionItem (api, logError) {
@@ -220,5 +231,5 @@ export function * watchGetPostMortemBySlug (api, logError) {
 }
 
 export function * watchGetTimeline (api, logError) {
-  yield * takeEvery(POST_MORTEM_TIMELINE_GET, _getTimeline(api, logError))
+  yield * takeEvery(POST_MORTEM_UPDATE, _getTimeline(api, logError))
 }

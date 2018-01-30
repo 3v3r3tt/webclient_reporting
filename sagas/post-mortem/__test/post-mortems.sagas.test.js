@@ -22,6 +22,7 @@ import {
 } from 'reporting/actions/post-mortem'
 
 const {
+
   _getPostMortemActionItems,
   _createPostMortemActionItem,
   _removePostMortemActionItem,
@@ -47,8 +48,9 @@ describe('sagas.post-mortems.action-items', function () {
       }
     }
 
-    const iterator = _getPostMortemActionItems(api, log)(action)
-    const actionItemsFetch = iterator.next().value
+    const iterator = _getPostMortemActionItems(api, log, action.payload.reportId)(action)
+    const actionItemsFetch = iterator.next({reportId: action.payload.reportId}).value
+
     it('should get post mortem action items from backend', function () {
       expect(actionItemsFetch)
         .to.deep.equal(
@@ -73,8 +75,7 @@ describe('sagas.post-mortems.action-items', function () {
         reportId: 'kj12l32kljx12'
       }
     }
-
-    const iterator = _createPostMortemActionItem(api, log)(action)
+    const iterator = _createPostMortemActionItem(api, log, action.payload.reportId)(action)
     const actionItemsCreate = iterator.next().value
     it('should create new post mortem action item', function () {
       expect(actionItemsCreate)
@@ -124,9 +125,9 @@ describe('sagas.post-mortems.action-items', function () {
         reportId: 'kj12l32kljx12'
       }
     }
-
     const iterator = _getPostMortemTimelineNotes(api, log)(action)
     const reportFetch = iterator.next().value
+
     it('should get post mortem report', function () {
       expect(reportFetch)
         .to.deep.equal(

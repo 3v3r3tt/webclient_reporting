@@ -105,7 +105,7 @@ class PostMortems extends React.Component {
               <p>Create a post-incident review to analyze timeline activity for a specific period and review how your team responded. <a href='https://help.victorops.com/knowledge-base/post-incident-review/' target='_blank'>Learn more.</a></p>
             </div>
             <div className='col-xs-12 col-12 text-center margin-bottom-20'>
-              <a href='#/reports/post-mortem' className='btn btn-lg btn-outline-info'>Create Post-Incident Review</a>
+              <Link to={`/reports/${this.props.orgslug}/post-mortem/new`} className='btn btn-lg btn-outline-info'>Create Post-Incident Review</Link>
             </div>
           </div>
         : <div>
@@ -167,9 +167,13 @@ class PostMortems extends React.Component {
           </header>
         </div>
         { this._getDescription() }
-        <div className='has-loading-gradient'>
-          <Table showLoader={this.props.showLoader} customClasses={['rows--have_hover']} {...tableConfig} />
-        </div>
+
+        { (this.props.postmortems.size)
+          ? <div className='has-loading-gradient'>
+            <Table showLoader={this.props.showLoader} customClasses={['rows--have_hover']} {...tableConfig} />
+          </div>
+          : null
+        }
       </div>
     )
   }

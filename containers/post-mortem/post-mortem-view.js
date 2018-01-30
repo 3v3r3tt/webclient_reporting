@@ -3,6 +3,7 @@ import { Link } from 'react-router'
 import { connect } from 'react-redux'
 import Victory from '@victorops/victory'
 import Summary from './summary'
+import Timeline from './timeline'
 
 import {
   getPostMortem
@@ -56,7 +57,9 @@ class PostMortem extends Component {
                 slug={this.props.params.slug}
               />
             </div>
-            <div className='post-mortemsummary--timeline' />
+            <div className='post-mortemsummary--timeline' >
+              <Timeline roomId={'*'} disableInfiniteScroll />
+            </div>
           </div>
         </div>
       </div>

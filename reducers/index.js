@@ -12,8 +12,15 @@ import users, { initialState as usersInitialState } from './users'
 import postMortems, { initialState as postMortemsInitialState } from './post-mortems'
 import postMortem, { initialState as postMortemInitialState } from './post-mortem'
 
+// External to Reports
+import timelineFilters from 'components/store/reducers/timeline-filters'
+import timelines from 'components/store/reducers/timelines'
+import backboneTimelineContainerActive from 'components/store/reducers/backbone-timeline-container-active'
+import alerts from 'components/store//reducers/alerts'
+
 const reducers = {
   auth,
+  alerts,
   iframeModal,
   incidentFrequency,
   meta,
@@ -24,7 +31,10 @@ const reducers = {
   postMortems,
   postMortem,
   users,
-  teams
+  backboneTimelineContainerActive,
+  teams,
+  timelineFilters,
+  timelines
 }
 
 export const initialState = {
