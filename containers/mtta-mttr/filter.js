@@ -87,20 +87,6 @@ class mttaMttrFilter extends Component {
       }
     ]
     this.resolutionTypes = clone(this.allResolutionTypes)
-    this.yAxisTypes = [
-      {
-        label: 'Linear',
-        handleClick: () => {
-          this._setFilter('yAxisType', Map({name: 'Linear', type: 'linear'}))
-        }
-      },
-      {
-        label: 'Logarithmic',
-        handleClick: () => {
-          this._setFilter('yAxisType', Map({name: 'Logarithmic', type: 'logarithmic'}))
-        }
-      }
-    ]
 
     this._beginDateChange = this._beginDateChange.bind(this)
     this._endDateChange = this._endDateChange.bind(this)
@@ -225,9 +211,19 @@ class mttaMttrFilter extends Component {
     this._getNewTableData()
   }
 
+  _setYAxisType (type) {
+    return () => {
+      if (type === 'linear') {
+        this._setFilter('yAxisType', Map({name: 'Linear', type: 'linear'}))
+      } else {
+        this._setFilter('yAxisType', Map({name: 'Logarithmic', type: 'logarithmic'}))
+      }
+    }
+  }
+
   render () {
+    const yAxisTypeName = this.props.yAxisType.get('name')
     const ResolutionTypeDropdownLabel = <span>{this.props.resolutionType.get('name')}&nbsp;&nbsp;&nbsp;&nbsp;<FontAwesomeIcon icon={faAngleDown} /></span>
-    const YAxisTypeDropdownLabel = <span>{this.props.yAxisType.get('name')}&nbsp;&nbsp;&nbsp;&nbsp;<FontAwesomeIcon icon={faAngleDown} /></span>
 
     return (
       <div className='reports--filter clearfix'>
@@ -277,14 +273,17 @@ class mttaMttrFilter extends Component {
             </div>
           </div>
         </div>
-        <div className='reports--yaxistype reports--filteritem'>
-          <div className='dropdown filter--dropdown-div'>
-            <Dropdown
-              dropdownItems={this.yAxisTypes}
-              labelComponent={YAxisTypeDropdownLabel}
-              triggerClasses={['btn', 'btn-secondary', 'dropdown-btn']}
-            />
-          </div>
+
+        <div className='reports--yaxisradios'>
+          <span>Y-axis scale: </span>
+          <label>
+            <input type='radio' checked={yAxisTypeName === 'Linear'} onClick={this._setYAxisType('linear')} />
+            Linear
+          </label>
+          <label>
+            <input type='radio' checked={yAxisTypeName === 'Logarithmic'} onClick={this._setYAxisType('logarithmic')} />
+            Logarithmic
+          </label>
         </div>
       </div>
     )
