@@ -8,6 +8,7 @@ import {
   Dropdown,
   DateRangePicker
 } from '@victorops/victory'
+import _truncate from 'util/truncate'
 
 import { getTeams } from 'reporting/actions/teams'
 import { reportingOnCallFilterUpdate } from 'reporting/actions/reporting'
@@ -89,7 +90,7 @@ class OnCallFilter extends Component {
       }
     ]
 
-    teams.forEach((team) => {
+    teams.map((team) => {
       const teamName = team.get('name', '')
       const teamSlug = team.get('slug')
       if (this.props.selectedTeam === teamSlug) selectedTeamName = teamName
@@ -101,7 +102,7 @@ class OnCallFilter extends Component {
     const LabelComponent =
       <span className='filter--team-label'>
         <FontAwesomeIcon icon={faUsers} />
-        <span className='filter--team-label-text'>{selectedTeamName}</span>
+        <span className='filter--team-label-text'>{_truncate(selectedTeamName, 16)}</span>
         <FontAwesomeIcon icon={faAngleDown} />
       </span>
 
