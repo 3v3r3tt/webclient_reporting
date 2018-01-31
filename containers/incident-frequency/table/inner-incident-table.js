@@ -132,7 +132,7 @@ class IncidentFrequencyTable extends Component {
         title: modalTitle,
         component: <InnerIncidentModal incidentId={incidentId} integration={integration} />,
         onCancel: () => this.props.hideModal(),
-        modalClass: 'incident-frequency--incident-detail--modal',
+        modalClass: 'incident-frequency--incident-detail--modal modal-is-scrollable',
         actionBar: false
       }
     }
