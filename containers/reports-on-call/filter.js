@@ -118,30 +118,23 @@ class OnCallFilter extends Component {
   render () {
     return (
       <div className='on-call--filter'>
-        <div className='row'>
-          <div className='col-12 col-md-9'>
-            { this._renderTeamsDropdown() }
-            <div className='on-call--filter_dateselector'>
-              <DateRangePicker
-                beginDate={{
-                  isValidDate: this._isValidBeginDate,
-                  onChange: this._beginDateChange,
-                  defaultValue: this.props.beginDate,
-                  value: this.props.beginDate
-                }}
-                endDate={{
-                  isValidDate: this._isValidEndDate,
-                  onChange: this._endDateChange,
-                  defaultValue: this.props.endDate,
-                  value: this.props.endDate
-                }}
-            />
-            </div>
-          </div>
-          <div className='col-12 col-md-3'>
-            <CSVDownloadButton {...this.props} />
-          </div>
+        { this._renderTeamsDropdown() }
+        <div className='on-call--filter_dateselector'>
+          <DateRangePicker
+            beginDate={{
+              isValidDate: this._isValidBeginDate,
+              onChange: this._beginDateChange,
+              defaultValue: this.props.beginDate,
+              value: this.props.beginDate
+            }}
+            endDate={{
+              isValidDate: this._isValidEndDate,
+              onChange: this._endDateChange,
+              defaultValue: this.props.endDate,
+              value: this.props.endDate
+            }} />
         </div>
+        <CSVDownloadButton {...this.props} />
       </div>
     )
   }
