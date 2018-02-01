@@ -14,12 +14,15 @@ import {
   MTTA_MTTR_TABLE_GET,
   MTTA_MTTR_GOAL_MTTA_SET,
   MTTA_MTTR_GOAL_MTTR_SET,
+  MTTA_MTTR_INCIDENT_DETAIL_GET,
   mttaMttrGraphUpdate,
   mttaMttrGraphError,
   mttaMttrTableUpdate,
   mttaMttrTableError,
   mttaMttrGoalUpdateMtta,
-  mttaMttrGoalUpdateMttr
+  mttaMttrGoalUpdateMttr,
+  mttaMttrIncidentDetailUpdate,
+  mttaMttrIncidentDetailError
 } from 'reporting/actions/mtta-mttr'
 
 import config from 'components/__utils/config'
@@ -122,12 +125,27 @@ function _setMttaMttrGoalMttr (api, logError) {
   }
 }
 
+function _getMttaMttrIncidentDetails ({fetch}, logError) {
+  return function * (action) {
+    try {
+      const incidentNumber = action.payload.incidentNumber
+      const MmrIncidentDetailEndpoint = `/api/v1/org/${config.auth.org.slug}/reports/performancemodal?incidentNumber=${incidentNumber}`
+      const mmrIncidentData = yield call(fetch, MmrIncidentDetailEndpoint)
+      yield put(mttaMttrIncidentDetailUpdate(mmrIncidentData))
+    } catch (err) {
+      yield call(logError, err)
+      yield put(mttaMttrIncidentDetailError({error: {modal: true}}))
+    }
+  }
+}
+
 export const Test = {
   _getMttaMttrGraph,
   _getMttaMttrTable,
   _setMttaMttrGoalMtta,
   _setMttaMttrGoalMttr,
-  _getMttaMttrState
+  _getMttaMttrState,
+  _getMttaMttrIncidentDetails
 }
 
 export function * watchGetMttaMttrGraph (api, logError) {
@@ -144,4 +162,8 @@ export function * watchSetMttaMttrGoalMtta (api, logError) {
 
 export function * watchSetMttaMttrGoalMttr (api, logError) {
   yield * takeEvery(MTTA_MTTR_GOAL_MTTR_SET, _setMttaMttrGoalMttr(api, logError))
+}
+
+export function * watchGetMttaMttrIncidentDetails (api, logError) {
+  yield * takeEvery(MTTA_MTTR_INCIDENT_DETAIL_GET, _getMttaMttrIncidentDetails(api, logError))
 }

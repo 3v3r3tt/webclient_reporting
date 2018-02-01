@@ -20,20 +20,21 @@ import {
 } from './reporting-on-call'
 
 import {
- watchGetRouteKeys
+  watchGetRouteKeys
 } from './route-keys'
 
 import {
- watchGetIncidentFrequencyTable,
- watchGetIncidentFrequencyGraph,
- watchGetIncidentFrequencyIncidentDetails
+  watchGetIncidentFrequencyTable,
+  watchGetIncidentFrequencyGraph,
+  watchGetIncidentFrequencyIncidentDetails
 } from './incident-frequency'
 
 import {
- watchGetMttaMttrGraph,
- watchGetMttaMttrTable,
- watchSetMttaMttrGoalMtta,
- watchSetMttaMttrGoalMttr
+  watchGetMttaMttrGraph,
+  watchGetMttaMttrTable,
+  watchSetMttaMttrGoalMtta,
+  watchSetMttaMttrGoalMttr,
+  watchGetMttaMttrIncidentDetails
 } from './mtta-mttr'
 
 import {
@@ -73,6 +74,7 @@ export default function makeRootSaga (api) {
     yield fork(watchGetMttaMttrTable, api, error)
     yield fork(watchSetMttaMttrGoalMtta, api, error)
     yield fork(watchSetMttaMttrGoalMttr, api, error)
+    yield fork(watchGetMttaMttrIncidentDetails, api, error)
 
     yield fork(watchCreatePostMortemActionItem, api, error)
     yield fork(watchGetPostMortemActionItems, api, error)

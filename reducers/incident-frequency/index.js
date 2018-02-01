@@ -100,21 +100,21 @@ const _loadingDetailData = (state) => state.update('loadingDetailData', () => tr
 function _filterUpdate (state, payload) {
   const filterKey = Object.keys(payload)[0]
   return state.set(filterKey, payload[filterKey])
-              .set('reducedData', initialState.get('reducedData'))
-              .update('loadingTableData', () => true)
-              .set('innerTableIncidentData', null)
+    .set('reducedData', initialState.get('reducedData'))
+    .update('loadingTableData', () => true)
+    .set('innerTableIncidentData', null)
 }
 
 function _updateTable (state, payload) {
   return state.set('innerTableIncidentData', _fromJS(payload))
-              .update('loadingTableData', () => false)
-              .setIn(['error', 'table'], false)
+    .update('loadingTableData', () => false)
+    .setIn(['error', 'table'], false)
 }
 
 function _resetInnerTable (state, payload) {
   return state.set('innerTableIncidentData', null)
-              .update('loadingTableData', () => false)
-              .setIn(['error', 'table'], false)
+    .update('loadingTableData', () => false)
+    .setIn(['error', 'table'], false)
 }
 
 function _setIncidentFrequencyTableError (state, payload) {
@@ -127,12 +127,12 @@ function _setIncidentFrequencyGraphError (state, payload) {
 
 function _updateReducedTable (state, payload) {
   return state.set('reducedData', _fromJS(payload))
-              .set('innerTableIncidentData', null)
+    .set('innerTableIncidentData', null)
 }
 
 function _resetReducedTable (state, payload) {
   return state.set('reducedData', initialState.get('reducedData'))
-              .set('innerTableIncidentData', null)
+    .set('innerTableIncidentData', null)
 }
 
 function _setIncidentFrequencyIncidentDetailError (state, payload) {
@@ -141,11 +141,11 @@ function _setIncidentFrequencyIncidentDetailError (state, payload) {
 
 function _updateIncidentDetail (state, payload) {
   return state.set('incidentDetailData', _fromJS(payload))
-              .set('loadingDetailData', false)
+    .set('loadingDetailData', false)
 }
 
 function _updateGraph (state, payload) {
   return state.set('graphData', _fromJS(payload))
-              .update('loadingGraphData', () => false)
-              .setIn(['error', 'graph'], false)
+    .update('loadingGraphData', () => false)
+    .setIn(['error', 'graph'], false)
 }

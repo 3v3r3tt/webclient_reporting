@@ -12,11 +12,15 @@ import {
   MTTA_MTTR_FILTER_UPDATE,
   MTTA_MTTR_ROUTE_KEY_UPDATE,
   MTTA_MTTR_GOAL_MTTA_UPDATE,
-  MTTA_MTTR_GOAL_MTTR_UPDATE
+  MTTA_MTTR_GOAL_MTTR_UPDATE,
+  MTTA_MTTR_INCIDENT_DETAIL_GET,
+  MTTA_MTTR_INCIDENT_DETAIL_UPDATE,
+  MTTA_MTTR_INCIDENT_DETAIL_ERROR
 } from 'reporting/actions/mtta-mttr'
 
 export const initialState = _fromJS({
   loadingGraphData: true,
+  loadingDetailData: true,
   beginDate: moment().subtract(1, 'month').valueOf(),
   endDate: moment().valueOf(),
   timezoneOffset: moment().utcOffset() / 60,
@@ -34,6 +38,7 @@ export const initialState = _fromJS({
     loading: true,
     data: []
   },
+  incidentDetailData: null,
   selectedRouteKeys: [],
   goals: {
     mtta: null,
@@ -41,7 +46,8 @@ export const initialState = _fromJS({
   },
   error: {
     graph: false,
-    table: false
+    table: false,
+    modal: false
   }
 })
 
@@ -67,6 +73,12 @@ export default function mttaMttrReport (state = initialState, action) {
       return _updateMttaGoal(state, action.payload)
     case MTTA_MTTR_GOAL_MTTR_UPDATE:
       return _updateMttrGoal(state, action.payload)
+    case MTTA_MTTR_INCIDENT_DETAIL_GET:
+      return _loadingDetailData(state)
+    case MTTA_MTTR_INCIDENT_DETAIL_UPDATE:
+      return _updateIncidentDetail(state, action.payload)
+    case MTTA_MTTR_INCIDENT_DETAIL_ERROR:
+      return _setMttaMttrIncidentDetailError(state, action.payload)
 
     default : return state
   }
@@ -74,11 +86,12 @@ export default function mttaMttrReport (state = initialState, action) {
 
 const _loadingGraphData = (state) => state.update('loadingGraphData', () => true)
 const _loadingTableData = (state) => state.updateIn(['table', 'loading'], () => true)
+const _loadingDetailData = (state) => state.update('loadingDetailData', () => true)
 
 function _filterUpdate (state, payload) {
   const filterKey = Object.keys(payload)[0]
   return state.set(filterKey, payload[filterKey])
-              .update('loadingTableData', () => true)
+    .update('loadingTableData', () => true)
 }
 
 function _setmttaMttrGraphError (state, payload) {
@@ -87,8 +100,8 @@ function _setmttaMttrGraphError (state, payload) {
 
 function _updateGraph (state, payload) {
   return state.set('graphData', _fromJS(payload))
-              .update('loadingGraphData', () => false)
-              .setIn(['error', 'graph'], false)
+    .update('loadingGraphData', () => false)
+    .setIn(['error', 'graph'], false)
 }
 
 function _setmttaMttrTableError (state, payload) {
@@ -97,8 +110,8 @@ function _setmttaMttrTableError (state, payload) {
 
 function _updateTable (state, payload) {
   return state.setIn(['table', 'data'], _fromJS(payload))
-              .updateIn(['table', 'loading'], () => false)
-              .setIn(['error', 'table'], false)
+    .updateIn(['table', 'loading'], () => false)
+    .setIn(['error', 'table'], false)
 }
 
 function _updateSelectedRouteKeys (state, payload) {
@@ -111,4 +124,13 @@ function _updateMttaGoal (state, payload) {
 
 function _updateMttrGoal (state, payload) {
   return state.setIn(['goals', 'mttr'], _fromJS(payload.mttr))
+}
+
+function _updateIncidentDetail (state, payload) {
+  return state.set('incidentDetailData', _fromJS(payload))
+    .update('loadingDetailData', () => false)
+}
+
+function _setMttaMttrIncidentDetailError (state, payload) {
+  return state.setIn(['error', 'modal'], _fromJS(payload.error))
 }

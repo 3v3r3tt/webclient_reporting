@@ -5,6 +5,12 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import moment from 'moment'
 
 import { Table } from '@victorops/victory'
+import MmrIncidentDetailModal from 'reporting/components/modal/mmr-detail-modal'
+
+import {
+  hideModal,
+  showModal
+} from 'reporting/actions/modal'
 
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import { faStrikethrough } from '@fortawesome/fontawesome-pro-regular'
@@ -18,6 +24,8 @@ function mapStateToProps (state) {
 
 function mapDispatchToProps (dispatch) {
   return {
+    hideModal: (payload) => dispatch(hideModal(payload)),
+    showModal: (payload) => dispatch(showModal(payload))
   }
 }
 
@@ -99,6 +107,38 @@ class MttaMttrTable extends Component {
     return reducedData
   }
 
+  _rowClickFnGenerator (rowId) {
+    return () => {
+      this._openIncidentDetailModal(rowId)
+    }
+  }
+
+  _openIncidentDetailModal (rowId) {
+    const incident = this.props.data.find((x) => x.get('id') === rowId)
+
+    if (!incident) return
+    const integration = incident.get('monitoring_tool', '')
+    const incidentId = rowId
+    const modalTitle = `Incident #${incidentId}`
+    const modalComponent =
+      <MmrIncidentDetailModal
+        incidentId={incidentId}
+        integration={integration} />
+
+    const modalConfig = {
+      modalType: 'confirm',
+      modalProps: {
+        title: modalTitle,
+        component: modalComponent,
+        onCancel: () => this.props.hideModal(),
+        modalClass: 'mtta-mttr--incident-detail--modal modal-is-scrollable',
+        actionBar: false
+      }
+    }
+
+    this.props.showModal(modalConfig)
+  }
+
   render () {
     const rowItems = this._transformRows(this.props.data)
     const tableData = {
@@ -112,7 +152,8 @@ class MttaMttrTable extends Component {
         {label: '# Pages', isSortable: true},
         {label: '# Reroutes', isSortable: true}
       ],
-      rowItems: rowItems ? rowItems.toJS() : []
+      rowItems: rowItems ? rowItems.toJS() : [],
+      generateRowClickFn: (row) => this._rowClickFnGenerator(row)
     }
 
     return (

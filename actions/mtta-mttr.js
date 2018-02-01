@@ -11,6 +11,9 @@ export const MTTA_MTTR_GOAL_MTTA_SET = 'MTTA_MTTR_GOAL_MTTA_SET'
 export const MTTA_MTTR_GOAL_MTTR_SET = 'MTTA_MTTR_GOAL_MTTR_SET'
 export const MTTA_MTTR_GOAL_MTTA_UPDATE = 'MTTA_MTTR_GOAL_MTTA_UPDATE'
 export const MTTA_MTTR_GOAL_MTTR_UPDATE = 'MTTA_MTTR_GOAL_MTTR_UPDATE'
+export const MTTA_MTTR_INCIDENT_DETAIL_GET = 'MTTA_MTTR_INCIDENT_DETAIL_GET'
+export const MTTA_MTTR_INCIDENT_DETAIL_UPDATE = 'MTTA_MTTR_INCIDENT_DETAIL_UPDATE'
+export const MTTA_MTTR_INCIDENT_DETAIL_ERROR = 'MTTA_MTTR_INCIDENT_DETAIL_ERROR'
 
 export function mttaMttrGraphGet (payload = {}) {
   return {
@@ -92,6 +95,27 @@ export function mttaMttrGoalSetMttr (payload = {}) {
 export function mttaMttrGoalUpdateMttr (payload = {}) {
   return {
     type: MTTA_MTTR_GOAL_MTTR_UPDATE,
+    payload
+  }
+}
+
+export function mttaMttrIncidentDetailGet (payload = {}) {
+  return {
+    type: MTTA_MTTR_INCIDENT_DETAIL_GET,
+    payload
+  }
+}
+
+export function mttaMttrIncidentDetailUpdate (payload = {}) {
+  return {
+    type: MTTA_MTTR_INCIDENT_DETAIL_UPDATE,
+    payload
+  }
+}
+
+export function mttaMttrIncidentDetailError (payload = {}) {
+  return {
+    type: MTTA_MTTR_INCIDENT_DETAIL_ERROR,
     payload
   }
 }
