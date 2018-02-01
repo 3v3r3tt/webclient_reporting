@@ -19,8 +19,9 @@ import {
 } from 'reporting/actions/post-mortem'
 
 function mapStateToProps (state, ownProps) {
+  const username = state.auth.config.getIn(['auth', 'user', 'username'], '')
   return {
-    is_owner: state.auth.config.getIn(['auth', 'user', 'username'], '') === state.postMortem.getIn(['report', 'owner'], null)
+    is_owner: username === state.postMortem.getIn(['report', 'owner'], username)
   }
 }
 
@@ -198,8 +199,8 @@ class PostMortemForm extends React.Component {
       'title': this.refs.title.value,
       'begin': this.props.postmortem.getIn(['report', 'begin']),
       'end': this.props.postmortem.getIn(['report', 'end']),
-      'can_edit': this.refs.can_edit.checked,
-      'can_delete': this.refs.can_delete.checked,
+      'can_edit': this.refs.can_edit.checked || false,
+      'can_delete': this.refs.can_delete.checked || false,
       'is_customer_impacted': this.refs.is_customer_impacted.checked,
       'source': this.refs.summary.value
     }
@@ -223,10 +224,10 @@ class PostMortemForm extends React.Component {
           <h2 className='post-mortem--report-summary--section-header'>Allow others to:</h2>
           <ul>
             <li>
-              <label><input type='checkbox' onChange={this._updateCheckBox} name='can_edit' ref='can_edit' checked={pm.getIn(['report', 'can_edit'])} />Edit this report</label>
+              <label><input type='checkbox' onChange={this._updateCheckBox} name='can_edit' ref='can_edit' checked={pm.getIn(['report', 'can_edit'], false)} />Edit this report</label>
             </li>
             <li>
-              <label><input type='checkbox' onChange={this._updateCheckBox} name='can_delete' ref='can_delete' checked={pm.getIn(['report', 'can_delete'])} />Delete this report</label>
+              <label><input type='checkbox' onChange={this._updateCheckBox} name='can_delete' ref='can_delete' checked={pm.getIn(['report', 'can_delete'], false)} />Delete this report</label>
             </li>
           </ul>
         </div>

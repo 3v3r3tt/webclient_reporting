@@ -216,10 +216,6 @@ export const Test = {
   _getPostMortemTimelineNotes
 }
 
-export function * watchPostMortemDateRangeUpdate (api, logError) {
-  yield * takeEvery(POST_MORTEM_DATE_UPDATE, _savePostMortem(api, logError))
-}
-
 export function * watchPostMortemFormSave (api, logError) {
   yield * takeEvery(POST_MORTEM_SAVE_FORM, _savePostMortem(api, logError))
 }

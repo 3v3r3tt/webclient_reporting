@@ -44,7 +44,6 @@ import {
   watchGetTimelineOnUpdate,
   watchGetTimeline,
   watchPostMortemDateChange,
-  watchPostMortemDateRangeUpdate,
   watchPostMortemFormSave,
   watchRemovePostMortemActionItem
 } from './post-mortem'
@@ -79,7 +78,6 @@ export default function makeRootSaga (api) {
     yield fork(watchGetPostMortemActionItems, api, error)
     yield fork(watchGetPostMortemBySlug, api, error)
     yield fork(watchGetPostMortemTimelineNotes, api, error)
-    yield fork(watchPostMortemDateRangeUpdate, api, error)
     yield fork(watchPostMortemFormSave, api, error)
     yield fork(watchRemovePostMortemActionItem, api, error)
     yield fork(watchGetTimeline, api, error)
