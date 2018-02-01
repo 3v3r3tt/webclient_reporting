@@ -6,7 +6,8 @@ import Timeline from './timeline'
 
 import {
   getPostMortem,
-  resetPostMortem
+  getTimeline,
+  resetPostMortemReport
 } from 'reporting/actions/post-mortem'
 
 function mapStateToProps (state) {
@@ -19,7 +20,8 @@ function mapStateToProps (state) {
 function mapDispatchToProps (dispatch) {
   return {
     getPostMortem: (payload) => dispatch(getPostMortem(payload)),
-    resetPostMortem: () => dispatch(resetPostMortem())
+    getTimeline: () => dispatch(getTimeline()),
+    resetPostMortemReport: () => dispatch(resetPostMortemReport())
   }
 }
 
@@ -31,7 +33,8 @@ class PostMortem extends Component {
       const payload = { reportId: slug }
       this.props.getPostMortem(payload)
     } else {
-      this.props.resetPostMortem()
+      this.props.getTimeline()
+      this.props.resetPostMortemReport()
     }
   }
 

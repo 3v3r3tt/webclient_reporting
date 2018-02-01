@@ -33,7 +33,6 @@ import {
   getAlertDetails,
   getBackboneContainerRendered,
   getBackboneTimelineContainerActive,
-  makeGetTimelineEndOfHistory,
   getTimelineFilters,
   makeGetNewTimelineMessageCount,
   makeGetTimelineMessages,
@@ -49,35 +48,42 @@ import {
 
 import vent from 'util/vent'
 
+function showDefaultMessage (loading, messageCount, lastSequence) {
+  const loadingComponentMessage = Map({
+    sequence: lastSequence + 0.11,
+    eventType: 'progressLoader'
+  })
+
+  const noTimelineData = Map({
+    componentProps: Map({
+      displayMessage: 'No data available for this data range',
+      eventType: 'chat'
+    }),
+    IS_ROBOT: true,
+    sequence: lastSequence + 0.11,
+    USER_ID: 'victorops'
+  })
+
+  if (loading) return loadingComponentMessage
+  else if (messageCount === 0) return noTimelineData
+  else return null
+}
+
 const makeMapStateToProps = (state, ownProps) => {
   const newMessageCount = makeGetNewTimelineMessageCount(ownProps.roomId)
   const shouldShowNewMessages = makeGetShowNewTimelineMessages(ownProps.roomId)
   const getTimelineMessages = makeGetTimelineMessages(ownProps.roomId)
-  const checkForEndOfHistory = makeGetTimelineEndOfHistory(ownProps.roomId)
 
   return function mapStateToProps (state, ownProps) {
-    const showBlankSlate = checkForEndOfHistory(state)
     const canFilter = ownProps.disableFilters || ownProps.disableInfiniteScroll
     const filters = getTimelineFilters(state)
     const messageState = getTimelineMessages(state)
     const lastSequence = messageState.size > 0 ? messageState.last().get('sequence') : 0
+    const isLoading = state.postMortem.get('timelineIsLoading', false)
 
-    const loadingComponentMessage = Map({
-      sequence: lastSequence + 0.11,
-      eventType: 'progressLoader'
-    })
+    const showBlankSlate = (isLoading || messageState.size === 0)
 
-    const endOfHistoryMessage = Map({
-      componentProps: Map({
-        displayMessage: 'You have reached the end of your history',
-        eventType: 'chat'
-      }),
-      IS_ROBOT: true,
-      sequence: lastSequence + 0.11,
-      USER_ID: 'victorops'
-    })
-
-    const finalMessage = showBlankSlate ? endOfHistoryMessage : loadingComponentMessage
+    const finalMessage = showDefaultMessage(isLoading, messageState.size, lastSequence)
     const unfilteredMessages = ownProps.disableInfiniteScroll ? messageState : messageState.push(finalMessage)
 
     return {

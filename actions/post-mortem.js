@@ -7,6 +7,7 @@ export const POST_MORTEM_DATE_UPDATE = 'POST_MORTEM_DATE_UPDATE'
 export const POST_MORTEM_FIELD_UPDATE = 'POST_MORTEM_FIELD_UPDATE'
 export const POST_MORTEM_GET = 'POST_MORTEM_GET'
 export const POST_MORTEM_RESET = 'POST_MORTEM_RESET'
+export const POST_MORTEM_REPORT_RESET = 'POST_MORTEM_REPORT_RESET'
 export const POST_MORTEM_REPORT_UPDATE = 'POST_MORTEM_REPORT_UPDATE'
 export const POST_MORTEM_SAVE_FORM = 'POST_MORTEM_SAVE_FORM'
 export const POST_MORTEM_TIMELINE_GET = 'POST_MORTEM_TIMELINE_GET'
@@ -14,13 +15,22 @@ export const POST_MORTEM_TIMELINE_NOTES_GET = 'POST_MORTEM_TIMELINE_NOTES_GET'
 export const POST_MORTEM_TIMELINE_NOTES_UPDATE = 'POST_MORTEM_TIMELINE_NOTES_UPDATE'
 export const POST_MORTEM_UPDATE = 'POST_MORTEM_UPDATE'
 export const POST_MORTEM_TIMELINE_UPDATE = 'POST_MORTEM_TIMELINE_UPDATE'
+export const TIMELINE_LOADED = 'TIMELINE_LOADED'
+export const TIMELINE_LOADING = 'TIMELINE_LOADING'
 
 // Post Mortems
 // ---------------------------------------------------------------------------
 
 export function resetPostMortem () {
   return {
-    type: POST_MORTEM_RESET
+    type: POST_MORTEM_RESET,
+    payload: { roomId: '*' }
+  }
+}
+
+export function resetPostMortemReport () {
+  return {
+    type: POST_MORTEM_REPORT_RESET
   }
 }
 
@@ -41,6 +51,20 @@ export function savePostMortem (payload) {
 export function updateTimeline (payload) {
   return {
     type: POST_MORTEM_TIMELINE_UPDATE,
+    payload
+  }
+}
+
+export function timelineLoading (payload) {
+  return {
+    type: TIMELINE_LOADING,
+    payload
+  }
+}
+
+export function timelineLoaded (payload) {
+  return {
+    type: TIMELINE_LOADED,
     payload
   }
 }

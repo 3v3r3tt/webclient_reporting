@@ -85,7 +85,6 @@ class PostMortems extends React.Component {
       })
     })
 
-    console.log('generated', generatedRows.toJS())
     return generatedRows.toJSON()
   }
 

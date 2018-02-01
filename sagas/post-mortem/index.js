@@ -27,8 +27,12 @@ import {
   POST_MORTEM_UPDATE,
   POST_MORTEM_SAVE_FORM,
   POST_MORTEM_TIMELINE_NOTES_GET,
+  POST_MORTEM_TIMELINE_GET,
   getPostMortemActionItems,
   updatePostMortem,
+  timelineLoaded,
+  timelineLoading,
+  resetPostMortem,
   updatePostMortemActionItems,
   updatePostMortemTimelineNotes
 } from 'reporting/actions/post-mortem'
@@ -70,6 +74,14 @@ function _getTimeline ({fetch}, logError) {
     try {
       const reportFormData = yield select(_getPostMortemState)
       if (reportFormData.begin && reportFormData.end) {
+        // show loading screen
+        const _timelineLoading = yield call(timelineLoading)
+        yield put(_timelineLoading)
+
+        // Clear timeline messages since the reduecers are made to concat not reload
+        const reset = yield call(resetPostMortem)
+        yield put(reset)
+
         const actionItemsEndpoint = `/api/v1/org/${config.auth.org.slug}/reporting/timeline?p.begin=${reportFormData.begin}&p.end=${reportFormData.end}&p.limit=1000`
         const timelineItems = yield call(fetch, actionItemsEndpoint)
 
@@ -79,6 +91,10 @@ function _getTimeline ({fetch}, logError) {
         receiveTimelineMessageSequence('*', batch, arg => { timelineAction = arg })
 
         yield put(timelineAction)
+
+        // Hide loading screen
+        const _timelineLoaded = yield call(timelineLoaded)
+        yield put(_timelineLoaded)
       }
     } catch (err) {
       yield call(logError, err)
@@ -230,6 +246,14 @@ export function * watchGetPostMortemBySlug (api, logError) {
   yield * takeEvery(POST_MORTEM_GET, _getPostMortemBySlug(api, logError))
 }
 
-export function * watchGetTimeline (api, logError) {
+export function * watchPostMortemDateChange (api, logError) {
+  yield * takeEvery(POST_MORTEM_DATE_UPDATE, _getTimeline(api, logError))
+}
+
+export function * watchGetTimelineOnUpdate (api, logError) {
   yield * takeEvery(POST_MORTEM_UPDATE, _getTimeline(api, logError))
+}
+
+export function * watchGetTimeline (api, logError) {
+  yield * takeEvery(POST_MORTEM_TIMELINE_GET, _getTimeline(api, logError))
 }

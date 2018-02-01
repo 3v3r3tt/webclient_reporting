@@ -41,6 +41,8 @@ class PostMortemForm extends React.Component {
     this._saveForm = this._saveForm.bind(this)
     this._onReportTitleChange = this._onReportTitleChange.bind(this)
     this._updateCheckBox = this._updateCheckBox.bind(this)
+    this._isValidEndDate = this._isValidEndDate.bind(this)
+    this._isValidBeginDate = this._isValidBeginDate.bind(this)
 
     this.state = {
       test: 'start',
@@ -60,6 +62,19 @@ class PostMortemForm extends React.Component {
         }
       }
     }
+  }
+
+  _isValidBeginDate (current) {
+    const pm = this.props.postmortem
+    const end = pm.getIn(['report', 'end'])
+    const lastYear = moment().subtract(10, 'years')
+    return current.isAfter(lastYear) && current.isBefore(end)
+  }
+
+  _isValidEndDate (current) {
+    const tomorrow = moment()
+    const pm = this.props.postmortem
+    return current.isAfter(pm.getIn(['report', 'begin'])) && current.isBefore(tomorrow)
   }
 
   _onReportTitleChange (e) {
@@ -117,7 +132,7 @@ class PostMortemForm extends React.Component {
     const location = this.props.location
     const query = location.query
     if (location.pathname.includes('new') && Object.keys(query).length > 0) {
-      for (var param in query) {
+      for (let param in query) {
         this._updateReportDateRange({[param]: this._formatQuery(param, query[param])})
       }
     }
@@ -140,7 +155,7 @@ class PostMortemForm extends React.Component {
     this._testRequiredFields('begin')
     this._testRequiredFields('title')
 
-    for (var field in fields) {
+    for (let field in fields) {
       if (!this._validateKey(field)) {
         formIsValid = false
       }
@@ -241,10 +256,12 @@ class PostMortemForm extends React.Component {
     return (
       <DateRangePicker
         beginDate={{
+          isValidDate: this._isValidBeginDate,
           onChange: this._beginDateChange,
           value: beginDate
         }}
         endDate={{
+          isValidDate: this._isValidEndDate,
           onChange: this._endDateChange,
           value: endDate
         }}
@@ -255,7 +272,6 @@ class PostMortemForm extends React.Component {
   render () {
     const pm = this.props.postmortem
 
-    console.log(this.props)
     return (
       <div>
         <div className='js-post-mortem-header post-mortem-header-wrapper'><div>

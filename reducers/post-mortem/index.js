@@ -2,6 +2,8 @@ import {
   fromJS as _fromJS
 } from 'immutable'
 
+import moment from 'moment'
+
 import {
   POST_MORTEM_ACTION_ITEMS_UPDATE,
   POST_MORTEM_DATE_UPDATE,
@@ -10,8 +12,10 @@ import {
   POST_MORTEM_SAVE_FORM,
   POST_MORTEM_TIMELINE_NOTES_UPDATE,
   POST_MORTEM_TIMELINE_UPDATE,
-  POST_MORTEM_RESET,
-  POST_MORTEM_UPDATE
+  POST_MORTEM_REPORT_RESET,
+  POST_MORTEM_UPDATE,
+  TIMELINE_LOADED,
+  TIMELINE_LOADING
 } from 'reporting/actions/post-mortem'
 
 import _ from 'lodash'
@@ -21,13 +25,13 @@ export const initialState = _fromJS({
   form: {},
   actionItems: [],
   timelineNotes: [],
-  timeline: [],
+  timelineIsLoading: false,
   report: {
     annotations: [],
-    begin: null,
+    begin: moment().subtract(1, 'month').valueOf(),
+    end: moment().valueOf(),
     can_delete: true,
     can_edit: true,
-    end: null,
     exclude: [],
     is_customer_impacted: false,
     timeline: null,
@@ -49,13 +53,19 @@ export default function postMortem (state = initialState, action) {
     case POST_MORTEM_DATE_UPDATE :
       const key = Object.keys(action.payload)[0]
       return state.setIn(['report', key], action.payload[key])
-    case POST_MORTEM_RESET :
-      return state.setIn(['report'], _fromJS({}))
+    case TIMELINE_LOADING :
+      return state.set('timelineIsLoading', true)
+    case TIMELINE_LOADED :
+      return state.set('timelineIsLoading', false)
+    case POST_MORTEM_REPORT_RESET :
+      return state.set('report', initialState.get('report'))
     case POST_MORTEM_UPDATE :
     case POST_MORTEM_SAVE_FORM :
     case POST_MORTEM_REPORT_UPDATE :
       if (action.payload) {
-        return state.setIn(['report'], _fromJS(action.payload))
+        return state
+          .set('timelineIsLoading', true)
+          .setIn(['report'], _fromJS(action.payload))
       } else {
         return state
       }
