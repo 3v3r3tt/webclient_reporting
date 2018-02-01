@@ -258,11 +258,15 @@ class PostMortemForm extends React.Component {
         beginDate={{
           isValidDate: this._isValidBeginDate,
           onChange: this._beginDateChange,
+          dateFormat: 'MMM Do YYYY',
+          timeFormat: true,
           value: beginDate
         }}
         endDate={{
           isValidDate: this._isValidEndDate,
           onChange: this._endDateChange,
+          dateFormat: 'MMM Do YYYY',
+          timeFormat: true,
           value: endDate
         }}
       />
