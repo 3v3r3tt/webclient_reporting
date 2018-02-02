@@ -15,6 +15,8 @@ import {
   browserHistory
 } from 'react-router'
 
+import { hideModal } from 'reporting/actions/modal'
+
 const {
   VO_CONFIG,
   VO_ENV,
@@ -31,10 +33,17 @@ const store = configureStore({
 
 initRaygun()
 
+async function onUpdate () {
+  store.dispatch(hideModal())
+}
+
 export default function () {
   render(
     <Provider store={store}>
-      <Router history={browserHistory}>
+      <Router
+        history={browserHistory}
+        onUpdate={onUpdate}
+      >
         { getRoutes() }
       </Router>
     </Provider>,
