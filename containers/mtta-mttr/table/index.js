@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import DownloadCSVRow from './download-csv-row'
 
 import moment from 'moment'
+import { Range, Map as iMap } from 'immutable'
 
 import { Table } from '@victorops/victory'
 import MmrIncidentDetailModal from 'reporting/components/modal/mmr-detail-modal'
@@ -17,7 +19,7 @@ import { faStrikethrough } from '@fortawesome/fontawesome-pro-regular'
 
 function mapStateToProps (state) {
   return {
-    data: state.mttaMttr.getIn(['table', 'data', 'incidents']),
+    data: state.mttaMttr.getIn(['table', 'data', 'incidents'], iMap({})),
     loading: state.mttaMttr.getIn(['table', 'loading'], true)
   }
 }
@@ -30,6 +32,33 @@ function mapDispatchToProps (dispatch) {
 }
 
 class MttaMttrTable extends Component {
+  constructor () {
+    super()
+
+    this._next = this._next.bind(this)
+    this._prev = this._prev.bind(this)
+    this.state = {
+      iterator: 0,
+      tableLimit: 100
+    }
+  }
+
+  _generateDownloadCSVRow () {
+    return {
+      id: 'incidentsSeeMore',
+      columns: [{
+        component: DownloadCSVRow,
+        id: 'downloadCSV',
+        content: {
+          start: this.props.beginDate,
+          end: this.props.endDate,
+          team: this.props.selectedTeam
+        },
+        type: 'component',
+        colspan: 6
+      }]
+    }
+  }
   _transformIncidentName (name, transmog) {
     const transmogIconComponent = <FontAwesomeIcon icon={faStrikethrough} />
     const transmogIcon = transmog ? transmogIconComponent : null
@@ -68,43 +97,73 @@ class MttaMttrTable extends Component {
     return hours + ':' + minutes + ':' + seconds
   }
 
-  _transformRows (data) {
+  // TODO move this to a utility function globally
+  _splitIntoChunks (list, chunkSize = 1) {
+    return Range(0, list.count(), chunkSize)
+      .map(chunkStart => list.slice(chunkStart, chunkStart + chunkSize))
+  }
+
+  _transformRows (_data) {
     let reducedData = null
-    if (data) {
+    if (_data.size) {
+      const data = this._splitIntoChunks(_data, this.state.tableLimit).get(this.state.iterator)
       reducedData = data.map((item, index) => {
         // TODO: these are all the keys I need to check match the API response
-        const incident = item.get('incident')
-        const date = item.get('date')
-        const timeToAck = item.get('time_to_ack', 0)
-        const timeToRes = item.get('time_to_res', 0)
-        const pages = item.get('pages', 0)
-        const reroutes = item.get('reroutes', 0)
-        const transmog = item.get('transmog', false)
+        //
+        if (index < this.state.tableLimit) {
+          const incident = item.get('incident')
+          const date = item.get('date')
+          const timeToAck = item.get('time_to_ack', 0)
+          const timeToRes = item.get('time_to_res', 0)
+          const pages = item.get('pages', 0)
+          const reroutes = item.get('reroutes', 0)
+          const transmog = item.get('transmog', false)
 
-        const formattedDate = moment(date).format('MMM. D, YYYY')
-        const formattedTimeToAck = this._transformTime(timeToAck)
-        const formattedTimeToRes = this._transformTime(timeToRes)
+          const formattedDate = moment(date).format('MMM. D, YYYY')
+          const formattedTimeToAck = this._transformTime(timeToAck)
+          const formattedTimeToRes = this._transformTime(timeToRes)
 
-        const formattedPages = this._transformPages(pages)
-        const formattedReroutes = this._transformReroutes(reroutes)
+          const formattedPages = this._transformPages(pages)
+          const formattedReroutes = this._transformReroutes(reroutes)
 
-        const formattedIncidentName = this._transformIncidentName(incident, transmog)
+          const formattedIncidentName = this._transformIncidentName(incident, transmog)
 
-        return {
-          id: item.get('id'),
-          key: index,
-          columns: [
-            {type: 'component', component: formattedIncidentName, value: incident},
-            {type: 'cell', content: formattedDate, value: date},
-            {type: 'cell', content: formattedTimeToAck, value: timeToAck},
-            {type: 'cell', content: formattedTimeToRes, value: timeToRes},
-            {type: 'cell', content: formattedPages, value: pages},
-            {type: 'cell', content: formattedReroutes, value: reroutes}
-          ]
+          return {
+            id: item.get('id'),
+            key: index,
+            columns: [
+              {type: 'component', component: formattedIncidentName, value: incident},
+              {type: 'cell', content: formattedDate, value: date},
+              {type: 'cell', content: formattedTimeToAck, value: timeToAck},
+              {type: 'cell', content: formattedTimeToRes, value: timeToRes},
+              {type: 'cell', content: formattedPages, value: pages},
+              {type: 'cell', content: formattedReroutes, value: reroutes}
+            ]
+          }
         }
       })
+
+      return reducedData.push(this._generateDownloadCSVRow())
     }
-    return reducedData
+  }
+
+  _iterate (increment) {
+    const newValue = this.state.iterator + increment
+    const max = Math.ceil(this.props.data.count() / this.state.tableLimit)
+
+    if (newValue > 0 && newValue < max) {
+      this.setState({
+        iterator: newValue
+      })
+    }
+  }
+
+  _next () {
+    this._iterate(1)
+  }
+
+  _prev () {
+    this._iterate(-1)
   }
 
   _rowClickFnGenerator (rowId) {
@@ -145,16 +204,18 @@ class MttaMttrTable extends Component {
       index: 1,
       columnWidths: ['30%', '10%', '15%', '15%', '15%', '15%'],
       columnHeaders: [
-        {label: 'Incidents', isSortable: true},
-        {label: 'Date', isSortable: true},
-        {label: 'Time to Ack.', isSortable: true},
-        {label: 'Time to Res.', isSortable: true},
-        {label: '# Pages', isSortable: true},
-        {label: '# Reroutes', isSortable: true}
+        {label: 'Incidents', isSortable: false},
+        {label: 'Date', isSortable: false},
+        {label: 'Time to Ack.', isSortable: false},
+        {label: 'Time to Res.', isSortable: false},
+        {label: '# Pages', isSortable: false},
+        {label: '# Reroutes', isSortable: false}
       ],
       rowItems: rowItems ? rowItems.toJS() : [],
       generateRowClickFn: (row) => this._rowClickFnGenerator(row)
     }
+
+    const max = Math.ceil(this.props.data.size / this.state.tableLimit) - 1
 
     return (
       <div className='mtta-mttr--table has-loading-gradient fade-in'>
@@ -168,6 +229,8 @@ class MttaMttrTable extends Component {
             {...tableData}
             showLoader={this.props.loading} />
         </ReactCSSTransitionGroup>
+        <button className='btn btn-outline-primary' onClick={this._prev} disabled={this.state.iterator === 0} >Prev</button>
+        <button className='btn btn-outline-primary' onClick={this._next} disabled={this.state.iterator >= max}>Next</button>
       </div>
     )
   }
