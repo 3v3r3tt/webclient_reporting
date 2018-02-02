@@ -48,13 +48,10 @@ class MmrIncidentDetailModal extends Component {
   }
 
   _getIncidentName () {
-    if (this.props.incidentDetailData.get('entityDisplayName')) {
-      return this.props.incidentDetailData.get('entityDisplayName')
-    } else if (this.props.incidentDetailData.get('service')) {
-      return this.props.incidentDetailData.get('service')
-    } else {
-      return this.props.incidentDetailData.get('entityId')
-    }
+    const alertDetails = this.props.incidentDetailData.get('alert_details')
+    const name = alertDetails.get('entity_display_name') || alertDetails.get('SERVICEDESC') || alertDetails.get('entity_id') || null
+
+    return name ? 'from ' + name : null
   }
 
   _transmogText (transmog) {
@@ -67,7 +64,7 @@ class MmrIncidentDetailModal extends Component {
 
   _alertDetail (alertDetail, alertDetailKey) {
     return (
-      <div className='row' key='alertDetailKey'>
+      <div className='row' key={alertDetailKey}>
         <div className='col-4'>
           {alertDetailKey}
         </div>
@@ -120,7 +117,6 @@ class MmrIncidentDetailModal extends Component {
     const rowItems = timelineData.map(this._generateRowItems)
     const tableData = {
       index: 1,
-      columnWidths: ['30%', '10%', '15%', '15%', '15%', '15%'],
       columnHeaders: [
         {label: 'Timeline', isSortable: true},
         {label: 'Who took action', isSortable: true}
@@ -133,6 +129,22 @@ class MmrIncidentDetailModal extends Component {
     )
   }
 
+  _formatTimeSpacing (time) {
+    while (time.length < 2) {
+      time = '0' + time
+    }
+    return time
+  }
+
+  _transformTime (time) {
+    const duration = moment.duration(time, 'm')
+    let hours = Math.floor(duration.asHours()).toString()
+    let minutes = duration.minutes().toString()
+    hours = this._formatTimeSpacing(hours)
+    minutes = this._formatTimeSpacing(minutes)
+    return hours + ':' + minutes
+  }
+
   render () {
     if (!this.props.loadingDetailData) {
       const entityDisplayName = this._getIncidentName()
@@ -140,8 +152,10 @@ class MmrIncidentDetailModal extends Component {
       const incidentTableData = this.props.data.find((x) => x.get('id') === this.props.incidentId)
       const incidentTime = moment(incidentTableData.get('date'))
       const transmog = incidentTableData.get('transmog', false)
+
       const timeToAck = incidentTableData.get('time_to_ack', 0)
       const timeToRes = incidentTableData.get('time_to_res', 0)
+
       const pages = incidentTableData.get('pages', 0)
       const reroutes = incidentTableData.get('reroutes', 0)
 
@@ -150,7 +164,7 @@ class MmrIncidentDetailModal extends Component {
       const timeline = incidentDetailData.get('timeline')
 
       let CriticalityText = <span className='critical-color'>CRITICAL</span>
-      if (incidentDetailData.get('') === 'WARNING') {
+      if (alertDetails.get('NOTIFICATIONTYPE') === 'warning') {
         CriticalityText = <span className='warning-color'>WARNING</span>
       }
 
@@ -159,7 +173,7 @@ class MmrIncidentDetailModal extends Component {
           <h4 className='modal-subtitle'>{incidentTime.format('MMM. DD, YYYY - h:mm A (Z UTC)')}</h4>
           <div className='modal-contents'>
             <div>
-              <h2 className='heading-4'>{CriticalityText} incident from {entityDisplayName}</h2>
+              <h2 className='heading-4'>{CriticalityText} incident {entityDisplayName}</h2>
 
               { this._transmogText(transmog) }
 
@@ -167,12 +181,12 @@ class MmrIncidentDetailModal extends Component {
 
               <p className='modal--main-detail'>
                 <strong>Time to Awknowledge:</strong>
-                <span> {timeToAck}</span>
+                <span> {this._transformTime(timeToAck)}</span>
               </p>
 
               <p className='modal--main-detail'>
                 <strong>Time to Resolve:</strong>
-                <span> {timeToRes}</span>
+                <span> {this._transformTime(timeToRes)}</span>
               </p>
 
               <p className='modal--main-detail'>

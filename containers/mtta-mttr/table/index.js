@@ -6,16 +6,16 @@ import DownloadCSVRow from './download-csv-row'
 import moment from 'moment'
 import { Range, Map as iMap } from 'immutable'
 
-import { Table } from '@victorops/victory'
+import {
+  Icon,
+  Table
+} from '@victorops/victory'
 import MmrIncidentDetailModal from 'reporting/components/modal/mmr-detail-modal'
 
 import {
   hideModal,
   showModal
 } from 'reporting/actions/modal'
-
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import { faStrikethrough } from '@fortawesome/fontawesome-pro-regular'
 
 function mapStateToProps (state) {
   return {
@@ -60,7 +60,7 @@ class MttaMttrTable extends Component {
     }
   }
   _transformIncidentName (name, transmog) {
-    const transmogIconComponent = <FontAwesomeIcon icon={faStrikethrough} />
+    const transmogIconComponent = <Icon type='Transmog' />
     const transmogIcon = transmog ? transmogIconComponent : null
     return () =>
       <div className='mtta-mttr--table--incident-name'>

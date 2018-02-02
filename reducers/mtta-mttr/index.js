@@ -38,7 +38,9 @@ export const initialState = _fromJS({
     loading: true,
     data: []
   },
-  incidentDetailData: null,
+  incidentDetailData: {
+    alert_details: {}
+  },
   selectedRouteKeys: [],
   goals: {
     mtta: null,
