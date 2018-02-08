@@ -35,7 +35,7 @@ class GoalsModal extends Component {
       this._hoursInput.value = duration.hours()
     }
     if (duration.minutes()) {
-      this._minutesInput.value = duration.minutes()
+      this._minsInput.value = duration.minutes()
     }
   }
 

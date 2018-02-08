@@ -180,7 +180,7 @@ class MmrIncidentDetailModal extends Component {
               { this._alertDetails(alertDetails) }
 
               <p className='modal--main-detail'>
-                <strong>Time to Awknowledge:</strong>
+                <strong>Time to Acknowledge:</strong>
                 <span> {this._transformTime(timeToAck)}</span>
               </p>
 

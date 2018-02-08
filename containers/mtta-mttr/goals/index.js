@@ -34,11 +34,17 @@ function mapDispatchToProps (dispatch) {
 }
 
 class mttaMttrGoals extends Component {
-  _transformTime (duration) {
+  _transformTime (value) {
+    const duration = moment.duration(value, 'seconds')
+
     const dayText = duration.days() > 0 ? `${duration.days()}d ` : ''
     const hourText = duration.hours() > 0 ? `${duration.hours()}h ` : ''
     const minuteText = duration.minutes() > 0 ? `${duration.minutes()}m` : ''
     const goalText = `${dayText}${hourText}${minuteText}`
+
+    if (this.props.incidents > 0 && value < 60) {
+      return `${Math.floor(duration.asSeconds())}s`
+    }
     return goalText.length ? goalText : 'N/A'
   }
 
@@ -91,8 +97,8 @@ class mttaMttrGoals extends Component {
   }
 
   render () {
-    const mtta = this._transformTime(moment.duration(this.props.mtta, 'seconds'))
-    const mttr = this._transformTime(moment.duration(this.props.mttr, 'seconds'))
+    const mtta = this._transformTime(this.props.mtta)
+    const mttr = this._transformTime(this.props.mttr)
 
     const addMttaGoal = this._goal(
       'mtta',
