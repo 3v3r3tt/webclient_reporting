@@ -3,23 +3,21 @@ import config from 'components/__utils/config'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import { faFileAlt } from '@fortawesome/fontawesome-pro-light'
 
-class IncidentFrequencyCSVDownloadButton extends Component {
+class MttaMttrCSVDownloadButton extends Component {
   render () {
     const {
       beginDate,
       endDate,
-      selectedTeam,
-      segmentationType,
-      resolutionType
+      selectedTeam
     } = this.props
 
-    const incidentFrequencyCSVEndpoint = `/api/v1/org/${config.auth.org.slug}/reports/mttamttrcsv?startDate=${beginDate}&endDate=${endDate}&selectedTeam=${selectedTeam}&segmentationType=${segmentationType}&resolutionType=${resolutionType}`
-    const incidentFrequencyCSVHref = encodeURI(incidentFrequencyCSVEndpoint)
+    const MttaMttrCSVEndpoint = `/api/v1/org/${config.auth.org.slug}/reports/performancecsv?startDate=${beginDate}&endDate=${endDate}&selectedTeam=${selectedTeam}`
+    const MttaMttrCSVHref = encodeURI(MttaMttrCSVEndpoint)
 
     return (
       <a
         className='btn btn-secondary incident-frequency--filter_csv'
-        href={incidentFrequencyCSVHref}
+        href={MttaMttrCSVHref}
         target='_blank'
         title='Export CSV'
         download
@@ -30,4 +28,4 @@ class IncidentFrequencyCSVDownloadButton extends Component {
   }
 }
 
-export default IncidentFrequencyCSVDownloadButton
+export default MttaMttrCSVDownloadButton
