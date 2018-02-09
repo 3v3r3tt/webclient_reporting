@@ -163,9 +163,9 @@ class MmrIncidentDetailModal extends Component {
       const alertDetails = incidentDetailData.get('alert_details')
       const timeline = incidentDetailData.get('timeline')
 
-      let CriticalityText = <span className='critical-color'>CRITICAL</span>
-      if (alertDetails.get('NOTIFICATIONTYPE') === 'warning') {
-        CriticalityText = <span className='warning-color'>WARNING</span>
+      let CriticalityText = <span className='warning-color'>WARNING</span>
+      if (alertDetails.get('message_type') === 'CRITICAL') {
+        CriticalityText = <span className='critical-color'>CRITICAL</span>
       }
 
       return (
