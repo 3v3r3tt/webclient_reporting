@@ -20,8 +20,6 @@ function mapDispatchToProps (dispatch) {
   }
 }
 
-const CSV_SIZE_WARNING_LIMIT = 10000
-
 class IncidentFrequencyCSVDownloadButton extends Component {
   constructor (props) {
     super(props)
@@ -38,7 +36,7 @@ class IncidentFrequencyCSVDownloadButton extends Component {
           component: <IncidentFrequencyCsvModal
             totalIncidents={this.props.totalIncidents}
             csvHref={csvHref}
-            limit={CSV_SIZE_WARNING_LIMIT}
+            limit={this.props.CSV_SIZE_WARNING_LIMIT}
             cancel={this.props.hideModal}
           />,
           onCancel: () => this.props.hideModal(),
@@ -61,7 +59,7 @@ class IncidentFrequencyCSVDownloadButton extends Component {
     const incidentFrequencyCSVEndpoint = `/api/v1/org/${config.auth.org.slug}/reports/incidentfrequencycsv?teamSlug=${selectedTeam}&start=${beginDate}&end=${endDate}`
     const incidentFrequencyCSVHref = encodeURI(incidentFrequencyCSVEndpoint)
 
-    if (totalIncidents <= CSV_SIZE_WARNING_LIMIT) {
+    if (totalIncidents <= this.props.CSV_SIZE_WARNING_LIMIT) {
       return (
         <a
           className='btn btn-secondary incident-frequency--filter_csv'

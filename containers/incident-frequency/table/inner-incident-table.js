@@ -58,7 +58,9 @@ class IncidentFrequencyTable extends Component {
         content: {
           start: this.props.beginDate,
           end: this.props.endDate,
-          team: this.props.selectedTeam
+          team: this.props.selectedTeam,
+          CSV_SIZE_WARNING_LIMIT: this.props.CSV_SIZE_WARNING_LIMIT,
+          totalIncidents: this.props.totalIncidents
         },
         type: 'component',
         colspan: 6

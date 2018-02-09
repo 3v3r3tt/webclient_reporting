@@ -17,6 +17,7 @@ import {
 } from 'reporting/selectors'
 
 const config = window.VO_CONFIG
+const CSV_SIZE_WARNING_LIMIT = 10000
 
 const COLOR_LIST = [
   '#FFD163', '#F1582F', '#5175CA', '#ABCB79', '#6C6C6C',
@@ -83,14 +84,25 @@ class IncidentFrequency extends Component {
 
         <h1 className='heading-3'>Incident Frequency Report</h1>
 
-        <Filter totalIncidents={totalIncidents} />
+        <Filter
+          totalIncidents={totalIncidents}
+          CSV_SIZE_WARNING_LIMIT={CSV_SIZE_WARNING_LIMIT}
+        />
 
         <div className='incident-frequency-graph--wrapper'>
           { this.props.reducedData ? ClearBucketSelectionButton : null }
 
-          <IncidentFrequencyGraph data={this.props.data} colorList={COLOR_LIST} />
+          <IncidentFrequencyGraph
+            data={this.props.data}
+            colorList={COLOR_LIST}
+          />
         </div>
-        <IncidentFrequencyTable graphIsEmpty={graphIsEmpty && !this.props.loadingData} colorList={COLOR_LIST} />
+        <IncidentFrequencyTable
+          graphIsEmpty={graphIsEmpty && !this.props.loadingData}
+          colorList={COLOR_LIST}
+          CSV_SIZE_WARNING_LIMIT={CSV_SIZE_WARNING_LIMIT}
+          totalIncidents={totalIncidents}
+        />
       </div>
     )
   }

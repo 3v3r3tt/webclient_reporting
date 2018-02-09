@@ -28,7 +28,10 @@ function mapStateToProps (state) {
     tableError: state.incidentFrequency.getIn(['error', 'table']),
     loadingTableData: state.incidentFrequency.get('loadingTableData', false),
     graphError: state.incidentFrequency.getIn(['error', 'graph']),
-    graphDataSegments: state.incidentFrequency.getIn(['graphData', 'segments'])
+    graphDataSegments: state.incidentFrequency.getIn(['graphData', 'segments']),
+    selectedTeam: state.incidentFrequency.get('selectedTeam'),
+    beginDate: state.incidentFrequency.get('beginDate'),
+    endDate: state.incidentFrequency.get('endDate')
   }
 }
 
@@ -72,7 +75,12 @@ class IncidentFrequencyTable extends Component {
             outerTableIndex: index,
             showModal: this.props.showModal,
             hideModal: this.props.hideModal,
-            loadingTableData: this.props.loadingTableData
+            loadingTableData: this.props.loadingTableData,
+            CSV_SIZE_WARNING_LIMIT: this.props.CSV_SIZE_WARNING_LIMIT,
+            totalIncidents: this.props.totalIncidents,
+            beginDate: this.props.beginDate,
+            endDate: this.props.endDate,
+            selectedTeam: this.props.selectedTeam
           },
           value: Math.floor(segment.total_incidents)
         }]
