@@ -150,8 +150,13 @@ class IncidentFrequencyTable extends Component {
       <div className='row top-row'>
         <div className='col-8'>
           <span className={cardHeaderClass}>
-            <span style={{color: `${this.props.colorList[this.props.outerTableIndex]}`}}>
-              <FontAwesomeIcon icon={faCircle} size='sm' className='margin-right-10' />
+            <span>
+              <FontAwesomeIcon
+                icon={faCircle}
+                size='sm'
+                className='margin-right-10'
+                style={{color: `${this.props.colorList[this.props.outerTableIndex]}`}}
+              />
             </span>
             {this.props.name}
           </span>
