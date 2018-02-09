@@ -50,7 +50,7 @@ class OnCallCSVDownloadButton extends Component {
       const DropdownLabel =
         <span className='filter--csv-dropdown'>
           <FontAwesomeIcon icon={faFileAlt} />
-          <span className='filter--csv-label-text'>Export CSV</span>
+          <span className='filter--csv-label-text'>CSV</span>
           <FontAwesomeIcon icon={faAngleDown} />
         </span>
       return (
@@ -72,7 +72,7 @@ class OnCallCSVDownloadButton extends Component {
           target='_blank'
           download
         >
-          <FontAwesomeIcon icon={faFileAlt} /> Export CSV
+          <FontAwesomeIcon icon={faFileAlt} /> CSV
         </a>
       )
     }

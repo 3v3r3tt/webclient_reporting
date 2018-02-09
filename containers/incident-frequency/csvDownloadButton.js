@@ -62,9 +62,9 @@ class IncidentFrequencyCSVDownloadButton extends Component {
     if (totalIncidents <= this.props.CSV_SIZE_WARNING_LIMIT) {
       return (
         <a
-          className='btn btn-secondary incident-frequency--filter_csv'
+          className='btn btn-secondary reports--filter_csv'
           href={incidentFrequencyCSVHref}
-          title='Export CSV'
+          title='CSV'
           download={`incident-frequency-${beginDate}-${endDate}`}
         >
           <FontAwesomeIcon icon={faFileAlt} /> CSV
@@ -73,8 +73,8 @@ class IncidentFrequencyCSVDownloadButton extends Component {
     } else {
       return (
         <a
-          className='btn btn-secondary incident-frequency--filter_csv'
-          title='Export CSV'
+          className='btn btn-secondary reports--filter_csv'
+          title='CSV'
           onClick={this._openCsvWarningModal(incidentFrequencyCSVHref)}
         >
           <FontAwesomeIcon icon={faFileAlt} /> CSV

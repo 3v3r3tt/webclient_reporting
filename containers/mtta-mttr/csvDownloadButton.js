@@ -16,10 +16,10 @@ class MttaMttrCSVDownloadButton extends Component {
 
     return (
       <a
-        className='btn btn-secondary incident-frequency--filter_csv'
+        className='btn btn-secondary reports--filter_csv'
         href={MttaMttrCSVHref}
         target='_blank'
-        title='Export CSV'
+        title='CSV'
         download
       >
         <FontAwesomeIcon icon={faFileAlt} /> CSV
