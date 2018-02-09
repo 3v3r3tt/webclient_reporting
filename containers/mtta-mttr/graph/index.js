@@ -227,6 +227,7 @@ class MttaMttrGraph extends Component {
         id: 'ackTimes',
         linkedTo: 'averageAckTime',
         type: 'scatter',
+        turboThreshold: 0,
         zIndex: 2,
         tooltip: {
           pointFormatter: this._scatterTooltipFormatter('acknowledge'),
@@ -244,6 +245,7 @@ class MttaMttrGraph extends Component {
         id: 'resolveTimes',
         linkedTo: 'averageResolveTime',
         type: 'scatter',
+        turboThreshold: 0,
         zIndex: 2,
         tooltip: {
           pointFormatter: this._scatterTooltipFormatter('resolve'),
