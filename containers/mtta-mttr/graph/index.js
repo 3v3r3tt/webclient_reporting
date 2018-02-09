@@ -158,6 +158,8 @@ class MttaMttrGraph extends Component {
         },
         type: this.props.yAxisType.get('type'),
         plotLines: [ mttaGoalPlotline, mttrGoalPlotline ],
+        gridLineWidth: 1,
+        minorGridLineWidth: 0,
         labels: {
           formatter: function () {
             const reconfiguredMoment = _clone(moment)
@@ -183,10 +185,12 @@ class MttaMttrGraph extends Component {
         }
       }, {
         title: {
-          text: isLinear ? 'Number of Incidents' : ''
+          text: 'Number of Incidents'
         },
         opposite: true,
-        allowDecimals: false
+        allowDecimals: false,
+        gridLineWidth: isLinear ? 1 : 0,
+        minorGridLineWidth: 0
       }],
       series: [{
         name: 'Time to Acknowledge',
@@ -255,7 +259,6 @@ class MttaMttrGraph extends Component {
         name: 'Number of Incidents',
         id: 'numberOfIncidents',
         type: 'column',
-        visible: isLinear,
         zIndex: 1,
         color: 'rgba(204, 211, 218, 0.5)',
         pointPadding: 0,
