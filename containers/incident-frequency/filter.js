@@ -318,7 +318,7 @@ class IncidentFrequencyFilter extends Component {
           </div>
         </div>
 
-        <div className='reports--exportcsv incident-frequency--exportcsv'>
+        <div className='reports--exportcsv reports--filter_csv'>
           <div className='reports--filter-type'>
             <IncidentFrequencyCSVButton {...this.props} />
           </div>
