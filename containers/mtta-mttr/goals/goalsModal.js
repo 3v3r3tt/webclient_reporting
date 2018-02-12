@@ -26,6 +26,14 @@ function mapDispatchToProps (dispatch) {
 }
 
 class GoalsModal extends Component {
+  constructor (props) {
+    super(props)
+
+    this.state = {
+      error: null
+    }
+  }
+
   componentDidMount () {
     const duration = moment.duration(this.props.value)
     if (Math.floor(duration.asDays()) > 0) {
@@ -40,18 +48,23 @@ class GoalsModal extends Component {
   }
 
   _modalOnConfirm () {
-    const days = this._daysInput.value || null
-    const hours = this._hoursInput.value || null
-    const minutes = this._minsInput.value || null
+    const days = Number(this._daysInput.value) || 0
+    const hours = Number(this._hoursInput.value) || 0
+    const minutes = Number(this._minsInput.value) || 0
 
-    let duration = moment.duration(0)
-      .add(parseInt(days), 'days')
-      .add(parseInt(hours), 'hours')
-      .add(parseInt(minutes), 'minutes')
+    const durationIsNonPositive = minutes + hours * 60 + days * 1440 <= 0
+    if (durationIsNonPositive) {
+      this.setState({error: 'Please set a realistic goal!'})
+    } else {
+      let duration = moment.duration(0)
+        .add(parseInt(days), 'days')
+        .add(parseInt(hours), 'hours')
+        .add(parseInt(minutes), 'minutes')
 
-    if (this.props.type === 'mtta') this.props.setMttaGoal({mtta: duration.valueOf()})
-    else if (this.props.type === 'mttr') this.props.setMttrGoal({mttr: duration.valueOf()})
-    this.props.hideModal()
+      if (this.props.type === 'mtta') this.props.setMttaGoal({mtta: duration.valueOf()})
+      else if (this.props.type === 'mttr') this.props.setMttrGoal({mttr: duration.valueOf()})
+      this.props.hideModal()
+    }
   }
 
   render () {
@@ -78,6 +91,9 @@ class GoalsModal extends Component {
             className='mtta-mttr--goal-modal--form--input'
             ref={(input) => { this._minsInput = input }} />
         </div>
+        <p className='mtta-mttr--goal-modal--error-message'>
+          {this.state.error}
+        </p>
         <div className='mtta-mttr--goal-modal--btn-row'>
           <Button
             content='Cancel'
