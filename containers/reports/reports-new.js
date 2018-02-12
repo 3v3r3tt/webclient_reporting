@@ -134,8 +134,8 @@ class ReportsNew extends React.Component {
             <ul className='reports-container'>
               { this._getPIRTile() }
               { this._getMMR() }
-              { this._getIncidentFrequencyTile() }
               { this._getOnCallTile() }
+              { this._getIncidentFrequencyTile() }
             </ul>
           </div>
         </div>
