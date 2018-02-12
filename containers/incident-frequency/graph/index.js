@@ -45,6 +45,8 @@ class IncidentFrequencyGraph extends Component {
     this._generateReducedGraph = this._generateReducedGraph.bind(this)
     this._determineBucketLabel = this._determineBucketLabel.bind(this)
     this._determineGraphMinMax = this._determineGraphMinMax.bind(this)
+
+    this.hoverCol = null
   }
 
   componentDidMount () {
@@ -159,26 +161,24 @@ class IncidentFrequencyGraph extends Component {
 
     const [graphXMin, graphXMax] = this._determineGraphMinMax(startDateBuckets)
 
-    var hoverCol = null
-
     const config = {
       colors: this.props.colorList,
       chart: {
         type: this.props.chartType.get('key').toLowerCase(),
         events: {
-          click: function (e) {
-            if (!hoverCol) return
-            let chart = this.xAxis[0]
+          click: () => {
+            if (this.hoverCol === null) return
+            let chart = this.hoverCol.series.xAxis
             chart.removePlotLine('selected-bucket')
             chart.addPlotLine({
-              value: hoverCol.x,
+              value: this.hoverCol.x,
               color: '#7e7e7e',
               width: 3,
               id: 'selected-bucket',
               zIndex: '9999'
             })
-            chart.labelFormatter(hoverCol.x)
-            generateGraph(hoverCol.category, hoverCol.series.chart.series, hoverCol.x)
+            chart.labelFormatter(this.hoverCol.x)
+            generateGraph(this.hoverCol.category, this.hoverCol.series.chart.series, this.hoverCol.x)
           },
           load: function (e) {
             let chart = this.xAxis[0]
@@ -205,22 +205,22 @@ class IncidentFrequencyGraph extends Component {
         series: {
           point: {
             events: {
-              click: function (e) {
-                if (!hoverCol) return
-                let chart = this.series.chart.xAxis[0]
+              click: () => {
+                if (this.hoverCol === null) return
+                let chart = this.hoverCol.series.xAxis
                 chart.removePlotLine('selected-bucket')
                 chart.addPlotLine({
-                  value: hoverCol.x,
+                  value: this.hoverCol.x,
                   color: '#7e7e7e',
                   width: 3,
                   id: 'selected-bucket',
                   zIndex: '9999'
                 })
                 chart.labelFormatter(this.x)
-                generateGraph(hoverCol.category, hoverCol.series.chart.series, hoverCol.x)
+                generateGraph(this.hoverCol.category, this.hoverCol.series.chart.series, this.hoverCol.x)
               },
-              mouseOver: function (e) {
-                hoverCol = this
+              mouseOver: (mouseOverEvent) => {
+                this.hoverCol = mouseOverEvent.target
               }
             }
           }
