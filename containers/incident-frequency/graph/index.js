@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import ReactHighcharts from 'react-highcharts'
-import HighchartsNoData from 'highcharts-no-data-to-display'
+import HighchartsNoData from 'highcharts/modules/no-data-to-display.js'
 
 import defaultHighChartsOptions from './highcharts-config'
 import Placeholder from './placeholder'
