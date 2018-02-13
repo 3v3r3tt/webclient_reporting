@@ -1,17 +1,29 @@
 import React, { Component } from 'react'
-import config from 'components/__utils/config'
+import { connect } from 'react-redux'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import { faFileAlt } from '@fortawesome/fontawesome-pro-light'
+import moment from 'moment'
+
+function mapStateToProps (state) {
+  return {
+    orgslug: state.auth.config.get('orgslug', ''),
+    selectedTeam: state.mttaMttr.get('selectedTeam'),
+    beginDate: state.mttaMttr.get('beginDate'),
+    endDate: state.mttaMttr.get('endDate')
+  }
+}
 
 class MttaMttrCSVDownloadButton extends Component {
   render () {
     const {
+      orgslug,
       beginDate,
       endDate,
       selectedTeam
     } = this.props
 
-    const MttaMttrCSVEndpoint = `/api/v1/org/${config.auth.org.slug}/reports/performancecsv?startDate=${beginDate}&endDate=${endDate}&selectedTeam=${selectedTeam}`
+    const offset = moment().utcOffset() / 60
+    const MttaMttrCSVEndpoint = `/api/v1/org/${orgslug}/reports/performancecsv?selectedTeam=${selectedTeam}&startDate=${beginDate}&endDate=${endDate}&offset=${offset}`
     const MttaMttrCSVHref = encodeURI(MttaMttrCSVEndpoint)
 
     return (
@@ -28,4 +40,4 @@ class MttaMttrCSVDownloadButton extends Component {
   }
 }
 
-export default MttaMttrCSVDownloadButton
+export default connect(mapStateToProps, {})(MttaMttrCSVDownloadButton)

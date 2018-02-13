@@ -4,7 +4,7 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import DownloadCSVRow from './download-csv-row'
 
 import moment from 'moment'
-import { Range, Map as iMap } from 'immutable'
+import { Map as iMap } from 'immutable'
 
 import {
   Icon,
@@ -19,6 +19,7 @@ import {
 
 function mapStateToProps (state) {
   return {
+    orgslug: state.auth.config.get('orgslug', ''),
     data: state.mttaMttr.getIn(['table', 'data', 'incidents'], iMap({})),
     loading: state.mttaMttr.getIn(['table', 'loading'], true)
   }
@@ -35,10 +36,7 @@ class MttaMttrTable extends Component {
   constructor () {
     super()
 
-    this._next = this._next.bind(this)
-    this._prev = this._prev.bind(this)
     this.state = {
-      iterator: 0,
       tableLimit: 100
     }
   }
@@ -50,6 +48,7 @@ class MttaMttrTable extends Component {
         component: DownloadCSVRow,
         id: 'downloadCSV',
         content: {
+          orgslug: this.props.orgslug,
           start: this.props.beginDate,
           end: this.props.endDate,
           team: this.props.selectedTeam
@@ -97,16 +96,9 @@ class MttaMttrTable extends Component {
     return hours + ':' + minutes + ':' + seconds
   }
 
-  // TODO move this to a utility function globally
-  _splitIntoChunks (list, chunkSize = 1) {
-    return Range(0, list.count(), chunkSize)
-      .map(chunkStart => list.slice(chunkStart, chunkStart + chunkSize))
-  }
-
-  _transformRows (_data) {
+  _transformRows (data) {
     let reducedData = null
-    if (_data.size) {
-      const data = this._splitIntoChunks(_data, this.state.tableLimit).get(this.state.iterator)
+    if (data.size) {
       reducedData = data.map((item, index) => {
         // TODO: these are all the keys I need to check match the API response
         //
@@ -145,25 +137,6 @@ class MttaMttrTable extends Component {
 
       return reducedData.push(this._generateDownloadCSVRow())
     }
-  }
-
-  _iterate (increment) {
-    const newValue = this.state.iterator + increment
-    const max = Math.ceil(this.props.data.count() / this.state.tableLimit)
-
-    if (newValue > 0 && newValue < max) {
-      this.setState({
-        iterator: newValue
-      })
-    }
-  }
-
-  _next () {
-    this._iterate(1)
-  }
-
-  _prev () {
-    this._iterate(-1)
   }
 
   _rowClickFnGenerator (rowId) {
@@ -215,8 +188,6 @@ class MttaMttrTable extends Component {
       generateRowClickFn: (row) => this._rowClickFnGenerator(row)
     }
 
-    const max = Math.ceil(this.props.data.size / this.state.tableLimit) - 1
-
     return (
       <div className='mtta-mttr--table has-loading-gradient fade-in'>
         <ReactCSSTransitionGroup
@@ -229,8 +200,6 @@ class MttaMttrTable extends Component {
             {...tableData}
             showLoader={this.props.loading} />
         </ReactCSSTransitionGroup>
-        <button className='btn btn-outline-primary' onClick={this._prev} disabled={this.state.iterator === 0} >Prev</button>
-        <button className='btn btn-outline-primary' onClick={this._next} disabled={this.state.iterator >= max}>Next</button>
       </div>
     )
   }

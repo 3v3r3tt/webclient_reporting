@@ -8,6 +8,7 @@ import {
   takeWhile
 } from 'lodash'
 import _truncate from 'util/truncate'
+import CSVButton from './csvDownloadButton'
 
 import {
   Dropdown,
@@ -271,6 +272,12 @@ class mttaMttrFilter extends Component {
                 />
               </div>
             </div>
+          </div>
+        </div>
+
+        <div className='reports--exportcsv reports--filter_csv'>
+          <div className='reports--filter-type'>
+            <CSVButton />
           </div>
         </div>
 

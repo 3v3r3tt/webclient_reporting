@@ -36,7 +36,7 @@ export const initialState = _fromJS({
   graphData: {},
   table: {
     loading: true,
-    data: []
+    data: {}
   },
   incidentDetailData: {
     alert_details: {}
