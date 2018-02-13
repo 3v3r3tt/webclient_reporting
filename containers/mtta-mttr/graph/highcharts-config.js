@@ -15,25 +15,7 @@ export default {
     showDuration: 100
   },
 
-  xAxis: {
-    title: {
-      text: 'Date'
-    },
-    tickColor: '#d6d6d6',
-    type: 'datetime',
-    dateTimeLabelFormats: {
-      hour: '<br />',
-      day: '%b %e',
-      week: '%b %e, %Y',
-      month: '%b %Y'
-    },
-    crosshair: {
-      width: 1,
-      color: '#7e7e7e'
-    }
-  },
   tooltip: {
-    crosshairs: true,
     shared: true,
     backgroundColor: 'white',
     borderColor: '#7e7e7e',

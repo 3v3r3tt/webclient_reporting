@@ -147,11 +147,33 @@ class MttaMttrGraph extends Component {
       zIndex: 4
     }
 
-    const isLinear = this.props.yAxisType.get('type') === 'linear'
-    const config = {
-      xAxis: {
-        tickInterval: this.props.resolutionType.type === 'day' ? 24 * 3600 * 1000 : null
+    const xAxisNoCrosshair = {
+      visible: false,
+      type: 'datetime'
+    }
+    const xAxisWithCrosshair = {
+      tickInterval: this.props.resolutionType.type === 'day' ? 24 * 3600 * 1000 : null,
+      title: {
+        text: 'Date'
       },
+      tickColor: '#d6d6d6',
+      type: 'datetime',
+      dateTimeLabelFormats: {
+        hour: '<br />',
+        day: '%b %e',
+        week: '%b %e, %Y',
+        month: '%b %Y'
+      },
+      crosshair: {
+        width: 1,
+        color: '#7e7e7e'
+      }
+    }
+
+    const isLinear = this.props.yAxisType.get('type') === 'linear'
+
+    const config = {
+      xAxis: [xAxisWithCrosshair, xAxisNoCrosshair],
       yAxis: [{
         title: {
           text: 'Time'
@@ -228,6 +250,7 @@ class MttaMttrGraph extends Component {
         linkedTo: 'averageAckTime',
         type: 'scatter',
         turboThreshold: 0,
+        xAxis: 1,
         zIndex: 2,
         tooltip: {
           pointFormatter: this._scatterTooltipFormatter('acknowledge'),
@@ -246,6 +269,7 @@ class MttaMttrGraph extends Component {
         linkedTo: 'averageResolveTime',
         type: 'scatter',
         turboThreshold: 0,
+        xAxis: 1,
         zIndex: 2,
         tooltip: {
           pointFormatter: this._scatterTooltipFormatter('resolve'),
