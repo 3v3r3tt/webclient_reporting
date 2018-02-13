@@ -77,11 +77,11 @@ class Header extends Component {
 
     if (orgs.size > 1) {
       return (
-        <select onChange={this._changeOrg}>
+        <select onChange={this._changeOrg} value={config.get('orgslug', '')}>
           {
             orgs.map(function (org, index) {
               const orgName = org.get('name', '')
-              return (<option key={index} selected={orgName === config.get('orgname', '')} value={org.get('slug', '')}>{ orgName }</option>)
+              return (<option key={index} value={org.get('slug', '')}>{ orgName }</option>)
             })
           }
         </select>
