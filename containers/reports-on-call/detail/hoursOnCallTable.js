@@ -133,7 +133,11 @@ class HoursOnCallTable extends React.Component {
         <p className='padded-double-bottom'>"On-call" means the person was on the first step in an escalation policy.</p>
 
         <div className='has-loading-gradient'>
-          <Table {...userOnCallTableConfig} showLoader={this.props.isLoading} />
+          <Table
+            {...userOnCallTableConfig}
+            showLoader={this.props.isLoading}
+            filteredBy={this.props.selectedTeam}
+          />
           {(!this.props.isLoading && !this.props.segmentedOnCalls.size) ? <p>No data found</p> : null}
         </div>
       </div>
