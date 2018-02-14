@@ -4,7 +4,11 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import DownloadCSVRow from './download-csv-row'
 
 import moment from 'moment'
-import { Map as iMap } from 'immutable'
+
+import {
+  Range as iRange,
+  Map as iMap
+} from 'immutable'
 
 import {
   Icon,
@@ -96,45 +100,57 @@ class MttaMttrTable extends Component {
     return hours + ':' + minutes + ':' + seconds
   }
 
-  _transformRows (data) {
-    let reducedData = null
-    if (data.size) {
+  _splitIntoChunks (list, chunkSize = 1) {
+    return iRange(0, list.count(), chunkSize)
+      .map(chunkStart => list.slice(chunkStart, chunkStart + chunkSize))
+  }
+
+  _transformRows (_data) {
+    let reducedData
+    if (_data.size) {
+      // Get first set of 100
+      const data = this._splitIntoChunks(_data, this.state.tableLimit).get(0)
       reducedData = data.map((item, index) => {
-        if (index < this.state.tableLimit) {
-          const incident = item.get('incident')
-          const date = item.get('date')
-          const timeToAck = item.get('time_to_ack', 0)
-          const timeToRes = item.get('time_to_res', 0)
-          const pages = item.get('pages', 0)
-          const reroutes = item.get('reroutes', 0)
-          const transmog = item.get('transmog', false)
+        const incident = item.get('incident')
+        const date = item.get('date')
+        const timeToAck = item.get('time_to_ack', 0)
+        const timeToRes = item.get('time_to_res', 0)
+        const pages = item.get('pages', 0)
+        const reroutes = item.get('reroutes', 0)
+        const transmog = item.get('transmog', false)
 
-          const formattedDate = moment(date).format('MMM. D, YYYY')
-          const formattedTimeToAck = this._transformTime(timeToAck)
-          const formattedTimeToRes = this._transformTime(timeToRes)
+        const formattedDate = moment(date).format('MMM. D, YYYY')
+        const formattedTimeToAck = this._transformTime(timeToAck)
+        const formattedTimeToRes = this._transformTime(timeToRes)
 
-          const formattedPages = this._transformPages(pages)
-          const formattedReroutes = this._transformReroutes(reroutes)
+        const formattedPages = this._transformPages(pages)
+        const formattedReroutes = this._transformReroutes(reroutes)
 
-          const formattedIncidentName = this._transformIncidentName(incident, transmog)
+        const formattedIncidentName = this._transformIncidentName(incident, transmog)
 
-          return {
-            id: item.get('id'),
-            key: index,
-            columns: [
-              {type: 'component', component: formattedIncidentName, value: incident},
-              {type: 'cell', content: formattedDate, value: date},
-              {type: 'cell', content: formattedTimeToAck, value: timeToAck},
-              {type: 'cell', content: formattedTimeToRes, value: timeToRes},
-              {type: 'cell', content: formattedPages, value: pages},
-              {type: 'cell', content: formattedReroutes, value: reroutes}
-            ]
-          }
+        return {
+          id: item.get('id'),
+          key: index,
+          columns: [
+            {type: 'component', component: formattedIncidentName, value: incident},
+            {type: 'cell', content: formattedDate, value: date},
+            {type: 'cell', content: formattedTimeToAck, value: timeToAck},
+            {type: 'cell', content: formattedTimeToRes, value: timeToRes},
+            {type: 'cell', content: formattedPages, value: pages},
+            {type: 'cell', content: formattedReroutes, value: reroutes}
+          ]
         }
       })
 
-      return reducedData.push(this._generateDownloadCSVRow())
+      if (reducedData.size === 0) {
+        return []
+      } else if (reducedData.size > this.state.tableLimit) {
+        return reducedData.push(this._generateDownloadCSVRow()).toJS()
+      } else {
+        return reducedData.toJS()
+      }
     }
+    return []
   }
 
   _rowClickFnGenerator (rowId) {
@@ -182,7 +198,7 @@ class MttaMttrTable extends Component {
         {label: '# Pages', isSortable: false},
         {label: '# Reroutes', isSortable: false}
       ],
-      rowItems: rowItems ? rowItems.toJS() : [],
+      rowItems: rowItems,
       generateRowClickFn: (row) => this._rowClickFnGenerator(row)
     }
 
