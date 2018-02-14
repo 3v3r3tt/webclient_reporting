@@ -205,8 +205,13 @@ class IncidentFrequencyTable extends Component {
         <div className='row hoverable top-row' onClick={this._setExpanded}>
           <div className='col-8 margin-bottom-20'>
             <span className={cardHeaderClass}>
-              <span style={{color: `${this.props.colorList[this.props.outerTableIndex]}`}}>
-                <FontAwesomeIcon icon={faCircle} size='sm' className='margin-right-10' />
+              <span>
+                <FontAwesomeIcon
+                  icon={faCircle}
+                  size='sm'
+                  className='margin-right-10'
+                  style={{color: `${this.props.colorList[this.props.outerTableIndex]}`}}
+                />
               </span>
               {this.props.name}
             </span>
