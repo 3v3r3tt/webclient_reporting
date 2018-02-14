@@ -62,6 +62,7 @@ class MttaMttrTable extends Component {
       }]
     }
   }
+
   _transformIncidentName (name, transmog) {
     const transmogIconComponent = <Icon type='Transmog' />
     const transmogIcon = transmog ? transmogIconComponent : null

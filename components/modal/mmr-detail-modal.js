@@ -150,6 +150,7 @@ class MmrIncidentDetailModal extends Component {
       const entityDisplayName = this._getIncidentName()
 
       const incidentTableData = this.props.data.find((x) => x.get('id') === this.props.incidentId)
+
       const incidentTime = moment(incidentTableData.get('date'))
       const transmog = incidentTableData.get('transmog', false)
 

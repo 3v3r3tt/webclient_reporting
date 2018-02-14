@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import ReactHighcharts from 'react-highcharts'
 import HighchartsNoData from 'highcharts/modules/no-data-to-display.js'
 
+import MmrIncidentDetailModal from 'reporting/components/modal/mmr-detail-modal'
 import defaultHighChartsOptions from './highcharts-config'
 
 import {
@@ -19,6 +20,11 @@ import {
   mttaMttrGoalUpdateMtta,
   mttaMttrGoalUpdateMttr
 } from 'reporting/actions/mtta-mttr'
+
+import {
+  hideModal,
+  showModal
+} from 'reporting/actions/modal'
 
 import meta from 'util/meta'
 import when from 'when'
@@ -40,7 +46,9 @@ function mapStateToProps (state) {
 function mapDispatchToProps (dispatch) {
   return {
     updateMttaGoal: (payload) => dispatch(mttaMttrGoalUpdateMtta(payload)),
-    updateMttrGoal: (payload) => dispatch(mttaMttrGoalUpdateMttr(payload))
+    updateMttrGoal: (payload) => dispatch(mttaMttrGoalUpdateMttr(payload)),
+    hideModal: (payload) => dispatch(hideModal(payload)),
+    showModal: (payload) => dispatch(showModal(payload))
   }
 }
 
@@ -50,6 +58,7 @@ class MttaMttrGraph extends Component {
 
     this._generateMttaMttrHighchartConfig = this._generateMttaMttrHighchartConfig.bind(this)
     this._manageGoals = this._manageGoals.bind(this)
+    this._openIncidentDetailModal = this._openIncidentDetailModal.bind(this)
   }
 
   componentDidMount () {
@@ -121,6 +130,23 @@ class MttaMttrGraph extends Component {
     }
   }
 
+  _openIncidentDetailModal (incidentId) {
+    const modalTitle = `Incident #${incidentId}`
+    const modalComponent = <MmrIncidentDetailModal incidentId={Number(incidentId)} />
+
+    const modalConfig = {
+      modalType: 'confirm',
+      modalProps: {
+        title: modalTitle,
+        component: modalComponent,
+        onCancel: () => this.props.hideModal(),
+        modalClass: 'mtta-mttr--incident-detail--modal modal-is-scrollable',
+        actionBar: false
+      }
+    }
+    this.props.showModal(modalConfig)
+  }
+
   _generateMttaMttrHighchartConfig (graphData) {
     if (!graphData) return
     const ttaAverageData = graphData.get('tta_avg', List()).toJS()
@@ -171,6 +197,7 @@ class MttaMttrGraph extends Component {
     }
 
     const isLinear = this.props.yAxisType.get('type') === 'linear'
+    const _openIncidentDetailModal = this._openIncidentDetailModal
 
     const config = {
       xAxis: [xAxisWithCrosshair, xAxisNoCrosshair],
@@ -261,7 +288,16 @@ class MttaMttrGraph extends Component {
           radius: 3,
           symbol: 'circle'
         },
-        data: ttaData
+        data: ttaData,
+        cursor: 'pointer',
+        events: {
+          click: function (e) {
+            if (e.point.name.match(/^\[(\d*)\]/) && e.point.name.match(/^\[(\d*)\]/)[1]) {
+              const incidentId = Number(e.point.name.match(/^\[(\d*)\]/)[1])
+              _openIncidentDetailModal(incidentId)
+            }
+          }
+        }
       },
       {
         name: 'Time to Resolve',
@@ -280,7 +316,14 @@ class MttaMttrGraph extends Component {
           radius: 3,
           symbol: 'circle'
         },
-        data: ttrData
+        data: ttrData,
+        cursor: 'pointer',
+        events: {
+          click: function (e) {
+            const incidentId = e.point.name.match(/^\[(\d*)\]/)[1]
+            _openIncidentDetailModal(incidentId)
+          }
+        }
       }, {
         name: 'Number of Incidents',
         id: 'numberOfIncidents',
@@ -290,6 +333,7 @@ class MttaMttrGraph extends Component {
         pointPadding: 0,
         yAxis: 1,
         data: incidentCountData,
+        findNearestPointBy: 'xy',
         events: {
           legendItemClick: function () {
             if (this.visible) {

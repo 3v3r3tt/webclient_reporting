@@ -6,6 +6,12 @@ export default {
     symbolRadius: 0
   },
 
+  plotOptions: {
+    series: {
+      stickyTracking: false
+    }
+  },
+
   title: {
     text: ''
   },
