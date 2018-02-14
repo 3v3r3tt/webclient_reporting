@@ -100,8 +100,6 @@ class MttaMttrTable extends Component {
     let reducedData = null
     if (data.size) {
       reducedData = data.map((item, index) => {
-        // TODO: these are all the keys I need to check match the API response
-        //
         if (index < this.state.tableLimit) {
           const incident = item.get('incident')
           const date = item.get('date')

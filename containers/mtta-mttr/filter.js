@@ -44,8 +44,7 @@ function mapStateToProps (state) {
     selectedTeam: state.mttaMttr.get('selectedTeam'),
     beginDate: state.mttaMttr.get('beginDate'),
     endDate: state.mttaMttr.get('endDate'),
-    resolutionType: state.mttaMttr.get('resolutionType'),
-    yAxisType: state.mttaMttr.get('yAxisType')
+    resolutionType: state.mttaMttr.get('resolutionType')
   }
 }
 
@@ -212,18 +211,7 @@ class mttaMttrFilter extends Component {
     this._getNewTableData()
   }
 
-  _setYAxisType (type) {
-    return () => {
-      if (type === 'linear') {
-        this._setFilter('yAxisType', Map({name: 'Linear', type: 'linear'}))
-      } else {
-        this._setFilter('yAxisType', Map({name: 'Logarithmic', type: 'logarithmic'}))
-      }
-    }
-  }
-
   render () {
-    const yAxisTypeName = this.props.yAxisType.get('name')
     const ResolutionTypeDropdownLabel = <span>{this.props.resolutionType.get('name')}&nbsp;&nbsp;&nbsp;&nbsp;<FontAwesomeIcon icon={faAngleDown} /></span>
 
     return (
@@ -279,18 +267,6 @@ class mttaMttrFilter extends Component {
           <div className='reports--filter-type'>
             <CSVButton />
           </div>
-        </div>
-
-        <div className='reports--yaxisradios'>
-          <span>Y-axis scale: </span>
-          <label>
-            <input type='radio' checked={yAxisTypeName === 'Linear'} onClick={this._setYAxisType('linear')} />
-            Linear
-          </label>
-          <label>
-            <input type='radio' checked={yAxisTypeName === 'Logarithmic'} onClick={this._setYAxisType('logarithmic')} />
-            Logarithmic
-          </label>
         </div>
       </div>
     )
