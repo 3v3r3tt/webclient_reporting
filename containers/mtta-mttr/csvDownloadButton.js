@@ -23,7 +23,9 @@ class MttaMttrCSVDownloadButton extends Component {
     } = this.props
 
     const offset = moment().utcOffset() / 60
-    const MttaMttrCSVEndpoint = `/api/v1/org/${orgslug}/reports/performancecsv?selectedTeam=${selectedTeam}&startDate=${beginDate}&endDate=${endDate}&offset=${offset}`
+    const startOfStart = moment(beginDate).startOf('day').valueOf()
+    const endOfEnd = moment(endDate).endOf('day').valueOf()
+    const MttaMttrCSVEndpoint = `/api/v1/org/${orgslug}/reports/performancecsv?selectedTeam=${selectedTeam}&startDate=${startOfStart}&endDate=${endOfEnd}&offset=${offset}`
     const MttaMttrCSVHref = encodeURI(MttaMttrCSVEndpoint)
 
     return (

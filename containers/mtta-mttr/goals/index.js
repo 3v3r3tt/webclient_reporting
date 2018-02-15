@@ -69,7 +69,7 @@ class mttaMttrGoals extends Component {
 
   _goal (type, value, title, text) {
     const duration = moment.duration(value)
-    let GoalText = <a>add goal</a>
+    let GoalText = <a className='underline-decoration'>add goal</a>
     if (value) {
       GoalText = <span>goal: {this._transformTime(duration)}</span>
     }

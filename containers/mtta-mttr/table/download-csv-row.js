@@ -18,7 +18,9 @@ function mapDispatchToProps (dispatch) {
 class MttaMttrDownloadCSVRow extends React.Component {
   render () {
     const offset = moment().utcOffset() / 60
-    const MttaMttrCSVEndpoint = `/api/v1/org/${this.props.orgslug}/reports/performancecsv?selectedTeam=${this.props.team}&startDate=${this.props.start}&endDate=${this.props.end}&offset=${offset}`
+    const startOfStart = moment(this.props.start).startOf('day').valueOf()
+    const endOfEnd = moment(this.props.end).endOf('day').valueOf()
+    const MttaMttrCSVEndpoint = `/api/v1/org/${this.props.orgslug}/reports/performancecsv?selectedTeam=${this.props.team}&startDate=${startOfStart}&endDate=${endOfEnd}&offset=${offset}`
     const csvHref = encodeURI(MttaMttrCSVEndpoint)
 
     return (
