@@ -178,12 +178,14 @@ class IncidentsOnCallTable extends React.Component {
   _openIncidentDetailModal (rowId) {
     const incident = this.props.incidents.get(rowId)
     if (!incident) return
+    const startTime = moment(incident.get('startTime'))
     const incidentId = Number(incident.get('incident_name').match(/^\[(\d*)\]/)[1])
     const modalTitle = `Incident #${incidentId}`
     const modalConfig = {
       modalType: 'confirm',
       modalProps: {
         title: modalTitle,
+        subTitle: startTime.format('MMM. DD, YYYY - h:mm A (Z UTC)'),
         component: <InnerIncidentModal incidentId={incidentId} />,
         onCancel: () => this.props.hideModal(),
         modalClass: 'incident-frequency--incident-detail--modal',

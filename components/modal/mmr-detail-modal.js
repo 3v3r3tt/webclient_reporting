@@ -55,10 +55,19 @@ class MmrIncidentDetailModal extends Component {
   }
 
   _transmogText (transmog) {
+    const transmogHref = `${location.origin}/dash/victorops#/alert-rules`
     if (transmog) {
-      return <h2 className='heading-4 modal--transmog-detail--true'><Icon type='Transmog' /> This incident was transmogrified</h2>
+      return (
+        <h2 className='heading-4 modal--transmog-detail--true'>
+          <Icon type='Transmog' /> <span>This incident was transmogrified (<a href={transmogHref}>learn more</a>)</span>
+        </h2>
+      )
     } else {
-      return <h2 className='heading-4 modal--transmog-detail--false'><Icon type='Transmog' /> This incident was not transmogrified</h2>
+      return (
+        <h2 className='heading-4 modal--transmog-detail--false'>
+          <Icon type='Transmog' /> <span>This incident was not transmogrified (<a href={transmogHref}>learn more</a>)</span>
+        </h2>
+      )
     }
   }
 
@@ -137,12 +146,12 @@ class MmrIncidentDetailModal extends Component {
   }
 
   _transformTime (time) {
-    const duration = moment.duration(time, 'm')
-    let hours = Math.floor(duration.asHours()).toString()
-    let minutes = duration.minutes().toString()
-    hours = this._formatTimeSpacing(hours)
-    minutes = this._formatTimeSpacing(minutes)
-    return hours + ':' + minutes
+    const duration = moment.duration(time, 'minutes')
+    const days = duration.days() ? `${duration.days()} day${duration.days() > 1 ? 's' : ''} ` : ''
+    const hours = duration.hours() ? `${duration.hours()} hour${duration.hours() > 1 ? 's' : ''} ` : ''
+    const minutes = duration.minutes() ? `${duration.minutes()} minute${duration.minutes() > 1 ? 's' : ''} ` : ''
+    const seconds = duration.seconds() ? `${duration.seconds()} second${duration.seconds() > 1 ? 's' : ''} ` : ''
+    return `${days}${hours}${minutes}${seconds}`
   }
 
   render () {
@@ -151,7 +160,6 @@ class MmrIncidentDetailModal extends Component {
 
       const incidentTableData = this.props.data.find((x) => x.get('id') === this.props.incidentId)
 
-      const incidentTime = moment(incidentTableData.get('date'))
       const transmog = incidentTableData.get('transmog', false)
 
       const timeToAck = incidentTableData.get('time_to_ack', 0)
@@ -170,15 +178,18 @@ class MmrIncidentDetailModal extends Component {
       }
 
       return (
-        <div className='container mtta-mttr--incident-detail--modal'>
-          <h4 className='modal-subtitle'>{incidentTime.format('MMM. DD, YYYY - h:mm A (Z UTC)')}</h4>
+        <div className='mtta-mttr--incident-detail--modal'>
           <div className='modal-contents'>
             <div>
               <h2 className='heading-4'>{CriticalityText} incident {entityDisplayName}</h2>
 
-              { this._transmogText(transmog) }
+              <div className='modal--main-detail'>
+                { this._transmogText(transmog) }
+              </div>
 
-              { this._alertDetails(alertDetails) }
+              <div className='modal--main-detail'>
+                { this._alertDetails(alertDetails) }
+              </div>
 
               <p className='modal--main-detail'>
                 <strong>Time to Acknowledge:</strong>

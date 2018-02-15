@@ -53,13 +53,12 @@ class IncidentDetailModal extends Component {
       const incidentDuration = Math.round(endTime.diff(startTime, 'minutes', true))
       const entityDisplayName = this._getIncidentName()
 
-      let CriticalityText = <span className='critical-color'>CRITICAL</span>
-      if (incident.get('') === 'WARNING') {
-        CriticalityText = <span className='warning-color'>WARNING</span>
+      let CriticalityText = <span className='warning-color'>WARNING</span>
+      if (incident.get('message_type') === 'CRITICAL') {
+        CriticalityText = <span className='critical-color'>CRITICAL</span>
       }
       return (
-        <div className='container incident-frequency--incident-detail--modal'>
-          <h4 className='modal-subtitle'>{startTime.format('MMM. DD, YYYY - h:mm A (Z UTC)')}</h4>
+        <div className='incident-frequency--incident-detail--modal'>
           <div className='modal-contents'>
             <div>
               <h2 className='heading-4'>{CriticalityText} incident from {entityDisplayName}</h2>

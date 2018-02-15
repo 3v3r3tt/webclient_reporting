@@ -39,7 +39,8 @@ function mapStateToProps (state) {
     resolutionType: state.mttaMttr.get('resolutionType'),
     yAxisType: state.mttaMttr.get('yAxisType'),
     mttaGoal: state.mttaMttr.getIn(['goals', 'mtta'], null),
-    mttrGoal: state.mttaMttr.getIn(['goals', 'mttr'], null)
+    mttrGoal: state.mttaMttr.getIn(['goals', 'mttr'], null),
+    tableData: state.mttaMttr.getIn(['table', 'data', 'incidents'])
   }
 }
 
@@ -133,11 +134,14 @@ class MttaMttrGraph extends Component {
   _openIncidentDetailModal (incidentId) {
     const modalTitle = `Incident #${incidentId}`
     const modalComponent = <MmrIncidentDetailModal incidentId={Number(incidentId)} />
+    const incidentTableData = this.props.tableData.find((x) => x.get('id') === incidentId)
+    const incidentTime = moment(incidentTableData.get('date'))
 
     const modalConfig = {
       modalType: 'confirm',
       modalProps: {
         title: modalTitle,
+        subTitle: incidentTime.format('MMM. DD, YYYY - h:mm A (Z UTC)'),
         component: modalComponent,
         onCancel: () => this.props.hideModal(),
         modalClass: 'mtta-mttr--incident-detail--modal modal-is-scrollable',
@@ -320,7 +324,7 @@ class MttaMttrGraph extends Component {
         cursor: 'pointer',
         events: {
           click: function (e) {
-            const incidentId = e.point.name.match(/^\[(\d*)\]/)[1]
+            const incidentId = Number(e.point.name.match(/^\[(\d*)\]/)[1])
             _openIncidentDetailModal(incidentId)
           }
         }

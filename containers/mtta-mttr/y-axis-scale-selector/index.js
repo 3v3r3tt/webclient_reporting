@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import { Map } from 'immutable'
 
-class MttaMttrGraph extends Component {
+class MttaMttrGraphYAxisSelect extends Component {
   constructor (props) {
     super(props)
 
@@ -27,11 +27,11 @@ class MttaMttrGraph extends Component {
         <span>Time scale:</span>
         <span className='reports--yaxisradiocontainer'>
           <label>
-            <input type='radio' checked={this.props.yAxisTypeName === 'Linear'} onClick={this._setAxisType('linear')} />
+            <input type='radio' checked={this.props.yAxisTypeName === 'Linear'} onChange={this._setAxisType('linear')} />
             Linear
           </label>
           <label>
-            <input type='radio' checked={this.props.yAxisTypeName === 'Logarithmic'} onClick={this._setAxisType('logarithmic')} />
+            <input type='radio' checked={this.props.yAxisTypeName === 'Logarithmic'} onChange={this._setAxisType('logarithmic')} />
             Logarithmic
           </label>
         </span>
@@ -40,4 +40,4 @@ class MttaMttrGraph extends Component {
   }
 }
 
-export default MttaMttrGraph
+export default MttaMttrGraphYAxisSelect
