@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import config from 'components/__utils/config'
+import moment from 'moment'
 import IncidentFrequencyCsvModal from '../csvDownloadModal'
 
 import {
@@ -47,7 +48,9 @@ class IncidentFrequencyDownloadCSVRow extends React.Component {
   }
 
   render () {
-    const incidentFrequencyCSVEndpoint = `/api/v1/org/${config.auth.org.slug}/reports/incidentfrequencycsv?teamSlug=${this.props.team}&start=${this.props.start}&end=${this.props.end}`
+    const startOfStart = moment(this.props.start).startOf('day').valueOf()
+    const endOfEnd = moment(this.props.end).endOf('day').valueOf()
+    const incidentFrequencyCSVEndpoint = `/api/v1/org/${config.auth.org.slug}/reports/incidentfrequencycsv?teamSlug=${this.props.team}&start=${startOfStart}&end=${endOfEnd}`
     const csvHref = encodeURI(incidentFrequencyCSVEndpoint)
     if (this.props.totalIncidents > this.props.CSV_SIZE_WARNING_LIMIT) {
       return (

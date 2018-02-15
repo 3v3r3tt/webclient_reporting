@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
 import config from 'components/__utils/config'
+import moment from 'moment'
 
 import {
   hideModal,
@@ -56,7 +57,9 @@ class IncidentFrequencyCSVDownloadButton extends Component {
       totalIncidents
     } = this.props
 
-    const incidentFrequencyCSVEndpoint = `/api/v1/org/${config.auth.org.slug}/reports/incidentfrequencycsv?teamSlug=${selectedTeam}&start=${beginDate}&end=${endDate}`
+    const startOfStart = moment(beginDate).startOf('day').valueOf()
+    const endOfEnd = moment(endDate).endOf('day').valueOf()
+    const incidentFrequencyCSVEndpoint = `/api/v1/org/${config.auth.org.slug}/reports/incidentfrequencycsv?teamSlug=${selectedTeam}&start=${startOfStart}&end=${endOfEnd}`
     const incidentFrequencyCSVHref = encodeURI(incidentFrequencyCSVEndpoint)
 
     if (totalIncidents <= this.props.CSV_SIZE_WARNING_LIMIT) {
