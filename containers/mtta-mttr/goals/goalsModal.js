@@ -54,7 +54,7 @@ class GoalsModal extends Component {
 
     const durationIsNonPositive = minutes + hours * 60 + days * 1440 <= 0
     if (durationIsNonPositive) {
-      this.setState({error: 'Please set a realistic goal!'})
+      this.setState({error: 'Invalid goal'})
     } else {
       let duration = moment.duration(0)
         .add(parseInt(days), 'days')

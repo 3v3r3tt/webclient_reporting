@@ -63,12 +63,12 @@ class MttaMttrTable extends Component {
     }
   }
 
-  _transformIncidentName (name, transmog) {
+  _transformIncidentName (name, transmog, id) {
     const transmogIconComponent = <Icon type='Transmog' />
     const transmogIcon = transmog ? transmogIconComponent : null
     return () =>
       <div className='mtta-mttr--table--incident-name'>
-        {transmogIcon} {name}
+        {transmogIcon} [{id}] {name}
       </div>
   }
 
@@ -109,16 +109,16 @@ class MttaMttrTable extends Component {
   _transformRows (_data) {
     let reducedData
     if (_data.size) {
-      // Get first set of 100
       const data = this._splitIntoChunks(_data, this.state.tableLimit).get(0)
-      reducedData = data.map((item, index) => {
-        const incident = item.get('incident')
-        const date = item.get('date')
-        const timeToAck = item.get('time_to_ack', 0)
-        const timeToRes = item.get('time_to_res', 0)
-        const pages = item.get('pages', 0)
-        const reroutes = item.get('reroutes', 0)
-        const transmog = item.get('transmog', false)
+      reducedData = data.map((incident, index) => {
+        const incidentName = incident.get('incident')
+        const incidentId = incident.get('id')
+        const date = incident.get('date')
+        const timeToAck = incident.get('time_to_ack', 0)
+        const timeToRes = incident.get('time_to_res', 0)
+        const pages = incident.get('pages', 0)
+        const reroutes = incident.get('reroutes', 0)
+        const transmog = incident.get('transmog', false)
 
         const formattedDate = moment(date).format('MMM. D, YYYY')
         const formattedTimeToAck = this._transformTime(timeToAck)
@@ -127,13 +127,13 @@ class MttaMttrTable extends Component {
         const formattedPages = this._transformPages(pages)
         const formattedReroutes = this._transformReroutes(reroutes)
 
-        const formattedIncidentName = this._transformIncidentName(incident, transmog)
+        const formattedIncidentName = this._transformIncidentName(incidentName, transmog, incidentId)
 
         return {
-          id: item.get('id'),
+          id: incident.get('id'),
           key: index,
           columns: [
-            {type: 'component', component: formattedIncidentName, value: incident},
+            {type: 'component', component: formattedIncidentName, value: incidentName},
             {type: 'cell', content: formattedDate, value: date},
             {type: 'cell', content: formattedTimeToAck, value: timeToAck},
             {type: 'cell', content: formattedTimeToRes, value: timeToRes},
