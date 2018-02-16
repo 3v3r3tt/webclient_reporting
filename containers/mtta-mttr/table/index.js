@@ -145,7 +145,7 @@ class MttaMttrTable extends Component {
 
       if (reducedData.size === 0) {
         return []
-      } else if (reducedData.size > this.state.tableLimit) {
+      } else if (reducedData.size >= this.state.tableLimit) {
         return reducedData.push(this._generateDownloadCSVRow()).toJS()
       } else {
         return reducedData.toJS()
