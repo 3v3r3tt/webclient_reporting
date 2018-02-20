@@ -13,6 +13,7 @@ import {
 } from 'reporting/actions/modal'
 
 import GoalsModal from './goalsModal'
+import _transformTime from '../utilities/transformTime'
 
 function mapStateToProps (state) {
   return {
@@ -34,20 +35,6 @@ function mapDispatchToProps (dispatch) {
 }
 
 class mttaMttrGoals extends Component {
-  _transformTime (value) {
-    const duration = moment.duration(value, 'seconds')
-
-    const dayText = duration.days() > 0 ? `${duration.days()}d ` : ''
-    const hourText = duration.hours() > 0 ? `${duration.hours()}h ` : ''
-    const minuteText = duration.minutes() > 0 ? `${duration.minutes()}m` : ''
-    const goalText = `${dayText}${hourText}${minuteText}`
-
-    if (this.props.incidents > 0 && value < 60) {
-      return `${Math.floor(duration.asSeconds())}s`
-    }
-    return goalText.length ? goalText : 'N/A'
-  }
-
   _openGoalModal (type, value, title, text) {
     const modalConfig = {
       modalType: 'confirm',
@@ -71,7 +58,7 @@ class mttaMttrGoals extends Component {
     const duration = moment.duration(value)
     let GoalText = <a className='underline-decoration'>add goal</a>
     if (value) {
-      GoalText = <span>goal: {this._transformTime(duration)}</span>
+      GoalText = <span>goal: {_transformTime(duration, this.props.incidents)}</span>
     }
     const modalText =
       <span
@@ -97,8 +84,8 @@ class mttaMttrGoals extends Component {
   }
 
   render () {
-    const mtta = this._transformTime(this.props.mtta)
-    const mttr = this._transformTime(this.props.mttr)
+    const mtta = _transformTime(this.props.mtta, this.props.incidents)
+    const mttr = _transformTime(this.props.mttr, this.props.incidents)
 
     const addMttaGoal = this._goal(
       'mtta',

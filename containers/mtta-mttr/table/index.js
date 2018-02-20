@@ -14,7 +14,9 @@ import {
   Icon,
   Table
 } from '@victorops/victory'
+
 import MmrIncidentDetailModal from 'reporting/components/modal/mmr-detail-modal'
+import _transformTime from '../utilities/transformTime'
 
 import {
   hideModal,
@@ -91,16 +93,6 @@ class MttaMttrTable extends Component {
     return time
   }
 
-  _transformTime (time) {
-    const duration = moment.duration(time, 's')
-    let hours = Math.floor(duration.asHours()).toString()
-    let minutes = duration.minutes().toString()
-    let seconds = duration.seconds().toString()
-    hours = this._formatTimeSpacing(hours)
-    minutes = this._formatTimeSpacing(minutes)
-    return hours + ':' + minutes + ':' + seconds
-  }
-
   _splitIntoChunks (list, chunkSize = 1) {
     return iRange(0, list.count(), chunkSize)
       .map(chunkStart => list.slice(chunkStart, chunkStart + chunkSize))
@@ -121,8 +113,8 @@ class MttaMttrTable extends Component {
         const transmog = incident.get('transmog', false)
 
         const formattedDate = moment(date).format('MMM. D, YYYY')
-        const formattedTimeToAck = this._transformTime(timeToAck)
-        const formattedTimeToRes = this._transformTime(timeToRes)
+        const formattedTimeToAck = _transformTime(timeToAck * 60, data.length)
+        const formattedTimeToRes = _transformTime(timeToRes * 60, data.length)
 
         const formattedPages = this._transformPages(pages)
         const formattedReroutes = this._transformReroutes(reroutes)
