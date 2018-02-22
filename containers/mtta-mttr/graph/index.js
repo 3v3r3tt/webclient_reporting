@@ -151,6 +151,18 @@ class MttaMttrGraph extends Component {
     this.props.showModal(modalConfig)
   }
 
+  _setStartEndAnchors (ttData) {
+    ttData.unshift({
+      x: moment(this.props.beginDate).valueOf(),
+      y: null
+    })
+    ttData.push({
+      x: moment(this.props.endDate).valueOf(),
+      y: null
+    })
+    return ttData
+  }
+
   _generateMttaMttrHighchartConfig (graphData) {
     if (!graphData) return
     const ttaAverageData = graphData.get('tta_avg', List()).toJS()
@@ -159,6 +171,9 @@ class MttaMttrGraph extends Component {
     const ttrData = this._convertToHighchartFormat(graphData.get('ttr_values', List()).toJS())
     const incidentCountData = graphData.get('incident_count', List()).toJS()
     const resolutionType = this.props.resolutionType.get('type')
+
+    const anchoredTtrData = this._setStartEndAnchors(ttrData)
+    const anchoredTtaData = this._setStartEndAnchors(ttaData)
 
     const mttaGoalPlotline = {
       id: 'mttaGoalPlotline',
@@ -306,7 +321,7 @@ class MttaMttrGraph extends Component {
           radius: 3,
           symbol: 'circle'
         },
-        data: ttaData,
+        data: anchoredTtaData,
         cursor: 'pointer',
         events: {
           click: function (e) {
@@ -334,7 +349,7 @@ class MttaMttrGraph extends Component {
           radius: 3,
           symbol: 'circle'
         },
-        data: ttrData,
+        data: anchoredTtrData,
         cursor: 'pointer',
         events: {
           click: function (e) {
