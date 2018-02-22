@@ -158,6 +158,7 @@ class MttaMttrGraph extends Component {
     const ttrAverageData = graphData.get('ttr_avg', List()).toJS()
     const ttrData = this._convertToHighchartFormat(graphData.get('ttr_values', List()).toJS())
     const incidentCountData = graphData.get('incident_count', List()).toJS()
+    const resolutionType = this.props.resolutionType.get('type')
 
     const mttaGoalPlotline = {
       id: 'mttaGoalPlotline',
@@ -183,6 +184,19 @@ class MttaMttrGraph extends Component {
     }
     const xAxisWithCrosshair = {
       tickInterval: this.props.resolutionType.type === 'day' ? 24 * 3600 * 1000 : null,
+      labels: {
+        formatter: function () {
+          const start = moment(this.value).add(1, 'day')
+          switch (resolutionType) {
+            case 'week':
+              return `${start.format('MMM D')} - ${moment(this.value).add(1, 'week').format('MMM D')}`
+            case 'month':
+              return `${start.format('MMM')}`
+            default:
+              return start.format('MMM D')
+          }
+        }
+      },
       title: {
         text: 'Date'
       },

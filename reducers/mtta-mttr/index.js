@@ -93,6 +93,7 @@ const _loadingDetailData = (state) => state.update('loadingDetailData', () => tr
 function _filterUpdate (state, payload) {
   const filterKey = Object.keys(payload)[0]
   return state.set(filterKey, payload[filterKey])
+    .set('graphData', _fromJS({}))
     .update('loadingTableData', () => true)
 }
 
