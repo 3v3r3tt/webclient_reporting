@@ -5,11 +5,14 @@ export default function _transformTime (value, incidents) {
 
   const dayText = duration.days() > 0 ? `${duration.days()}d ` : ''
   const hourText = duration.hours() > 0 ? `${duration.hours()}h ` : ''
-  const minuteText = duration.minutes() > 0 ? `${duration.minutes()}m` : ''
-  const goalText = `${dayText}${hourText}${minuteText}`
+  const minuteText = duration.minutes() > 0 ? `${duration.minutes()}m ` : ''
+  const secondText = duration.minutes() > 0 ? `${duration.seconds()}s ` : ''
 
-  if (incidents > 0 && value < 60) {
-    return `${Math.floor(duration.asSeconds())}s`
+  if (dayText) {
+    return `${dayText}${hourText}${minuteText}`
+  } else if (hourText || minuteText || secondText) {
+    return `${hourText}${minuteText}${secondText}`
+  } else {
+    return 'N/A'
   }
-  return goalText.length ? goalText : 'N/A'
 }

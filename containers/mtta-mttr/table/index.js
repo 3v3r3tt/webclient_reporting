@@ -113,8 +113,8 @@ class MttaMttrTable extends Component {
         const transmog = incident.get('transmog', false)
 
         const formattedDate = moment(date).format('MMM. D, YYYY')
-        const formattedTimeToAck = _transformTime(timeToAck * 60, data.length)
-        const formattedTimeToRes = _transformTime(timeToRes * 60, data.length)
+        const formattedTimeToAck = _transformTime(timeToAck, data.length)
+        const formattedTimeToRes = _transformTime(timeToRes, data.length)
 
         const formattedPages = this._transformPages(pages)
         const formattedReroutes = this._transformReroutes(reroutes)

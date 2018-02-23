@@ -146,7 +146,7 @@ class MmrIncidentDetailModal extends Component {
   }
 
   _transformTime (time) {
-    const duration = moment.duration(time, 'minutes')
+    const duration = moment.duration(time, 'seconds')
     const days = duration.days() ? `${duration.days()} day${duration.days() > 1 ? 's' : ''} ` : ''
     const hours = duration.hours() ? `${duration.hours()} hour${duration.hours() > 1 ? 's' : ''} ` : ''
     const minutes = duration.minutes() ? `${duration.minutes()} minute${duration.minutes() > 1 ? 's' : ''} ` : ''
