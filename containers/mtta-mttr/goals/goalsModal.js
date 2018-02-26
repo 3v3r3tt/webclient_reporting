@@ -53,8 +53,11 @@ class GoalsModal extends Component {
     const minutes = Number(this._minsInput.value) || 0
 
     const durationIsNonPositive = minutes + hours * 60 + days * 1440 <= 0
+    const durationIsTooBig = hours > 100 || days > 100 || minutes > 6000
     if (durationIsNonPositive) {
       this.setState({error: 'Invalid goal'})
+    } else if (durationIsTooBig) {
+      this.setState({error: 'Invalid goal (duration too large)'})
     } else {
       let duration = moment.duration(0)
         .add(parseInt(days), 'days')
@@ -76,18 +79,21 @@ class GoalsModal extends Component {
             type='number'
             placeholder='Days'
             min={0}
+            max={100}
             className='mtta-mttr--goal-modal--form--input'
             ref={(input) => { this._daysInput = input }} />
           <input
             type='number'
             placeholder='Hours'
             min={0}
+            max={100}
             className='mtta-mttr--goal-modal--form--input'
             ref={(input) => { this._hoursInput = input }} />
           <input
             type='number'
             placeholder='Minutes'
             min={0}
+            max={100}
             className='mtta-mttr--goal-modal--form--input'
             ref={(input) => { this._minsInput = input }} />
         </div>
