@@ -13,6 +13,8 @@ import {
 
 import { Button } from '@victorops/victory'
 
+const GOAL_LIMIT = 100
+
 function mapStateToProps (state) {
   return {}
 }
@@ -30,7 +32,10 @@ class GoalsModal extends Component {
     super(props)
 
     this.state = {
-      error: null
+      error: null,
+      daysError: false,
+      hoursError: false,
+      minutesError: false
     }
   }
 
@@ -47,23 +52,48 @@ class GoalsModal extends Component {
     }
   }
 
+  _handleSizeError (duration) {
+    const durationIsTooBig = duration.asDays() > GOAL_LIMIT
+
+    const errorMessage = durationIsTooBig ? 'Invalid goal (max 100 days)' : null
+
+    this.setState({
+      error: errorMessage
+    })
+
+    return durationIsTooBig
+  }
+
+  _handleSizeErrorWrapper () {
+    const days = Number(this._daysInput.value) || 0
+    const hours = Number(this._hoursInput.value) || 0
+    const minutes = Number(this._minsInput.value) || 0
+
+    let duration = moment.duration(0)
+      .add(parseInt(days), 'days')
+      .add(parseInt(hours), 'hours')
+      .add(parseInt(minutes), 'minutes')
+
+    this._handleSizeError(duration)
+  }
+
   _modalOnConfirm () {
     const days = Number(this._daysInput.value) || 0
     const hours = Number(this._hoursInput.value) || 0
     const minutes = Number(this._minsInput.value) || 0
 
     const durationIsNonPositive = minutes + hours * 60 + days * 1440 <= 0
-    const durationIsTooBig = hours > 100 || days > 100 || minutes > 6000
+
+    let duration = moment.duration(0)
+      .add(parseInt(days), 'days')
+      .add(parseInt(hours), 'hours')
+      .add(parseInt(minutes), 'minutes')
+
     if (durationIsNonPositive) {
       this.setState({error: 'Invalid goal'})
-    } else if (durationIsTooBig) {
-      this.setState({error: 'Invalid goal (duration too large)'})
+    } else if (duration.asDays() > GOAL_LIMIT) {
+      this._handleSizeError(duration)
     } else {
-      let duration = moment.duration(0)
-        .add(parseInt(days), 'days')
-        .add(parseInt(hours), 'hours')
-        .add(parseInt(minutes), 'minutes')
-
       if (this.props.type === 'mtta') this.props.setMttaGoal({mtta: duration.valueOf()})
       else if (this.props.type === 'mttr') this.props.setMttrGoal({mttr: duration.valueOf()})
       this.props.hideModal()
@@ -80,21 +110,24 @@ class GoalsModal extends Component {
             placeholder='Days'
             min={0}
             max={100}
-            className='mtta-mttr--goal-modal--form--input'
+            className={'mtta-mttr--goal-modal--form--input' + (this.state.error ? ' mtta-mttr--goal-modal--form--input--error' : '')}
+            onBlur={() => this._handleSizeErrorWrapper()}
             ref={(input) => { this._daysInput = input }} />
           <input
             type='number'
             placeholder='Hours'
             min={0}
             max={100}
-            className='mtta-mttr--goal-modal--form--input'
+            className={'mtta-mttr--goal-modal--form--input' + (this.state.error ? ' mtta-mttr--goal-modal--form--input--error' : '')}
+            onBlur={() => this._handleSizeErrorWrapper()}
             ref={(input) => { this._hoursInput = input }} />
           <input
             type='number'
             placeholder='Minutes'
             min={0}
             max={100}
-            className='mtta-mttr--goal-modal--form--input'
+            className={'mtta-mttr--goal-modal--form--input' + (this.state.error ? ' mtta-mttr--goal-modal--form--input--error' : '')}
+            onBlur={() => this._handleSizeErrorWrapper()}
             ref={(input) => { this._minsInput = input }} />
         </div>
         <p className='mtta-mttr--goal-modal--error-message'>
