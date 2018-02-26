@@ -18,6 +18,8 @@ import {
   faAngleDown
 } from '@fortawesome/fontawesome-pro-light'
 
+import { unescape } from 'components/__utils/format'
+
 function mapStateToProps (state) {
   return {
     incidentDetailData: state.mttaMttr.get('incidentDetailData'),
@@ -75,10 +77,10 @@ class MmrIncidentDetailModal extends Component {
     return (
       <div className='row' key={alertDetailKey}>
         <div className='col-4'>
-          {alertDetailKey}
+          {unescape(alertDetailKey)}
         </div>
         <div className='col-8'>
-          {alertDetail}
+          {unescape(alertDetail)}
         </div>
       </div>
     )
