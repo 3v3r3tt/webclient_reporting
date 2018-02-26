@@ -106,7 +106,7 @@ class ReportsOnCallList extends Component {
     const OnCallListErrorMessage = <p className='text-center text--bold mt-5'>Could not load your report data - please try again later.</p>
     const OnCallListView =
       <div>
-        <p>&quot;On-call&quot; means this person was on the first step in an escalation policy.</p>
+        <p>&quot;On-Call&quot; means this person was on the first step in an escalation policy.</p>
         <OnCallFilter
           beginDate={this.props.beginDate}
           endDate={this.props.endDate}
@@ -132,7 +132,7 @@ class ReportsOnCallList extends Component {
       <div className='container module-wrapper'>
         <BreadCrumbs breadcrumbs={[
           {label: ReportHomeLink, active: true},
-          {label: 'On-call report', uri: '#reports/on-call', active: true}
+          {label: 'On-Call report', uri: '#reports/on-call', active: true}
         ]} light />
 
         <h1 className='heading-3'>On-Call Reports</h1>

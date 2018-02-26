@@ -26,7 +26,7 @@ class ReportsNew extends React.Component {
       <Link to={`/reports/${orgslug}/on-call`} className='reports-container-link'>
         <div className='report-header'>
           <h3 className='report-header--heading'>On-Call</h3>
-          <span className='report-header--subheading'>Understand individual on-call and incident workload</span>
+          <span className='report-header--subheading'>Understand individual On-Call and incident workload</span>
         </div>
         <div className='image--container'><img src='/img/ocr-thumbnail.png' className='image' /></div>
       </Link>
