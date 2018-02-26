@@ -231,6 +231,7 @@ class MttaMttrGraph extends Component {
 
     const isLinear = this.props.yAxisType.get('type') === 'linear'
     const _openIncidentDetailModal = this._openIncidentDetailModal
+    const yAxisMax = this.props.mttaGoal || this.props.mttrGoal
 
     const config = {
       xAxis: [xAxisWithCrosshair, xAxisNoCrosshair],
@@ -242,6 +243,7 @@ class MttaMttrGraph extends Component {
         plotLines: [ mttaGoalPlotline, mttrGoalPlotline ],
         gridLineWidth: 1,
         minorGridLineWidth: 0,
+        max: yAxisMax ? yAxisMax / 1000 : null,
         labels: {
           formatter: function () {
             const reconfiguredMoment = _clone(moment)
