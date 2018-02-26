@@ -18,7 +18,7 @@ import {
 export const initialState = _fromJS({
   loadingData: true,
   beginDate: moment().subtract(1, 'month').valueOf(),
-  endDate: moment().valueOf(),
+  endDate: moment().endOf('day').valueOf(),
   selectedTeam: '',
   selectedUser: '',
   userData: {
