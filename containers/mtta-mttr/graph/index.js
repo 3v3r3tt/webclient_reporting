@@ -178,7 +178,7 @@ class MttaMttrGraph extends Component {
     const mttaGoalPlotline = {
       id: 'mttaGoalPlotline',
       color: '#fdcf8c',
-      dashStyle: 'ShortDash',
+      dashStyle: 'dashdot',
       value: this.props.mttaGoal ? moment.duration(this.props.mttaGoal).asSeconds() : null,
       width: 2,
       zIndex: 4
@@ -187,7 +187,7 @@ class MttaMttrGraph extends Component {
     const mttrGoalPlotline = {
       id: 'mttrGoalPlotline',
       color: '#66d6ee',
-      dashStyle: 'ShortDash',
+      dashStyle: 'dash',
       value: this.props.mttrGoal ? moment.duration(this.props.mttrGoal).asSeconds() : null,
       width: 2,
       zIndex: 4
@@ -231,7 +231,6 @@ class MttaMttrGraph extends Component {
 
     const isLinear = this.props.yAxisType.get('type') === 'linear'
     const _openIncidentDetailModal = this._openIncidentDetailModal
-    const yAxisMax = this.props.mttaGoal || this.props.mttrGoal
 
     const config = {
       xAxis: [xAxisWithCrosshair, xAxisNoCrosshair],
@@ -243,7 +242,6 @@ class MttaMttrGraph extends Component {
         plotLines: [ mttaGoalPlotline, mttrGoalPlotline ],
         gridLineWidth: 1,
         minorGridLineWidth: 0,
-        max: yAxisMax ? yAxisMax / 1000 : null,
         labels: {
           formatter: function () {
             const reconfiguredMoment = _clone(moment)
@@ -382,7 +380,7 @@ class MttaMttrGraph extends Component {
         name: 'MTTA Goal',
         color: '#fdcf8c',
         showInLegend: this.props.mttaGoal !== null,
-        dashStyle: 'shortdash',
+        yAxis: 0,
         marker: {
           enabled: false
         },
@@ -394,12 +392,16 @@ class MttaMttrGraph extends Component {
               this.chart.yAxis[0].addPlotLine(mttaGoalPlotline)
             }
           }
-        }
+        },
+        data: [{
+          x: moment(this.props.beginDate).valueOf(),
+          y: this.props.mttaGoal / 1000
+        }]
       }, {
         name: 'MTTR Goal',
         color: '#66d6ee',
         showInLegend: this.props.mttrGoal !== null,
-        dashStyle: 'shortdash',
+        yAxis: 0,
         marker: {
           enabled: false
         },
@@ -411,7 +413,11 @@ class MttaMttrGraph extends Component {
               this.chart.yAxis[0].addPlotLine(mttrGoalPlotline)
             }
           }
-        }
+        },
+        data: [{
+          x: moment(this.props.beginDate).valueOf(),
+          y: this.props.mttrGoal / 1000
+        }]
       }]
     }
 
