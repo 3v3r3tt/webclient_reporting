@@ -51,13 +51,13 @@ class MmrIncidentDetailModal extends Component {
     if (transmog) {
       return (
         <h2 className='heading-4 modal--transmog-detail--true'>
-          <Icon type='Transmog' /> <span>This incident was transmogrified (<a href={transmogHref}>learn more</a>)</span>
+          <Icon type='Transmog' /> <span>This incident was transmogrified (<a target='_blank' href={transmogHref}>learn more</a>)</span>
         </h2>
       )
     } else {
       return (
         <h2 className='heading-4 modal--transmog-detail--false'>
-          <Icon type='Transmog' /> <span>This incident was not transmogrified (<a href={transmogHref}>learn more</a>)</span>
+          <Icon type='Transmog' /> <span>This incident was not transmogrified (<a target='_blank' href={transmogHref}>learn more</a>)</span>
         </h2>
       )
     }
