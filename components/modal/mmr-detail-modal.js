@@ -38,22 +38,10 @@ function mapDispatchToProps (dispatch) {
 }
 
 class MmrIncidentDetailModal extends Component {
-  constructor (props) {
-    super(props)
-
-    this._getIncidentName = this._getIncidentName.bind(this)
-  }
-
   componentDidMount () {
     const payload = { incidentNumber: this.props.incidentId }
+    this.dateDetermined = false
     this.props.getIncidentDetails(payload)
-  }
-
-  _getIncidentName () {
-    const alertDetails = this.props.incidentDetailData.get('alert_details')
-    const name = alertDetails.get('entity_display_name') || alertDetails.get('SERVICEDESC') || alertDetails.get('entity_id') || null
-
-    return name ? 'from ' + name : null
   }
 
   _transmogText (transmog) {
@@ -160,23 +148,25 @@ class MmrIncidentDetailModal extends Component {
     return `${days}${hours}${minutes}${seconds}`
   }
 
+  componentWillReceiveProps (nextProps) {
+    const incidentDate = nextProps.incidentDetailData.get('date', false)
+    if (incidentDate && !this.dateDetermined) {
+      nextProps.updateModal(moment(incidentDate).format('MMM. DD, YYYY - h:mm A (Z UTC)'))
+      this.dateDetermined = true
+    }
+  }
+
   render () {
     if (!this.props.loadingDetailData) {
-      const entityDisplayName = this._getIncidentName()
+      const incidentName = this.props.incidentDetailData.get('incident')
+      const transmog = this.props.incidentDetailData.get('transmog', false)
+      const timeToAck = this.props.incidentDetailData.get('time_to_ack', 0)
+      const timeToRes = this.props.incidentDetailData.get('time_to_res', 0)
+      const pages = this.props.incidentDetailData.get('pages', 0)
+      const reroutes = this.props.incidentDetailData.get('reroutes', 0)
 
-      const incidentTableData = this.props.data.find((x) => x.get('id') === this.props.incidentId)
-
-      const transmog = incidentTableData.get('transmog', false)
-
-      const timeToAck = incidentTableData.get('time_to_ack', 0)
-      const timeToRes = incidentTableData.get('time_to_res', 0)
-
-      const pages = incidentTableData.get('pages', 0)
-      const reroutes = incidentTableData.get('reroutes', 0)
-
-      const incidentDetailData = this.props.incidentDetailData
-      const alertDetails = incidentDetailData.get('alert_details')
-      const timeline = incidentDetailData.get('timeline')
+      const alertDetails = this.props.incidentDetailData.get('alert_details')
+      const timeline = this.props.incidentDetailData.get('timeline')
 
       let CriticalityText = <span className='warning-color'>WARNING</span>
       if (alertDetails.get('message_type') === 'CRITICAL') {
@@ -187,7 +177,7 @@ class MmrIncidentDetailModal extends Component {
         <div className='mtta-mttr--incident-detail--modal'>
           <div className='modal-contents'>
             <div>
-              <h2 className='heading-4'>{CriticalityText} incident {entityDisplayName}</h2>
+              <h2 className='heading-4'>{CriticalityText} incident {incidentName}</h2>
 
               <div className='modal--main-detail'>
                 { this._transmogText(transmog) }

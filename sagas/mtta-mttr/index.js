@@ -125,12 +125,28 @@ function _setMttaMttrGoalMttr (api, logError) {
   }
 }
 
-function _getMttaMttrIncidentDetails ({fetch}, logError) {
+function _getMttaMttrIncidentDetails ({fetch, create}, logError) {
   return function * (action) {
     try {
-      const incidentNumber = action.payload.incidentNumber
-      const MmrIncidentDetailEndpoint = `/api/v1/org/${config.auth.org.slug}/reports/performancemodal?incidentNumber=${incidentNumber}`
-      const mmrIncidentData = yield call(fetch, MmrIncidentDetailEndpoint)
+      const mttaMttrReportEndpoint = `/api/v1/org/${config.auth.org.slug}/reports/performancetable`
+      const mttaMttrState = yield select(_getMttaMttrState)
+      const startDate = moment(mttaMttrState.get('beginDate', '')).utc().startOf('day').valueOf()
+      const endDate = moment(mttaMttrState.get('endDate', '')).utc().endOf('day').valueOf()
+      const data = {
+        team: mttaMttrState.get('selectedTeam', ''),
+        time_period: mttaMttrState.getIn(['resolutionType', 'type']),
+        start: startDate,
+        end: endDate,
+        tz_offset: mttaMttrState.get('timezoneOffset', 0),
+        incident_id: action.payload.incidentNumber
+      }
+      const mmrIncidentDataList = yield call(create, mttaMttrReportEndpoint, data)
+      let mmrIncidentData = mmrIncidentDataList.incidents[0]
+      const MmrIncidentDetailEndpoint = `/api/v1/org/${config.auth.org.slug}/reports/performancemodal?incidentNumber=${action.payload.incidentNumber}`
+      const mmrIncidentDetailedData = yield call(fetch, MmrIncidentDetailEndpoint)
+      mmrIncidentData.timeline = mmrIncidentDetailedData.timeline
+      mmrIncidentData.alert_details = mmrIncidentDetailedData.alert_details
+      mmrIncidentData.alert_details_truncated = mmrIncidentDetailedData.alert_details_truncated
       yield put(mttaMttrIncidentDetailUpdate(mmrIncidentData))
     } catch (err) {
       yield call(logError, err)

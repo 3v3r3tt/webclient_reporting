@@ -60,6 +60,7 @@ class MttaMttrGraph extends Component {
     this._generateMttaMttrHighchartConfig = this._generateMttaMttrHighchartConfig.bind(this)
     this._manageGoals = this._manageGoals.bind(this)
     this._openIncidentDetailModal = this._openIncidentDetailModal.bind(this)
+    this._updateModal = this._updateModal.bind(this)
   }
 
   componentDidMount () {
@@ -133,22 +134,24 @@ class MttaMttrGraph extends Component {
 
   _openIncidentDetailModal (incidentId) {
     const modalTitle = `Incident #${incidentId}`
-    const modalComponent = <MmrIncidentDetailModal incidentId={Number(incidentId)} />
-    const incidentTableData = this.props.tableData.find((x) => x.get('id') === incidentId)
-    const incidentTime = moment(incidentTableData.get('date'))
+    const modalComponent = <MmrIncidentDetailModal updateModal={this._updateModal} incidentId={Number(incidentId)} />
 
-    const modalConfig = {
+    this.modalConfig = {
       modalType: 'confirm',
       modalProps: {
         title: modalTitle,
-        subTitle: incidentTime.format('MMM. DD, YYYY - h:mm A (Z UTC)'),
         component: modalComponent,
         onCancel: () => this.props.hideModal(),
         modalClass: 'mtta-mttr--incident-detail--modal modal-is-scrollable',
         actionBar: false
       }
     }
-    this.props.showModal(modalConfig)
+    this.props.showModal(this.modalConfig)
+  }
+
+  _updateModal (formattedDate) {
+    this.modalConfig.modalProps.subTitle = formattedDate
+    this.props.showModal(this.modalConfig)
   }
 
   _setStartEndAnchors (ttData) {
