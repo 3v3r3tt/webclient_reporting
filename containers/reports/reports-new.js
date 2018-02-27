@@ -101,7 +101,7 @@ class ReportsNew extends React.Component {
     return (
       <Link to={`/reports/${orgslug}/mtta-mttr`} className='reports-container-link reports-container-link'>
         <div className='report-header'>
-          <h3 className='report-header--heading'>Organization MTTA/MTTR</h3>
+          <h3 className='report-header--heading'>Performance (MTTA/MTTR)</h3>
           <span className='report-header--subheading'>Evaluate your organizational and team incident metrics</span>
         </div>
         <div className='image--container'><img src='/img/mmr-thumbnail.png' className='image' /></div>
