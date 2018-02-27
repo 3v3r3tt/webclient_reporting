@@ -441,18 +441,22 @@ class MttaMttrGraph extends Component {
   }
 
   _setErrorText () {
-    let noDataText = 'An error has occured, please try again.'
     let HasError = true
+    const graphError = 'Sorry, something went wrong. Please try again.'
+    const genericError = 'An error has occured, please try again.'
+    const dataFlagError = 'This Organization does not have any data.'
+    const noDataError = 'No data available. Please, refine your search.'
+    let noDataText = genericError
 
     const HighCharts = ReactHighcharts.Highcharts
     const graphData = this.props.graphData
 
     if (this.props.graphError) {
-      noDataText = 'Sorry, something went wrong. Please try again.'
+      noDataText = graphError
     } else if (this._checkForNoData()) {
-      noDataText = 'There is no data to display.'
-    } else if (!graphData.get('has_data_flag')) {
-      noDataText = 'This Organization does not have any data.'
+      noDataText = noDataError
+    } else if (!graphData.get('has_data_flag', true)) {
+      noDataText = dataFlagError
     } else {
       HasError = false
     }
@@ -464,7 +468,7 @@ class MttaMttrGraph extends Component {
   render () {
     HighchartsNoData(ReactHighcharts.Highcharts)
     const mttaMttrHighchartData = this._generateMttaMttrHighchartConfig(this.props.graphData)
-    let highChartsData = (this._setErrorText()) ? {} : mttaMttrHighchartData
+    let highChartsData = (this._setErrorText()) ? {title: ''} : mttaMttrHighchartData
 
     return (
       <div className='mtta-mttr--graph' id='mtta-mttr-graph'>
