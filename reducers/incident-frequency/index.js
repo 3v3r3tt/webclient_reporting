@@ -22,8 +22,8 @@ export const initialState = _fromJS({
   loadingGraphData: true,
   loadingTableData: true,
   loadingDetailData: true,
-  beginDate: moment().subtract(1, 'month').valueOf(),
-  endDate: moment().valueOf(),
+  beginDate: moment().subtract(1, 'month').utc().startOf('day').valueOf(),
+  endDate: moment().utc().endOf('day').valueOf(),
   timezoneOffset: moment().utcOffset() / 60,
   selectedTeam: '',
   chartType: {

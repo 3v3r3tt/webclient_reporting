@@ -119,13 +119,15 @@ class mttaMttrFilter extends Component {
   }
 
   _endDateChange (momentDate) {
-    this.props.setFilterMttaMttr({endDate: momentDate.valueOf()})
-    this._checkDateRange(moment(this.props.beginDate), momentDate)
+    const date = momentDate.utc().endOf('day')
+    this.props.setFilterMttaMttr({endDate: date.valueOf()})
+    this._checkDateRange(moment(this.props.beginDate), date)
   }
 
   _beginDateChange (momentDate) {
-    this.props.setFilterMttaMttr({beginDate: momentDate.valueOf()})
-    this._checkDateRange(momentDate, moment(this.props.endDate))
+    const date = momentDate.utc().startOf('day')
+    this.props.setFilterMttaMttr({beginDate: date.valueOf()})
+    this._checkDateRange(date, moment(this.props.endDate))
   }
 
   _checkDateRange (begin, end) {

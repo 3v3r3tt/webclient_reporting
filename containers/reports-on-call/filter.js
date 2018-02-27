@@ -52,12 +52,14 @@ class OnCallFilter extends Component {
     this.props.getData()
   }
   _endDateChange (momentDate) {
-    this.props.setFilterOnCall({endDate: momentDate.endOf('day').valueOf()})
+    const date = momentDate.local().endOf('day')
+    this.props.setFilterOnCall({endDate: date.valueOf()})
     this._getNewTableData()
   }
 
   _beginDateChange (momentDate) {
-    this.props.setFilterOnCall({beginDate: momentDate.valueOf()})
+    const date = momentDate.local().startOf('day')
+    this.props.setFilterOnCall({beginDate: date.valueOf()})
     this._getNewTableData()
   }
 

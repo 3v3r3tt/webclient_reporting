@@ -175,13 +175,15 @@ class IncidentFrequencyFilter extends Component {
   }
 
   _endDateChange (momentDate) {
-    this.props.setFilterIncidentFrequency({endDate: momentDate.valueOf()})
-    this._checkDateRange(moment(this.props.beginDate), momentDate)
+    const date = momentDate.utc().endOf('day')
+    this.props.setFilterIncidentFrequency({endDate: date.valueOf()})
+    this._checkDateRange(moment(this.props.beginDate), date)
   }
 
   _beginDateChange (momentDate) {
-    this.props.setFilterIncidentFrequency({beginDate: momentDate.valueOf()})
-    this._checkDateRange(momentDate, moment(this.props.endDate))
+    const date = momentDate.utc().startOf('day')
+    this.props.setFilterIncidentFrequency({beginDate: date.valueOf()})
+    this._checkDateRange(date, moment(this.props.endDate))
   }
 
   _checkDateRange (begin, end) {
