@@ -174,7 +174,7 @@ class MttaMttrGraph extends Component {
   }
 
   _generateMttaMttrHighchartConfig (graphData) {
-    if (!graphData) return
+    if (!graphData) return {}
     const ttaAverageData = graphData.get('tta_avg', List()).toJS()
     const ttaData = this._convertToHighchartFormat(graphData.get('tta_values', List()).toJS())
     const ttrAverageData = graphData.get('ttr_avg', List()).toJS()
@@ -434,14 +434,41 @@ class MttaMttrGraph extends Component {
     return _merge(_clone(defaultHighChartsOptions), _clone(config))
   }
 
+  _checkForNoData () {
+    const graphData = this.props.graphData
+
+    return graphData.size && (!graphData.get('incident_count').size && !graphData.get('ttr_values').size && !graphData.get('ttr_values').size)
+  }
+
+  _setErrorText () {
+    let noDataText = 'An error has occured, please try again.'
+    let HasError = true
+
+    const HighCharts = ReactHighcharts.Highcharts
+    const graphData = this.props.graphData
+
+    if (this.props.graphError) {
+      noDataText = 'Sorry, something went wrong. Please try again.'
+    } else if (this._checkForNoData()) {
+      noDataText = 'There is no data to display.'
+    } else if (!graphData.get('has_data_flag')) {
+      noDataText = 'This Organization does not have any data.'
+    } else {
+      HasError = false
+    }
+    HighCharts.setOptions({lang: {noData: noDataText}})
+
+    return HasError
+  }
+
   render () {
     HighchartsNoData(ReactHighcharts.Highcharts)
-    ReactHighcharts.Highcharts.setOptions({lang: {noData: 'There is no data to display'}})
     const mttaMttrHighchartData = this._generateMttaMttrHighchartConfig(this.props.graphData)
+    let highChartsData = (this._setErrorText()) ? {} : mttaMttrHighchartData
 
     return (
       <div className='mtta-mttr--graph' id='mtta-mttr-graph'>
-        <ReactHighcharts config={mttaMttrHighchartData} ref='chart' />
+        <ReactHighcharts config={highChartsData} ref='chart' />
       </div>
     )
   }

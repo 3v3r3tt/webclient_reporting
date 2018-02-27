@@ -25,6 +25,7 @@ import {
 
 function mapStateToProps (state) {
   return {
+    tableError: state.mttaMttr.getIn(['error', 'table']),
     orgslug: state.auth.config.get('orgslug', ''),
     data: state.mttaMttr.getIn(['table', 'data', 'incidents'], iMap({})),
     loading: state.mttaMttr.getIn(['table', 'loading'], true)
@@ -196,17 +197,22 @@ class MttaMttrTable extends Component {
     }
 
     return (
-      <div className='mtta-mttr--table has-loading-gradient fade-in'>
-        <ReactCSSTransitionGroup
-          transitionName='mtta-mttr--transition'
-          transitionAppear
-          transitionAppearTimeout={500}
-          transitionEnterTimeout={500}
-          transitionLeaveTimeout={200}>
-          <Table
-            {...tableData}
-            showLoader={this.props.loading} />
-        </ReactCSSTransitionGroup>
+      <div>
+        {(this.props.tableError)
+          ? <p className='col-12 text-center padded-double-flow heading-4 text--danger'>Sorry, something went wrong, please try again</p>
+          : <div className='mtta-mttr--table has-loading-gradient fade-in'>
+            <ReactCSSTransitionGroup
+              transitionName='mtta-mttr--transition'
+              transitionAppear
+              transitionAppearTimeout={500}
+              transitionEnterTimeout={500}
+              transitionLeaveTimeout={200}>
+              <Table
+                {...tableData}
+                showLoader={this.props.loading} />
+            </ReactCSSTransitionGroup>
+          </div>
+        }
       </div>
     )
   }
