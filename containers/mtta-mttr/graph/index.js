@@ -152,12 +152,19 @@ class MttaMttrGraph extends Component {
   }
 
   _setStartEndAnchors (ttData) {
+    const startAnchor = moment(this.props.beginDate)
+    const endAnchor = moment(this.props.endDate)
+    const resolutionType = this.props.resolutionType.get('type')
+    if (resolutionType !== 'day') {
+      startAnchor.startOf(resolutionType).startOf('day')
+      endAnchor.endOf(resolutionType).endOf('day')
+    }
     ttData.unshift({
-      x: moment(this.props.beginDate).valueOf(),
+      x: startAnchor.valueOf(),
       y: null
     })
     ttData.push({
-      x: moment(this.props.endDate).valueOf(),
+      x: endAnchor.valueOf(),
       y: null
     })
     return ttData
