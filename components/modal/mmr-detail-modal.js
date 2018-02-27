@@ -27,7 +27,8 @@ function mapStateToProps (state) {
     loadingDetailData: state.mttaMttr.get('loadingDetailData'),
     selectedTeam: state.mttaMttr.get('selectedTeam'),
     beginDate: state.mttaMttr.get('beginDate'),
-    endDate: state.mttaMttr.get('endDate')
+    endDate: state.mttaMttr.get('endDate'),
+    auth: state.auth
   }
 }
 
@@ -45,7 +46,8 @@ class MmrIncidentDetailModal extends Component {
   }
 
   _transmogText (transmog) {
-    const transmogHref = `${location.origin}/dash/victorops#/alert-rules`
+    const orgslug = this.props.auth.config.get('orgslug', '')
+    const transmogHref = `${location.origin}/dash/${orgslug}#/alert-rules`
     if (transmog) {
       return (
         <h2 className='heading-4 modal--transmog-detail--true'>
