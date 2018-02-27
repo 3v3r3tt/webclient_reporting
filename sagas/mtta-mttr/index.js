@@ -6,7 +6,8 @@ import meta from 'util/meta'
 import {
   put,
   call,
-  select
+  select,
+  all
 } from 'redux-saga/effects'
 
 import {
@@ -128,7 +129,6 @@ function _setMttaMttrGoalMttr (api, logError) {
 function _getMttaMttrIncidentDetails ({fetch, create}, logError) {
   return function * (action) {
     try {
-      const mttaMttrReportEndpoint = `/api/v1/org/${config.auth.org.slug}/reports/performancetable`
       const mttaMttrState = yield select(_getMttaMttrState)
       const startDate = moment(mttaMttrState.get('beginDate', '')).utc().startOf('day').valueOf()
       const endDate = moment(mttaMttrState.get('endDate', '')).utc().endOf('day').valueOf()
@@ -140,10 +140,15 @@ function _getMttaMttrIncidentDetails ({fetch, create}, logError) {
         tz_offset: mttaMttrState.get('timezoneOffset', 0),
         incident_id: action.payload.incidentNumber
       }
-      const mmrIncidentDataList = yield call(create, mttaMttrReportEndpoint, data)
-      let mmrIncidentData = mmrIncidentDataList.incidents[0]
+      const mttaMttrReportEndpoint = `/api/v1/org/${config.auth.org.slug}/reports/performancetable`
       const MmrIncidentDetailEndpoint = `/api/v1/org/${config.auth.org.slug}/reports/performancemodal?incidentNumber=${action.payload.incidentNumber}`
-      const mmrIncidentDetailedData = yield call(fetch, MmrIncidentDetailEndpoint)
+
+      const [mmrIncidentDataList, mmrIncidentDetailedData] = yield all([
+        call(create, mttaMttrReportEndpoint, data),
+        call(fetch, MmrIncidentDetailEndpoint)
+      ])
+
+      let mmrIncidentData = mmrIncidentDataList.incidents[0]
       mmrIncidentData.timeline = mmrIncidentDetailedData.timeline
       mmrIncidentData.alert_details = mmrIncidentDetailedData.alert_details
       mmrIncidentData.alert_details_truncated = mmrIncidentDetailedData.alert_details_truncated
