@@ -152,7 +152,7 @@ class MmrIncidentDetailModal extends Component {
 
   componentWillReceiveProps (nextProps) {
     const incidentDate = nextProps.incidentDetailData.get('date', false)
-    if (incidentDate && !this.dateDetermined) {
+    if (incidentDate && !this.dateDetermined && nextProps.updateModal) {
       nextProps.updateModal(moment(incidentDate).format('MMM. DD, YYYY - h:mm A (Z UTC)'))
       this.dateDetermined = true
     }
