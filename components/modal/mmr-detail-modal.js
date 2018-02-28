@@ -170,16 +170,20 @@ class MmrIncidentDetailModal extends Component {
       const alertDetails = this.props.incidentDetailData.get('alert_details')
       const timeline = this.props.incidentDetailData.get('timeline')
 
-      let CriticalityText = <span className='warning-color'>WARNING</span>
-      if (alertDetails.get('message_type') === 'CRITICAL') {
+      let CriticalityText = ''
+      if (alertDetails.get('message_type', '').toLowerCase() === 'critical') {
         CriticalityText = <span className='critical-color'>CRITICAL</span>
+      } else if (alertDetails.get('message_type', '').toLowerCase() === 'warning') {
+        CriticalityText = <span className='warning-color'>WARNING</span>
       }
+
+      const incidentWordText = CriticalityText ? 'incident' : 'Incident'
 
       return (
         <div className='mtta-mttr--incident-detail--modal'>
           <div className='modal-contents'>
             <div>
-              <h2 className='heading-4'>{CriticalityText} incident {incidentName}</h2>
+              <h2 className='heading-4'>{CriticalityText} {incidentWordText} {incidentName}</h2>
 
               <div className='modal--main-detail'>
                 { this._transmogText(transmog) }
