@@ -87,7 +87,7 @@ class MmrIncidentDetailModal extends Component {
       <form className='alert-details'>
         <input type='checkbox' id='alert-details--checkbox' className='alert-details--checkbox' />
         <label htmlFor='alert-details--checkbox' className='alert-details--label'>
-          <div className='row'>
+          <div className='alert-detail--wrapper'>
             <div className='angle--down pull-left' ><FontAwesomeIcon icon={faAngleRight} /></div>
             <div className='angle--right pull-left' ><FontAwesomeIcon icon={faAngleDown} /></div>
             <span className='padded-left'>alert details</span>
