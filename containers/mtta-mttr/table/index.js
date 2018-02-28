@@ -124,7 +124,7 @@ class MttaMttrTable extends Component {
         id: incident.get('id'),
         key: index,
         columns: [
-          {type: 'component', component: formattedIncidentName, value: incidentName},
+          {type: 'component', component: formattedIncidentName, value: incidentId},
           {type: 'cell', content: formattedDate, value: date},
           {type: 'cell', content: formattedTimeToAck, value: timeToAck},
           {type: 'cell', content: formattedTimeToRes, value: timeToRes},
