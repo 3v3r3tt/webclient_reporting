@@ -109,7 +109,6 @@ class GoalsModal extends Component {
             type='number'
             placeholder='Days'
             min={0}
-            max={100}
             className={'mtta-mttr--goal-modal--form--input' + (this.state.error ? ' mtta-mttr--goal-modal--form--input--error' : '')}
             onBlur={() => this._handleSizeErrorWrapper()}
             ref={(input) => { this._daysInput = input }} />
@@ -117,7 +116,6 @@ class GoalsModal extends Component {
             type='number'
             placeholder='Hours'
             min={0}
-            max={100}
             className={'mtta-mttr--goal-modal--form--input' + (this.state.error ? ' mtta-mttr--goal-modal--form--input--error' : '')}
             onBlur={() => this._handleSizeErrorWrapper()}
             ref={(input) => { this._hoursInput = input }} />
@@ -125,7 +123,6 @@ class GoalsModal extends Component {
             type='number'
             placeholder='Minutes'
             min={0}
-            max={100}
             className={'mtta-mttr--goal-modal--form--input' + (this.state.error ? ' mtta-mttr--goal-modal--form--input--error' : '')}
             onBlur={() => this._handleSizeErrorWrapper()}
             ref={(input) => { this._minsInput = input }} />
