@@ -3,6 +3,9 @@ import { connect } from 'react-redux'
 import ReactHighcharts from 'react-highcharts'
 import HighchartsNoData from 'highcharts/modules/no-data-to-display.js'
 
+// eslint-disable-next-line no-unused-vars
+import PolyFill from './classlist-polyfill'
+
 import MmrIncidentDetailModal from 'reporting/components/modal/mmr-detail-modal'
 import defaultHighChartsOptions from './highcharts-config'
 
