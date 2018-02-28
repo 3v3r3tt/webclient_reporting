@@ -175,6 +175,8 @@ class MmrIncidentDetailModal extends Component {
         CriticalityText = <span className='critical-color'>CRITICAL</span>
       } else if (alertDetails.get('message_type', '').toLowerCase() === 'warning') {
         CriticalityText = <span className='warning-color'>WARNING</span>
+      } else if (alertDetails.get('message_type', '').toLowerCase() === 'info') {
+        CriticalityText = <span className='info-color'>INFO</span>
       }
 
       const incidentWordText = CriticalityText ? 'incident' : 'Incident'
