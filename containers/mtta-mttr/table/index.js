@@ -43,9 +43,9 @@ class MttaMttrTable extends Component {
   constructor () {
     super()
 
-    this.state = {
-      tableLimit: 100
-    }
+    this.tableLimit = 100
+    this.dataLimit = 5000
+    this._generateDownloadCSVRow = this._generateDownloadCSVRow.bind(this)
   }
 
   _generateDownloadCSVRow () {
@@ -99,52 +99,46 @@ class MttaMttrTable extends Component {
       .map(chunkStart => list.slice(chunkStart, chunkStart + chunkSize))
   }
 
-  _transformRows (_data) {
-    let reducedData
-    if (_data.size) {
-      const data = this._splitIntoChunks(_data, this.state.tableLimit).get(0)
-      reducedData = data.map((incident, index) => {
-        const incidentName = incident.get('incident')
-        const incidentId = incident.get('id')
-        const date = incident.get('date')
-        const timeToAck = incident.get('time_to_ack', 0)
-        const timeToRes = incident.get('time_to_res', 0)
-        const pages = incident.get('pages', 0)
-        const reroutes = incident.get('reroutes', 0)
-        const transmog = incident.get('transmog', false)
+  _transformRows (data) {
+    if (data.isEmpty()) return []
+    let reducedData = data.map((incident, index) => {
+      const incidentName = incident.get('incident')
+      const incidentId = incident.get('id')
+      const date = incident.get('date')
+      const timeToAck = incident.get('time_to_ack', 0)
+      const timeToRes = incident.get('time_to_res', 0)
+      const pages = incident.get('pages', 0)
+      const reroutes = incident.get('reroutes', 0)
+      const transmog = incident.get('transmog', false)
 
-        const formattedDate = moment(date).format('MMM. D, YYYY')
-        const formattedTimeToAck = _transformTime(timeToAck, data.length)
-        const formattedTimeToRes = _transformTime(timeToRes, data.length)
+      const formattedDate = moment(date).format('MMM. D, YYYY')
+      const formattedTimeToAck = _transformTime(timeToAck, data.length)
+      const formattedTimeToRes = _transformTime(timeToRes, data.length)
 
-        const formattedPages = this._transformPages(pages)
-        const formattedReroutes = this._transformReroutes(reroutes)
+      const formattedPages = this._transformPages(pages)
+      const formattedReroutes = this._transformReroutes(reroutes)
 
-        const formattedIncidentName = this._transformIncidentName(incidentName, transmog, incidentId)
+      const formattedIncidentName = this._transformIncidentName(incidentName, transmog, incidentId)
 
-        return {
-          id: incident.get('id'),
-          key: index,
-          columns: [
-            {type: 'component', component: formattedIncidentName, value: incidentName},
-            {type: 'cell', content: formattedDate, value: date},
-            {type: 'cell', content: formattedTimeToAck, value: timeToAck},
-            {type: 'cell', content: formattedTimeToRes, value: timeToRes},
-            {type: 'cell', content: formattedPages, value: pages},
-            {type: 'cell', content: formattedReroutes, value: reroutes}
-          ]
-        }
-      })
-
-      if (reducedData.size === 0) {
-        return []
-      } else if (reducedData.size >= this.state.tableLimit) {
-        return reducedData.push(this._generateDownloadCSVRow()).toJS()
-      } else {
-        return reducedData.toJS()
+      return {
+        id: incident.get('id'),
+        key: index,
+        columns: [
+          {type: 'component', component: formattedIncidentName, value: incidentName},
+          {type: 'cell', content: formattedDate, value: date},
+          {type: 'cell', content: formattedTimeToAck, value: timeToAck},
+          {type: 'cell', content: formattedTimeToRes, value: timeToRes},
+          {type: 'cell', content: formattedPages, value: pages},
+          {type: 'cell', content: formattedReroutes, value: reroutes}
+        ]
       }
+    })
+
+    if (reducedData.size === 0) {
+      return []
+    } else {
+      return reducedData.toJS()
     }
-    return []
   }
 
   _rowClickFnGenerator (rowId) {
@@ -181,19 +175,24 @@ class MttaMttrTable extends Component {
 
   render () {
     const rowItems = this._transformRows(this.props.data)
-    const tableData = {
+    const tooMuchData = rowItems.length > this.dataLimit
+    let tableData = {
       index: 1,
-      columnWidths: ['30%', '10%', '15%', '15%', '15%', '15%'],
+      columnWidths: ['30%', '14%', '18%', '18%', '10%', '10%'],
       columnHeaders: [
-        {label: 'Incidents', isSortable: false},
-        {label: 'Date', isSortable: false},
-        {label: 'Time to Ack.', isSortable: false},
-        {label: 'Time to Res.', isSortable: false},
-        {label: '# Pages', isSortable: false},
-        {label: '# Reroutes', isSortable: false}
+        {label: 'Incidents', isSortable: !tooMuchData},
+        {label: 'Date', isSortable: !tooMuchData},
+        {label: 'Time to Acknowledge', isSortable: !tooMuchData},
+        {label: 'Time to Resolve', isSortable: !tooMuchData},
+        {label: '# Pages', isSortable: !tooMuchData},
+        {label: '# Reroutes', isSortable: !tooMuchData}
       ],
       rowItems: rowItems,
+      limitTo: this.tableLimit,
       generateRowClickFn: (row) => this._rowClickFnGenerator(row)
+    }
+    if (rowItems.length >= this.tableLimit) {
+      tableData.exceededLimitToRow = this._generateDownloadCSVRow
     }
 
     return (

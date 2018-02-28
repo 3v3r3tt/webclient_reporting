@@ -322,7 +322,7 @@ class MttaMttrGraph extends Component {
         id: 'ackTimes',
         linkedTo: 'averageAckTime',
         type: 'scatter',
-        turboThreshold: 0,
+        turboThreshold: 5000,
         xAxis: 1,
         zIndex: 2,
         tooltip: {
@@ -350,7 +350,7 @@ class MttaMttrGraph extends Component {
         id: 'resolveTimes',
         linkedTo: 'averageResolveTime',
         type: 'scatter',
-        turboThreshold: 0,
+        turboThreshold: 5000,
         xAxis: 1,
         zIndex: 2,
         tooltip: {
