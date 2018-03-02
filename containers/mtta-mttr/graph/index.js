@@ -160,6 +160,9 @@ class MttaMttrGraph extends Component {
   _setStartEndAnchors (ttData) {
     const startAnchor = moment(this.props.beginDate)
     const endAnchor = moment(this.props.endDate)
+    if (ttData.length > 5000) { // only plot latest 5000 points
+      ttData = ttData.slice(ttData.length - 5000, ttData.length - 1)
+    }
     const resolutionType = this.props.resolutionType.get('type')
     if (resolutionType !== 'day') {
       startAnchor.startOf(resolutionType).startOf('day')
@@ -322,7 +325,7 @@ class MttaMttrGraph extends Component {
         id: 'ackTimes',
         linkedTo: 'averageAckTime',
         type: 'scatter',
-        turboThreshold: 5000,
+        turboThreshold: 0,
         xAxis: 1,
         zIndex: 2,
         tooltip: {
@@ -350,7 +353,7 @@ class MttaMttrGraph extends Component {
         id: 'resolveTimes',
         linkedTo: 'averageResolveTime',
         type: 'scatter',
-        turboThreshold: 5000,
+        turboThreshold: 0,
         xAxis: 1,
         zIndex: 2,
         tooltip: {

@@ -117,6 +117,7 @@ class mttaMttrGoals extends Component {
         <span className='mtta-mttr--goals--goal'>
           <strong>Incidents: </strong>
           {noMttaMttrData ? 'N/A' : this.props.incidents}
+          {this.props.incidents < 5000 ? null : ' (showing 5000)'}
         </span>
       </div>
     )
